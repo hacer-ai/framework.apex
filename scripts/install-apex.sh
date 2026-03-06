@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+TEMPLATE_DIR="$ROOT_DIR/templates/shared-brain"
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/install-apex.sh [target-dir] [--project-name NAME] [--force]
+
+Installs the APEX shared-brain scaffold into a project.
+
+Examples:
+  scripts/install-apex.sh .
+  scripts/install-apex.sh ../my-app --project-name "My App"
+  scripts/install-apex.sh . --force
+EOF
+}
+
+TARGET_DIR="."
+PROJECT_NAME=""
+FORCE=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --project-name)
+      PROJECT_NAME="${2:-}"
+      if [[ -z "$PROJECT_NAME" ]]; then
+        printf 'error: --project-name requires a value\n' >&2
+        exit 1
+      fi
+      shift 2
+      ;;
+    --force)
+      FORCE=true
+      shift
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    *)
+      TARGET_DIR="$1"
+      shift
+      ;;
+  esac
+done
+
+mkdir -p "$TARGET_DIR"
+
+if [[ -z "$PROJECT_NAME" ]]; then
+  PROJECT_NAME="$(basename "$(cd "$TARGET_DIR" && pwd)")"
+fi
+
+escape_sed() {
+  printf '%s' "$1" | sed -e 's/[\/&]/\\&/g'
+}
+
+PROJECT_NAME_ESCAPED="$(escape_sed "$PROJECT_NAME")"
+
+copy_file() {
+  local rel="$1"
+  local src="$TEMPLATE_DIR/$rel"
+  local dst="$TARGET_DIR/$rel"
+
+  mkdir -p "$(dirname "$dst")"
+
+  if [[ -e "$dst" && "$FORCE" != true ]]; then
+    printf 'skip  %s (already exists)\n' "$rel"
+    return
+  fi
+
+  sed "s/__PROJECT_NAME__/$PROJECT_NAME_ESCAPED/g" "$src" > "$dst"
+  printf 'write %s\n' "$rel"
+}
+
+FILES=(
+  "AGENTS.md"
+  "CLAUDE.md"
+  ".agents/CONTEXT.md"
+  ".agents/MAP.md"
+  ".agents/SCHEMA.md"
+  ".agents/TASKS.md"
+  ".agents/PROGRESS.md"
+  ".agents/DECISIONS.md"
+  ".agents/CONTRACTS.md"
+  ".agents/playbooks/start-session.md"
+  ".agents/playbooks/end-session.md"
+  ".agents/playbooks/db-change.md"
+  ".agents/playbooks/plan-feature.md"
+  ".claude/commands/apex-start.md"
+  ".claude/commands/apex-end.md"
+  ".claude/commands/apex-schema.md"
+  ".claude/commands/apex-plan.md"
+)
+
+for file in "${FILES[@]}"; do
+  copy_file "$file"
+done
+
+printf '\nInstalled APEX shared-brain scaffold into %s\n' "$(cd "$TARGET_DIR" && pwd)"
+printf 'Next steps:\n'
+printf '1. Fill in AGENTS.md, CLAUDE.md, and the files under .agents/.\n'
+printf '2. Keep .agents/ current as part of normal development.\n'
+printf '3. Use the shared playbooks from either Codex or Claude.\n'
