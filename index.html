@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APEX Shared Brain</title>
+<title>APEX — Shared Brain for Codex and Claude</title>
 <style>
 :root {
   --bg: #f3efe7;
@@ -278,32 +278,32 @@ h1 {
   <section class="hero">
     <article class="hero-card">
       <div class="eyebrow"><span class="dot"></span> APEX Shared Brain</div>
-      <h1>One memory layer.<br>Two agents.</h1>
+      <h1>One brain.<br>Humans and agents, aligned.</h1>
       <p class="lead">
-        APEX is now an installable scaffold for Codex and Claude. The shared brain lives in
-        <code>.agents/</code>, workflows live in <code>.agents/playbooks/</code>, and each tool gets
-        a thin native entry point instead of pretending both runtimes discover the same local skills.
+        APEX is an installable scaffold that gives your whole team — humans, Claude, and Codex —
+        a single shared memory layer. Install once, initialize with <code>/apex-init</code>,
+        and every session starts with full context.
       </p>
       <div class="hero-actions">
-        <a class="button primary" href="#install">Install the scaffold</a>
+        <a class="button primary" href="#" data-goto="install">Get started</a>
         <a class="button secondary" href="README.md">Read the README</a>
       </div>
     </article>
 
     <aside class="hero-card hero-side">
-      <h2>What changed</h2>
+      <h2>How it works</h2>
       <div class="stack">
         <div class="mini">
-          <strong>No more fake cross-tool skill parity</strong>
-          Codex is driven by <code>AGENTS.md</code>. Claude is driven by <code>CLAUDE.md</code> and optional command wrappers.
+          <strong>1 · Install</strong>
+          Run <code>install-apex.sh</code> in your project. Gets the scaffold in place in seconds.
         </div>
         <div class="mini">
-          <strong>Installable, not just presentational</strong>
-          The repo now ships a real template and an installer script.
+          <strong>2 · Init</strong>
+          Run <code>/apex-init</code> in Claude Code. Claude reads the codebase and fills <code>.agents/</code> automatically.
         </div>
         <div class="mini">
-          <strong>Shared docs guide exploration</strong>
-          The map narrows the search space; it does not replace source validation.
+          <strong>3 · Work</strong>
+          Use <code>/apex-start</code> to load context, <code>/apex-end</code> to close. Every session stays in sync.
         </div>
       </div>
     </aside>
@@ -311,96 +311,194 @@ h1 {
 
   <div class="tabs" role="tablist" aria-label="APEX sections">
     <button class="tab active" data-page="overview" type="button">Overview</button>
-    <button class="tab" data-page="install" type="button">Install</button>
+    <button class="tab" data-page="install" type="button">Get started</button>
+    <button class="tab" data-page="playbooks" type="button">Playbooks</button>
     <button class="tab" data-page="layout" type="button">Layout</button>
     <button class="tab" data-page="compatibility" type="button">Compatibility</button>
   </div>
 
+  <!-- OVERVIEW -->
   <section class="panel page active" id="page-overview">
     <div class="section grid">
       <div class="callout warning">
-        <strong>Design rule</strong>
+        <strong>Core rule</strong>
         Shared memory is an accelerator. It is not permission to skip reading the code that is about to change.
       </div>
       <div class="grid two">
         <div class="callout">
-          <strong>Shared layer</strong>
-          <div><code>.agents/</code> stores context, map, tasks, progress, decisions, contracts, and schema notes.</div>
+          <strong>Shared memory layer</strong>
+          <div><code>.agents/</code> holds context, map, schema, tasks, progress, decisions, and contracts. Every tool and contributor reads the same files.</div>
         </div>
         <div class="callout">
           <strong>Workflow layer</strong>
-          <div><code>.agents/playbooks/</code> holds cross-model workflows for session start, wrap-up, planning, and DB work.</div>
+          <div><code>.agents/playbooks/</code> holds model-agnostic workflows. Both Codex and Claude follow the same playbooks.</div>
         </div>
         <div class="callout">
-          <strong>Codex layer</strong>
-          <div><code>AGENTS.md</code> tells Codex how to use the shared brain and which playbook to open for each task shape.</div>
+          <strong>Codex entry point</strong>
+          <div><code>AGENTS.md</code> is user-owned. It tells Codex where the shared brain lives and which playbook to open per task shape.</div>
         </div>
         <div class="callout">
-          <strong>Claude layer</strong>
-          <div><code>CLAUDE.md</code> points to the same playbooks. Optional <code>.claude/commands/</code> files wrap them for slash commands.</div>
+          <strong>Claude entry point</strong>
+          <div><code>CLAUDE.md</code> is user-owned. It points to the same playbooks. <code>.claude/commands/</code> are optional slash-command wrappers.</div>
+        </div>
+        <div class="callout">
+          <strong>Active-work signal</strong>
+          <div>Mark tasks with <code>🔒 ACTIVO: Name · date</code> when working on them. Prevents two agents or contributors from taking the same task.</div>
+        </div>
+        <div class="callout">
+          <strong>Session attribution</strong>
+          <div>Every <code>PROGRESS.md</code> entry records who did the work: a human name, Claude, or Codex. Full history, no ambiguity.</div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- GET STARTED -->
   <section class="panel page" id="page-install">
     <div class="section grid" id="install">
-      <h2>Install into a real project</h2>
+      <h2>Get started in three steps</h2>
+
+      <div class="callout">
+        <strong>Step 1 — Install the scaffold</strong>
+        <div style="margin-top:10px">Run from the APEX repo into your project:</div>
+      </div>
       <div class="code">
 <pre>./scripts/install-apex.sh /path/to/project --project-name "My Project"</pre>
       </div>
       <div class="grid two">
         <div class="callout">
-          <strong>Default behavior</strong>
-          Existing files are preserved. The installer skips anything already present unless you pass <code>--force</code>.
+          <strong>CLAUDE.md and AGENTS.md are never overwritten</strong>
+          Those files are yours. The installer creates them only if they don't exist, even with <code>--force</code>.
         </div>
         <div class="callout">
-          <strong>Overwrite behavior</strong>
-          <code>./scripts/install-apex.sh . --force</code>
+          <strong>Refresh framework files</strong>
+          <code>./scripts/install-apex.sh . --force</code> updates playbooks and commands without touching your entry points.
         </div>
       </div>
-      <ol class="list">
-        <li>Fill in the placeholders in <code>AGENTS.md</code>, <code>CLAUDE.md</code>, and <code>.agents/</code>.</li>
-        <li>Commit the scaffold with your project.</li>
-        <li>Keep shared memory current as code, contracts, and schema evolve.</li>
-      </ol>
+
+      <div class="callout">
+        <strong>Step 2 — Initialize the shared brain</strong>
+        <div style="margin-top:10px">Open Claude Code in your project and run:</div>
+      </div>
+      <div class="code">
+<pre>/apex-init</pre>
+      </div>
+      <div class="grid two">
+        <div class="callout">
+          <strong>What Claude does automatically</strong>
+          Reads your stack, maps modules, detects schema, then asks if you have existing tasks to import before writing anything.
+        </div>
+        <div class="callout">
+          <strong>What you do after</strong>
+          Review the generated files. Correct anything Claude could not infer. Fill in Known Risks and Decisions manually.
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Step 3 — Start your first session</strong>
+        <div style="margin-top:10px">From any session, in Claude Code or Codex:</div>
+      </div>
+      <div class="code">
+<pre>/apex-start</pre>
+      </div>
+      <div class="code">
+<pre>SESSION LOADED
+Project: My App · Mode: ACTIVE
+Last completed: T-003 — Auth migration
+Active task:    T-004 — Payment webhook
+Blocked: none · Risks: none</pre>
+      </div>
     </div>
   </section>
 
+  <!-- PLAYBOOKS -->
+  <section class="panel page" id="page-playbooks">
+    <div class="section grid">
+      <h2>Playbooks</h2>
+      <div class="callout warning">
+        <strong>Playbooks are the source of truth.</strong>
+        <code>.claude/commands/</code> are thin wrappers that open the corresponding playbook. No logic lives in the commands.
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Playbook</th>
+            <th>Claude command</th>
+            <th>When to use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>init.md</code></td>
+            <td><code>/apex-init</code></td>
+            <td>Once, after install. Claude reads the codebase and fills <code>.agents/</code>. Asks about existing tasks before writing.</td>
+          </tr>
+          <tr>
+            <td><code>start-session.md</code></td>
+            <td><code>/apex-start</code></td>
+            <td>Beginning of every work session. Loads shared brain and surfaces the active task.</td>
+          </tr>
+          <tr>
+            <td><code>end-session.md</code></td>
+            <td><code>/apex-end</code></td>
+            <td>End of every session. Updates PROGRESS, TASKS, MAP, SCHEMA, and suggests a commit message.</td>
+          </tr>
+          <tr>
+            <td><code>plan-feature.md</code></td>
+            <td><code>/apex-plan</code></td>
+            <td>Before implementing anything that spans multiple modules or touches contracts.</td>
+          </tr>
+          <tr>
+            <td><code>db-change.md</code></td>
+            <td><code>/apex-schema</code></td>
+            <td>Any migration, schema edit, query rewrite, or DB-dependent feature. Stops for approval before destructive changes.</td>
+          </tr>
+          <tr>
+            <td><code>onboard.md</code></td>
+            <td><code>/apex-onboard</code></td>
+            <td>When a new human or agent joins. Walks through setup checklist and suggests the first task.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- LAYOUT -->
   <section class="panel page" id="page-layout">
     <div class="section grid">
       <h2>Scaffold layout</h2>
       <div class="tree">
 <pre>your-project/
-├── AGENTS.md
-├── CLAUDE.md
+├── AGENTS.md                    ← Codex entry point (user-owned, never overwritten)
+├── CLAUDE.md                    ← Claude entry point (user-owned, never overwritten)
 ├── .agents/
-│   ├── CONTEXT.md
-│   ├── MAP.md
-│   ├── SCHEMA.md
-│   ├── TASKS.md
-│   ├── PROGRESS.md
-│   ├── DECISIONS.md
-│   ├── CONTRACTS.md
+│   ├── CONTEXT.md               stack, services, env vars, constraints
+│   ├── MAP.md                   codebase map + last-verified commit
+│   ├── SCHEMA.md                DB view + last-verified commit
+│   ├── TASKS.md                 work queue with 🔒 ACTIVO ownership signal
+│   ├── PROGRESS.md              session log with human/agent attribution
+│   ├── DECISIONS.md             architectural decisions (ADR format)
+│   ├── CONTRACTS.md             stable interfaces + change log
 │   └── playbooks/
+│       ├── init.md
 │       ├── start-session.md
 │       ├── end-session.md
+│       ├── plan-feature.md
 │       ├── db-change.md
-│       └── plan-feature.md
+│       └── onboard.md
 └── .claude/
     └── commands/
+        ├── apex-init.md
         ├── apex-start.md
         ├── apex-end.md
+        ├── apex-plan.md
         ├── apex-schema.md
-        └── apex-plan.md</pre>
-      </div>
-      <div class="callout">
-        <strong>Important</strong>
-        The playbooks are the source of truth for workflows. Claude wrappers are conveniences only.
+        └── apex-onboard.md</pre>
       </div>
     </div>
   </section>
 
+  <!-- COMPATIBILITY -->
   <section class="panel page" id="page-compatibility">
     <div class="section grid">
       <h2>Compatibility model</h2>
@@ -429,19 +527,24 @@ h1 {
             <td><code>.agents/playbooks/</code></td>
           </tr>
           <tr>
-            <td>Convenience commands</td>
-            <td>Use natural language or agent instructions</td>
-            <td>Optional <code>.claude/commands/</code> wrappers</td>
+            <td>Init (fill shared brain)</td>
+            <td>Follow <code>init.md</code> manually or via instructions in <code>AGENTS.md</code></td>
+            <td><code>/apex-init</code> slash command</td>
+          </tr>
+          <tr>
+            <td>Session commands</td>
+            <td>Natural language: "start session", "end session"</td>
+            <td><code>/apex-start</code>, <code>/apex-end</code></td>
           </tr>
           <tr>
             <td>Safe assumption</td>
-            <td>Explicit playbook references</td>
-            <td>Explicit playbook references</td>
+            <td>Explicit playbook references in <code>AGENTS.md</code></td>
+            <td>Explicit playbook references in <code>CLAUDE.md</code></td>
           </tr>
         </tbody>
       </table>
       <div class="footer-note">
-        If your environment supports richer local skill discovery, add it as an optimization. Do not make that optimization the foundation of the framework.
+        The playbooks are plain markdown committed with your project. If tool support changes, the playbooks remain valid and can be followed manually.
       </div>
     </div>
   </section>
@@ -451,14 +554,21 @@ h1 {
 const tabs = Array.from(document.querySelectorAll(".tab"));
 const pages = Array.from(document.querySelectorAll(".page"));
 
-function showPage(pageId, tab) {
+function showPage(pageId) {
   pages.forEach((page) => page.classList.toggle("active", page.id === `page-${pageId}`));
-  tabs.forEach((item) => item.classList.toggle("active", item === tab));
+  tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.page === pageId));
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 tabs.forEach((tab) => {
-  tab.addEventListener("click", () => showPage(tab.dataset.page, tab));
+  tab.addEventListener("click", () => showPage(tab.dataset.page));
+});
+
+document.querySelectorAll("[data-goto]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    showPage(el.dataset.goto);
+  });
 });
 </script>
 </body>

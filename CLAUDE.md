@@ -35,7 +35,7 @@ framework.apex/
 │   ├── AGENTS.md             # Codex entry point template
 │   ├── CLAUDE.md             # Claude entry point template
 │   ├── .agents/              # Shared project memory templates
-│   │   └── playbooks/        # Model-agnostic workflow templates (start, end, db, plan, onboard)
+│   │   └── playbooks/        # Model-agnostic workflow templates (init, start, end, db, plan, onboard)
 │   └── .claude/commands/     # Claude slash-command wrappers (point to playbooks)
 └── index.html                # Static reference page (documentation only)
 ```
