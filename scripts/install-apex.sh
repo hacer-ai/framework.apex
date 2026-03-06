@@ -59,6 +59,24 @@ escape_sed() {
 
 PROJECT_NAME_ESCAPED="$(escape_sed "$PROJECT_NAME")"
 
+# Copy a user-owned file: only create if missing, never overwrite (even with --force).
+copy_user_file() {
+  local rel="$1"
+  local src="$TEMPLATE_DIR/$rel"
+  local dst="$TARGET_DIR/$rel"
+
+  mkdir -p "$(dirname "$dst")"
+
+  if [[ -e "$dst" ]]; then
+    printf 'skip  %s (already exists — not overwritten)\n' "$rel"
+    return
+  fi
+
+  sed "s/__PROJECT_NAME__/$PROJECT_NAME_ESCAPED/g" "$src" > "$dst"
+  printf 'write %s\n' "$rel"
+}
+
+# Copy a framework file: skip if exists, overwrite only when --force is set.
 copy_file() {
   local rel="$1"
   local src="$TEMPLATE_DIR/$rel"
@@ -75,9 +93,14 @@ copy_file() {
   printf 'write %s\n' "$rel"
 }
 
-FILES=(
+# User-owned entry-point files — never overwritten.
+USER_FILES=(
   "AGENTS.md"
   "CLAUDE.md"
+)
+
+# Framework files — safe to overwrite with --force.
+FILES=(
   ".agents/CONTEXT.md"
   ".agents/MAP.md"
   ".agents/SCHEMA.md"
@@ -89,11 +112,17 @@ FILES=(
   ".agents/playbooks/end-session.md"
   ".agents/playbooks/db-change.md"
   ".agents/playbooks/plan-feature.md"
+  ".agents/playbooks/onboard.md"
   ".claude/commands/apex-start.md"
   ".claude/commands/apex-end.md"
   ".claude/commands/apex-schema.md"
   ".claude/commands/apex-plan.md"
+  ".claude/commands/apex-onboard.md"
 )
+
+for file in "${USER_FILES[@]}"; do
+  copy_user_file "$file"
+done
 
 for file in "${FILES[@]}"; do
   copy_file "$file"
