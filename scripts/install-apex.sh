@@ -108,11 +108,13 @@ FILES=(
   ".agents/PROGRESS.md"
   ".agents/DECISIONS.md"
   ".agents/CONTRACTS.md"
+  ".agents/playbooks/init.md"
   ".agents/playbooks/start-session.md"
   ".agents/playbooks/end-session.md"
   ".agents/playbooks/db-change.md"
   ".agents/playbooks/plan-feature.md"
   ".agents/playbooks/onboard.md"
+  ".claude/commands/apex-init.md"
   ".claude/commands/apex-start.md"
   ".claude/commands/apex-end.md"
   ".claude/commands/apex-schema.md"
@@ -130,6 +132,7 @@ done
 
 printf '\nInstalled APEX shared-brain scaffold into %s\n' "$(cd "$TARGET_DIR" && pwd)"
 printf 'Next steps:\n'
-printf '1. Fill in AGENTS.md, CLAUDE.md, and the files under .agents/.\n'
-printf '2. Keep .agents/ current as part of normal development.\n'
-printf '3. Use the shared playbooks from either Codex or Claude.\n'
+printf '1. Open Claude Code in the project and run: /apex-init\n'
+printf '   Claude will read the codebase and fill in .agents/ automatically.\n'
+printf '2. Review and correct the generated files.\n'
+printf '3. Run /apex-start to begin the first work session.\n'

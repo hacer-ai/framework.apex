@@ -1,160 +1,186 @@
 # APEX — Shared Brain for Codex and Claude
 
-APEX is an installable project scaffold for keeping Codex and Claude aligned through a shared `.agents/` memory layer.
+APEX is an installable scaffold that gives a software team — humans and AI agents together — a single shared memory layer. Every session, every tool, and every contributor reads from and writes to the same `.agents/` folder.
 
-This version drops the weak assumption that both tools will auto-discover the same `SKILL.md` files. Instead:
+- `AGENTS.md` — Codex entry point
+- `CLAUDE.md` — Claude entry point
+- `.agents/` — shared project memory (context, map, schema, tasks, decisions, contracts)
+- `.agents/playbooks/` — model-agnostic workflows
+- `.claude/commands/` — optional Claude slash-command wrappers
 
-- `AGENTS.md` is the Codex entry point
-- `CLAUDE.md` is the Claude entry point
-- `.agents/` holds the shared project memory
-- `.agents/playbooks/` holds model-agnostic workflows
-- `.claude/commands/` contains optional Claude wrappers around the same playbooks
+One shared brain. Two thin entry points. No fake cross-tool parity.
 
-The result is simpler and more defensible: one shared brain, two thin entry points, and no dependency on undocumented cross-tool skill loading.
+---
 
-## Why this version is different
+## How to use APEX in three steps
 
-The previous proposal treated documentation as a replacement for code exploration and implied parity around local skill auto-discovery. That is too optimistic.
+### 1. Install the scaffold
 
-This repo now reflects a safer operating model:
-
-- Shared docs narrow the search space; they do not replace source inspection.
-- Codex compatibility is driven by `AGENTS.md` and shared playbooks.
-- Claude compatibility is driven by `CLAUDE.md` plus optional slash-command wrappers.
-- Database work always requires both shared-memory review and schema-source verification.
-
-## Repository layout
-
-```text
-framework.apex/
-├── README.md
-├── index.html
-├── scripts/
-│   └── install-apex.sh
-└── templates/
-    └── shared-brain/
-        ├── AGENTS.md
-        ├── CLAUDE.md
-        ├── .agents/
-        │   ├── CONTEXT.md
-        │   ├── MAP.md
-        │   ├── SCHEMA.md
-        │   ├── TASKS.md
-        │   ├── PROGRESS.md
-        │   ├── DECISIONS.md
-        │   ├── CONTRACTS.md
-        │   └── playbooks/
-        │       ├── start-session.md
-        │       ├── end-session.md
-        │       ├── db-change.md
-        │       ├── plan-feature.md
-        │       └── onboard.md
-        └── .claude/
-            └── commands/
-                ├── apex-start.md
-                ├── apex-end.md
-                ├── apex-schema.md
-                ├── apex-plan.md
-                └── apex-onboard.md
-```
-
-## Install into a project
-
-Run the installer from this repo:
+Run the installer from this repo into your project:
 
 ```sh
 ./scripts/install-apex.sh /path/to/your/project --project-name "My Project"
 ```
 
-For the current directory:
+Or for the current directory:
 
 ```sh
 ./scripts/install-apex.sh .
 ```
 
-If you want to overwrite existing APEX files:
+The installer creates all scaffold files. **It never overwrites `CLAUDE.md` or `AGENTS.md`** — those are yours. Framework files under `.agents/` and `.claude/commands/` can be refreshed with `--force`.
 
-```sh
-./scripts/install-apex.sh . --force
+### 2. Initialize the shared brain
+
+Open Claude Code inside the project and run:
+
+```
+/apex-init
 ```
 
-The installer copies the scaffold, fills in the project name, and leaves existing files untouched unless `--force` is passed.
+Claude reads the real codebase and fills in `.agents/` automatically:
+- Detects stack, services, and environment variables → writes `CONTEXT.md`
+- Maps folders and key modules → writes `MAP.md`
+- Reads migrations and ORM models → writes `SCHEMA.md` (if DB found)
+- Asks whether you have existing tasks to import → writes `TASKS.md`
 
-## After install
+After init, review the generated files and correct anything Claude could not infer.
 
-1. Fill in `AGENTS.md` and `CLAUDE.md` with team and project details.
-2. Replace placeholders in `.agents/`.
-3. Keep `.agents/` updated as part of normal work, especially after:
-   - architecture changes
-   - new modules
-   - API contract changes
-   - database changes
-   - task priority changes
+### 3. Start every work session
 
-## How the shared brain works
+```
+/apex-start
+```
 
-### `.agents/`
+Claude loads the shared brain and returns a compact handoff:
 
-This folder is durable project memory:
+```
+SESSION LOADED
+Project: My App · Mode: ACTIVE
+Last completed: T-003 — Auth migration
+Active task: T-004 — Payment webhook
+Blocked: none
+Risks: none
+```
 
-- `CONTEXT.md`: stack, services, environment assumptions
-- `MAP.md`: high-value map of the codebase
-- `SCHEMA.md`: application-facing database view
-- `TASKS.md`: current work queue with active-work signal (`🔒 ACTIVO`)
-- `PROGRESS.md`: session log with attribution (human / Claude / Codex)
-- `DECISIONS.md`: architectural decisions
-- `CONTRACTS.md`: stable interfaces between modules or teams, with change log
+---
 
-### `.agents/playbooks/`
+## Daily workflow
 
-These are shared workflows used by both tools:
+| When | Run | What happens |
+| --- | --- | --- |
+| Starting work | `/apex-start` | Loads shared brain, surfaces active task |
+| Planning a feature | `/apex-plan` | Plans across modules before writing code |
+| DB work | `/apex-schema` | Forces schema review before any migration |
+| New contributor | `/apex-onboard` | Structured onboarding checklist |
+| Ending work | `/apex-end` | Updates PROGRESS, TASKS, MAP, SCHEMA |
 
-- `start-session.md`
-- `end-session.md`
-- `db-change.md`
-- `plan-feature.md`
-- `onboard.md`
+---
 
-This is the cross-model layer. It is plain markdown, committed with the project, and referenced explicitly by both entry points.
+## Team conventions
 
-### `.claude/commands/`
+### Active-work signal
+When taking a task, add `🔒 ACTIVO` to the line in `TASKS.md`:
 
-These are optional Claude conveniences. They point back to the same playbooks and do not contain separate logic. If Claude command support changes, the shared playbooks remain valid.
+```md
+- [ ] T-004 — Payment webhook `[Ana]` 🔒 ACTIVO: Ana · 2026-03-06
+```
 
-## Model compatibility
+Remove it when done or when committing. Prevents two agents or contributors from taking the same task simultaneously.
 
-### Codex
+### Session attribution
+Every entry in `PROGRESS.md` records who did the work:
 
-Codex reads `AGENTS.md`. The correct pattern is to instruct Codex there to use `.agents/` and the shared playbooks.
+```md
+### 2026-03-06 · Ana · work
+### 2026-03-06 · Claude · planning
+### 2026-03-06 · Codex · work
+```
 
-Do not rely on Codex discovering arbitrary local `SKILL.md` files unless your environment explicitly supports that behavior.
+### Staleness tracking
+`MAP.md` and `SCHEMA.md` include a "Última verificación" block with commit hash, date, and author. If the map contradicts the source, fix the map.
 
-### Claude
+---
 
-Claude reads `CLAUDE.md`. If you want slash commands, keep them as thin wrappers around `.agents/playbooks/`.
+## Shared brain files
 
-Do not duplicate the actual workflow logic inside `.claude/commands/`.
+| File | Purpose |
+| --- | --- |
+| `CONTEXT.md` | Stack, services, environment variables, constraints |
+| `MAP.md` | Codebase map with last-verified commit |
+| `SCHEMA.md` | Application-facing DB view with last-verified commit |
+| `TASKS.md` | Work queue with ownership and active-work signal |
+| `PROGRESS.md` | Session log with attribution per entry |
+| `DECISIONS.md` | Architectural decisions (ADR format) |
+| `CONTRACTS.md` | Stable interfaces between modules or teams, with change log |
+
+---
+
+## Playbooks
+
+Playbooks are model-agnostic markdown workflows in `.agents/playbooks/`. Both Codex and Claude follow the same playbooks.
+
+| Playbook | When to use |
+| --- | --- |
+| `init.md` | Once, after install — fills `.agents/` from the real codebase |
+| `start-session.md` | Beginning of every work session |
+| `end-session.md` | End of every work session |
+| `plan-feature.md` | Before implementing anything that spans multiple modules |
+| `db-change.md` | Any migration, schema edit, or DB-dependent feature |
+| `onboard.md` | When a new human or agent joins the project |
+
+`.claude/commands/` are thin wrappers that open the corresponding playbook. No logic lives in the commands themselves.
+
+---
+
+## Scaffold layout
+
+```text
+your-project/
+├── AGENTS.md                        ← Codex entry point (user-owned)
+├── CLAUDE.md                        ← Claude entry point (user-owned)
+├── .agents/
+│   ├── CONTEXT.md
+│   ├── MAP.md
+│   ├── SCHEMA.md
+│   ├── TASKS.md
+│   ├── PROGRESS.md
+│   ├── DECISIONS.md
+│   ├── CONTRACTS.md
+│   └── playbooks/
+│       ├── init.md
+│       ├── start-session.md
+│       ├── end-session.md
+│       ├── plan-feature.md
+│       ├── db-change.md
+│       └── onboard.md
+└── .claude/
+    └── commands/
+        ├── apex-init.md
+        ├── apex-start.md
+        ├── apex-end.md
+        ├── apex-plan.md
+        ├── apex-schema.md
+        └── apex-onboard.md
+```
+
+---
 
 ## Operating rules
 
-- Shared memory is an accelerator, not a substitute for source validation.
-- If the map is stale, fix the map.
-- For DB work, check both `SCHEMA.md` and real schema sources.
-- Record decisions once in `DECISIONS.md` instead of re-debating them.
-- Use `TASKS.md` to coordinate ownership, but verify active code state before editing.
+- Shared memory is an accelerator, not a substitute for reading the code that is about to change.
+- If the map is stale, fix the map before using it.
+- For DB work, always check both `SCHEMA.md` and the real migration/ORM source.
+- Record decisions once in `DECISIONS.md` — stop re-debating them.
+- When a contract changes, update `CONTRACTS.md` and notify all listed consumers.
+- If `🔒 ACTIVO` is on a task, coordinate before taking it.
 
-## Open the reference
+---
 
-The repo still ships a static reference page:
+## View the reference page
 
 ```sh
 open index.html
-```
-
-Or serve it locally:
-
-```sh
+# or
 python3 -m http.server 8080
 ```
-
-The HTML is now documentation for the installable scaffold, not the scaffold itself.
