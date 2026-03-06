@@ -3,649 +3,840 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APEX v2 — Claude Code Framework</title>
+<title>APEX v3 — Claude Code Framework</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
-  :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #18181f;
-    --border: #2a2a35;
-    --accent: #c8f060;
-    --accent2: #60a0f0;
-    --accent3: #f06080;
-    --accent4: #f0c060;
-    --text: #e8e8f0;
-    --muted: #7070a0;
-    --new: #c8f060;
-    --active: #60a0f0;
-    --stable: #a060f0;
-    --db: #f0c060;
-  }
+:root {
+  --bg: #ffffff;
+  --bg-subtle: #f9f9fb;
+  --bg-muted: #f3f3f7;
+  --border: #e5e5ea;
+  --border-strong: #d1d1d8;
+  --text: #1a1a2e;
+  --text-2: #4a4a6a;
+  --text-muted: #8888aa;
+  --accent: #7c3aed;
+  --accent-light: #f3eeff;
+  --accent-mid: #ddd6fe;
+  --green: #059669;
+  --green-light: #ecfdf5;
+  --amber: #d97706;
+  --amber-light: #fffbeb;
+  --blue: #2563eb;
+  --blue-light: #eff6ff;
+  --red: #dc2626;
+  --red-light: #fef2f2;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; font-size: 13px; line-height: 1.7; min-height: 100vh; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* NAV TABS */
-  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 100; overflow-x: auto; }
-  .tab { padding: 14px 24px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; }
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+}
 
-  /* HEADER */
-  header { border-bottom: 1px solid var(--border); padding: 36px 48px 28px; position: relative; overflow: hidden; }
-  header::before { content: ''; position: absolute; top: -80px; left: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(200,240,96,0.05) 0%, transparent 70%); pointer-events: none; }
-  .header-tag { font-size: 10px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; }
-  h1 { font-family: 'Fraunces', serif; font-size: 46px; font-weight: 900; line-height: 1; letter-spacing: -2px; margin-bottom: 6px; }
-  h1 span { color: var(--accent); }
-  .subtitle { color: var(--muted); font-size: 12px; max-width: 620px; }
-  .mode-badges { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
-  .badge { padding: 3px 10px; border-radius: 2px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; border: 1px solid; }
-  .badge-new { border-color: var(--new); color: var(--new); background: rgba(200,240,96,0.06); }
-  .badge-active { border-color: var(--active); color: var(--active); background: rgba(96,160,240,0.06); }
-  .badge-stable { border-color: var(--stable); color: var(--stable); background: rgba(160,96,240,0.06); }
-  .badge-db { border-color: var(--db); color: var(--db); background: rgba(240,192,96,0.06); }
-  .badge-cmd { border-color: var(--accent3); color: var(--accent3); background: rgba(240,96,128,0.06); }
+/* ─── TOPBAR ─── */
+.topbar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 48px;
+  overflow-x: auto;
+}
+.logo {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--accent);
+  margin-right: 24px;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.logo-dot { color: var(--text-muted); font-weight: 300; }
+.tab {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s;
+  gap: 6px;
+}
+.tab:hover { color: var(--text-2); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-icon { font-size: 14px; }
 
-  /* SECTIONS */
-  .page { display: none; max-width: 1060px; margin: 0 auto; padding: 36px 48px 80px; }
-  .page.active { display: block; }
-  section { margin-bottom: 56px; }
-  .section-label { font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-  .section-title { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 16px; letter-spacing: -0.5px; }
-  .section-desc { color: var(--muted); font-size: 12px; line-height: 1.9; max-width: 680px; margin-bottom: 20px; }
+/* ─── LAYOUT ─── */
+.page { display: none; }
+.page.active { display: block; }
+.container { max-width: 900px; margin: 0 auto; padding: 40px 32px 80px; }
 
-  /* TREE */
-  .tree { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px; }
-  .tree-item { display: flex; gap: 12px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.03); align-items: flex-start; }
-  .tree-item:last-child { border-bottom: none; }
-  .tree-path { color: var(--accent); min-width: 260px; font-size: 12px; }
-  .tree-path .dir { color: var(--muted); }
-  .tree-desc { color: var(--muted); font-size: 11px; line-height: 1.5; }
-  .tree-tag { margin-left: 6px; font-size: 9px; padding: 1px 5px; border-radius: 2px; letter-spacing: 1px; }
-  .tag-always { background: rgba(200,240,96,0.15); color: var(--accent); }
-  .tag-update { background: rgba(96,160,240,0.15); color: var(--accent2); }
-  .tag-db { background: rgba(240,192,96,0.15); color: var(--db); }
-  .tag-cmd { background: rgba(240,96,128,0.15); color: var(--accent3); }
+/* ─── TYPOGRAPHY ─── */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.4px;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.lead {
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.75;
+  max-width: 640px;
+  margin-bottom: 24px;
+}
 
-  /* FLOW */
-  .flow { display: flex; align-items: stretch; gap: 0; overflow-x: auto; padding-bottom: 4px; }
-  .flow-step { background: var(--surface); border: 1px solid var(--border); padding: 14px 18px; min-width: 150px; flex: 1; position: relative; }
-  .flow-step::after { content: '→'; position: absolute; right: -13px; top: 50%; transform: translateY(-50%); color: var(--muted); z-index: 2; background: var(--bg); padding: 2px 3px; font-size: 12px; }
-  .flow-step:last-child::after { display: none; }
-  .flow-num { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 900; opacity: 0.2; margin-bottom: 3px; }
-  .flow-name { font-size: 11px; font-weight: 500; color: var(--accent); margin-bottom: 3px; }
-  .flow-desc { font-size: 10px; color: var(--muted); line-height: 1.5; }
+section { margin-bottom: 48px; }
 
-  /* PROMPT CARDS */
-  .prompt-grid { display: grid; gap: 20px; }
-  .prompt-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-  .prompt-card.mode-new { border-left: 3px solid var(--new); }
-  .prompt-card.mode-active { border-left: 3px solid var(--active); }
-  .prompt-card.mode-stable { border-left: 3px solid var(--stable); }
-  .prompt-card.mode-existing { border-left: 3px solid var(--accent4); }
-  .prompt-card.mode-db { border-left: 3px solid var(--db); }
-  .prompt-card.mode-cmd { border-left: 3px solid var(--accent3); }
-  .card-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
-  .card-header:hover { background: rgba(255,255,255,0.02); }
-  .card-num { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 900; opacity: 0.25; min-width: 28px; }
-  .card-title-group { flex: 1; }
-  .card-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
-  .card-when { font-size: 10px; color: var(--muted); }
-  .card-toggle { font-size: 18px; color: var(--muted); transition: transform 0.2s; line-height: 1; }
-  .card-toggle.open { transform: rotate(45deg); }
-  .card-body { display: none; }
-  .card-body.open { display: block; }
-  .prompt-block { padding: 18px 20px; border-bottom: 1px solid var(--border); }
-  .prompt-block:last-child { border-bottom: none; }
-  .prompt-label { font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-  .prompt-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-  .prompt-text { background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 16px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text); line-height: 1.85; white-space: pre-wrap; position: relative; }
-  .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 3px 9px; font-family: 'DM Mono', monospace; font-size: 10px; cursor: pointer; border-radius: 2px; letter-spacing: 1px; transition: all 0.15s; }
-  .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
-  .copy-btn.copied { color: var(--accent); border-color: var(--accent); }
-  .kw { color: var(--accent); }
-  .str { color: var(--accent2); }
-  .cmt { color: var(--muted); font-style: italic; }
-  .var { color: var(--accent3); }
-  .db-color { color: var(--db); }
+/* ─── CALLOUT ─── */
+.callout {
+  display: flex;
+  gap: 12px;
+  background: var(--accent-light);
+  border: 1px solid var(--accent-mid);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+.callout.green { background: var(--green-light); border-color: #a7f3d0; }
+.callout.amber { background: var(--amber-light); border-color: #fde68a; }
+.callout.blue { background: var(--blue-light); border-color: #bfdbfe; }
+.callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.callout-body {}
+.callout-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.callout-desc { font-size: 13px; color: var(--text-2); line-height: 1.65; }
+.callout-desc code { background: rgba(124,58,237,0.1); color: var(--accent); padding: 1px 5px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
 
-  /* FILE CARDS */
-  .file-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 14px; overflow: hidden; }
-  .file-card-header { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-bottom: 1px solid var(--border); cursor: pointer; }
-  .file-card-header:hover { background: rgba(255,255,255,0.02); }
-  .file-name { color: var(--accent); font-size: 12px; font-weight: 500; flex: 1; }
-  .file-name.db { color: var(--db); }
-  .file-name.cmd { color: var(--accent3); }
-  .file-purpose { color: var(--muted); font-size: 11px; }
-  .file-toggle { color: var(--muted); font-size: 16px; transition: transform 0.2s; }
-  .file-toggle.open { transform: rotate(45deg); }
-  .file-content { display: none; padding: 14px 18px; }
-  .file-content.open { display: block; }
-  .file-text { background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 14px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text); line-height: 1.9; white-space: pre-wrap; position: relative; }
+/* ─── TREE ─── */
+.tree {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.tree-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+.tree-row:last-child { border-bottom: none; }
+.tree-row:hover { background: var(--bg-muted); }
+.tree-path {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  min-width: 260px;
+  flex-shrink: 0;
+}
+.tree-path .dim { color: var(--text-muted); }
+.tree-desc { font-size: 12px; color: var(--text-2); line-height: 1.5; flex: 1; }
+.pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 99px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.pill-purple { background: var(--accent-light); color: var(--accent); }
+.pill-green { background: var(--green-light); color: var(--green); }
+.pill-amber { background: var(--amber-light); color: var(--amber); }
+.pill-blue { background: var(--blue-light); color: var(--blue); }
+.pill-red { background: var(--red-light); color: var(--red); }
 
-  /* ENFORCEMENT TABLE */
-  .enforce-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .enforce-table th { text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--border); color: var(--muted); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 400; }
-  .enforce-table td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
-  .enforce-table tr:last-child td { border-bottom: none; }
-  .enforce-table tr:hover td { background: rgba(255,255,255,0.02); }
-  .enforce-method { color: var(--accent); font-weight: 500; }
-  .enforce-effort { font-size: 10px; padding: 2px 8px; border-radius: 2px; display: inline-block; }
-  .effort-zero { background: rgba(200,240,96,0.12); color: var(--new); }
-  .effort-low { background: rgba(96,160,240,0.12); color: var(--active); }
-  .effort-med { background: rgba(240,192,96,0.12); color: var(--db); }
-  .enforce-desc { color: var(--muted); font-size: 11px; line-height: 1.6; }
-  .enforce-rec { color: var(--accent3); font-size: 10px; }
+/* ─── FLOW ─── */
+.flow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+@media (max-width: 640px) { .flow { grid-template-columns: 1fr; } }
+.flow-step {
+  background: var(--bg);
+  padding: 16px;
+  position: relative;
+}
+.flow-step:hover { background: var(--bg-subtle); }
+.flow-num {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.flow-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.flow-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+.flow-cmd {
+  display: inline-block;
+  margin-top: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
 
-  /* TIPS GRID */
-  .tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  @media (max-width: 600px) { .tips-grid { grid-template-columns: 1fr; } }
-  .tip { background: var(--surface); border: 1px solid var(--border); padding: 14px; border-radius: 3px; }
-  .tip-icon { font-size: 16px; margin-bottom: 6px; }
-  .tip-title { font-size: 11px; font-weight: 500; color: var(--text); margin-bottom: 5px; }
-  .tip-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
+/* ─── CARDS ─── */
+.card-stack { display: flex; flex-direction: column; gap: 12px; }
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.card:hover { border-color: var(--border-strong); }
+.card.accent-purple { border-left: 3px solid var(--accent); }
+.card.accent-green { border-left: 3px solid var(--green); }
+.card.accent-amber { border-left: 3px solid var(--amber); }
+.card.accent-blue { border-left: 3px solid var(--blue); }
 
-  /* CALLOUT */
-  .callout { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 14px 18px; border-radius: 3px; margin-bottom: 20px; }
-  .callout.db { border-left-color: var(--db); }
-  .callout.cmd { border-left-color: var(--accent3); }
-  .callout-title { font-size: 11px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-  .callout-desc { font-size: 11px; color: var(--muted); line-height: 1.7; }
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid transparent;
+  transition: background 0.1s;
+}
+.card-header:hover { background: var(--bg-subtle); }
+.card-header.open { border-bottom-color: var(--border); }
+.card-emoji { font-size: 16px; flex-shrink: 0; }
+.card-meta { flex: 1; min-width: 0; }
+.card-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 1px; }
+.card-sub { font-size: 11px; color: var(--text-muted); }
+.card-toggle {
+  color: var(--text-muted);
+  font-size: 18px;
+  transition: transform 0.2s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.card-toggle.open { transform: rotate(45deg); }
+.card-body { display: none; }
+.card-body.open { display: block; }
 
-  .divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+/* ─── PROMPT BLOCKS ─── */
+.prompt-section {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.prompt-section:last-child { border-bottom: none; }
+.prompt-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.code-block {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  position: relative;
+  word-break: break-word;
+}
+.code-block .cm { color: var(--text-muted); font-style: italic; }
+.code-block .kw { color: var(--accent); font-weight: 500; }
+.code-block .val { color: var(--blue); }
+.code-block .hi { color: var(--green); font-weight: 500; }
+.code-block .warn { color: var(--amber); }
+
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 3px 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.15s;
+}
+.copy-btn:hover { color: var(--accent); border-color: var(--accent-mid); background: var(--accent-light); }
+.copy-btn.copied { color: var(--green); border-color: #a7f3d0; background: var(--green-light); }
+
+/* ─── TABLE ─── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.data-table th {
+  background: var(--bg-subtle);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+.data-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg-subtle); }
+.td-name { color: var(--text); font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.td-rec { color: var(--accent); font-size: 11px; font-weight: 600; }
+
+/* ─── 2-COL GRID ─── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+.info-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+.info-card .ic-icon { font-size: 18px; margin-bottom: 6px; }
+.info-card .ic-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.info-card .ic-desc { font-size: 12px; color: var(--text-2); line-height: 1.6; }
+.info-card code { background: var(--border); color: var(--text); padding: 1px 4px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+
+/* ─── DIFF COMPARE ─── */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+.compare-col { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.compare-head {
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.compare-head.purple { background: var(--accent-light); color: var(--accent); }
+.compare-head.blue { background: var(--blue-light); color: var(--blue); }
+.compare-body { padding: 14px; font-size: 12px; color: var(--text-2); line-height: 1.75; }
+.compare-body code { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--bg-muted); padding: 1px 5px; border-radius: 3px; color: var(--text); }
+.compare-row { padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; gap: 8px; }
+.compare-row:last-child { border-bottom: none; }
+.cr-key { color: var(--text-muted); font-size: 11px; min-width: 80px; }
+.cr-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text); }
+
+hr.divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-subtle); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 6px; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-tag">// Claude Code Operating Framework — v2</div>
-  <h1>APEX<span>.</span></h1>
-  <div class="subtitle">Adaptive Project EXecution — Token-efficient context system for Claude Code. Mixed teams, all project phases, enforced via slash commands.</div>
-  <div class="mode-badges">
-    <span class="badge badge-new">◆ New</span>
-    <span class="badge badge-active">◆ Active Dev</span>
-    <span class="badge badge-stable">◆ Stable</span>
-    <span class="badge" style="border-color:var(--accent4);color:var(--accent4);background:rgba(240,192,96,0.06)">◆ Existing Project</span>
-    <span class="badge badge-db">◆ DB Schema</span>
-    <span class="badge badge-cmd">◆ Slash Commands</span>
+<nav class="topbar">
+  <div class="logo">
+    <span>APEX</span><span class="logo-dot">·</span><span style="font-weight:400;color:var(--text-muted);font-size:12px">v3</span>
   </div>
-</header>
+  <div class="tab active" onclick="showPage('overview')"><span class="tab-icon">◻</span> Overview</div>
+  <div class="tab" onclick="showPage('setup')"><span class="tab-icon">⚡</span> Setup</div>
+  <div class="tab" onclick="showPage('skills')"><span class="tab-icon">✦</span> Skills</div>
+  <div class="tab" onclick="showPage('schema')"><span class="tab-icon">⬡</span> DB Schema</div>
+  <div class="tab" onclick="showPage('multimodel')"><span class="tab-icon">⇄</span> Multi-Model</div>
+  <div class="tab" onclick="showPage('linear')"><span class="tab-icon">⬡</span> Linear</div>
+  <div class="tab" onclick="showPage('templates')"><span class="tab-icon">◈</span> Templates</div>
+</nav>
 
-<div class="tabs">
-  <div class="tab active" onclick="showPage('structure')">📁 Structure</div>
-  <div class="tab" onclick="showPage('setup')">🚀 Setup Prompts</div>
-  <div class="tab" onclick="showPage('session')">⚡ Session Prompts</div>
-  <div class="tab" onclick="showPage('schema')">🗄 DB Schema</div>
-  <div class="tab" onclick="showPage('commands')">/ Slash Commands</div>
-  <div class="tab" onclick="showPage('enforce')">🔒 Enforcement</div>
-  <div class="tab" onclick="showPage('templates')">📄 File Templates</div>
-</div>
 
-<!-- ════════════════════════════════════════ PAGE: STRUCTURE -->
-<div class="page active" id="page-structure">
-  <section>
-    <div class="section-label">// The APEX Brain</div>
-    <div class="section-title">Your .claude/ folder — what lives where</div>
-    <div class="section-desc">Claude reads the map, not the territory. Every session begins with these files — not by scanning src/. Contractors onboard from this folder alone.</div>
-
-    <div class="tree">
-      <div class="tree-item"><div class="tree-path"><span class="dir">your-project/</span></div><div class="tree-desc" style="color:var(--muted)">project root</div></div>
-      <div class="tree-item"><div class="tree-path">  <span class="dir">├─ </span>CLAUDE.md</div><div class="tree-desc">Entry point. Golden rules. Points to .claude/ files. <span class="tree-tag tag-always">auto-read by Claude Code</span></div></div>
-      <div class="tree-item"><div class="tree-path">  <span class="dir">└─ .claude/</span></div><div class="tree-desc">Brain directory — git-tracked, never built/deployed.</div></div>
-      <div class="tree-item"><div class="tree-path">        <span class="dir">├─ </span>CONTEXT.md</div><div class="tree-desc">Stack, services, env vars, integrations. The "what and why". <span class="tree-tag tag-always">session start</span></div></div>
-      <div class="tree-item"><div class="tree-path">        <span class="dir">├─ </span>MAP.md</div><div class="tree-desc">Every module described. Replaces file scanning. Biggest token saver. <span class="tree-tag tag-always">session start</span></div></div>
-      <div class="tree-item"><div class="tree-path">        <span class="dir">├─ <span style="color:var(--db)">SCHEMA.md</span></span></div><div class="tree-desc">All tables, fields, types, relationships, indexes, constraints. <span class="tree-tag tag-db">check before any DB change</span></div></div>
-      <div class="tree-item"><div class="tree-path">        <span class="dir">├─ </span>TASKS.md</div><div class="tree-desc">Numbered sprint queue with [LEAD]/[CONTRACTOR] tags. <span class="tree-tag tag-update">update each session</span></div></div>
-      <div class="tree-item"><div class="tree-path">        <span class="dir">├─ </span>PROGRESS.md</div><div class="tree-desc">Milestone timeline + session log. Claude appends at session end. <span class="tree-tag tag-update">session end</span></div></div>
-      <div class="tree-item"><div class="tree-path">        <span class="dir">├─ </span>DECISIONS.md</div><div class="tree-desc">Architecture Decision Records. Never re-debate settled choices. <span class="tree-tag tag-update">when decided</span></div></div>
-      <div class="tree-item"><div class="tree-path">        <span class="dir">├─ </span>CONTRACTS.md</div><div class="tree-desc">API endpoints, shared interfaces, data contracts. <span class="tree-tag tag-update">on schema change</span></div></div>
-      <div class="tree-item"><div class="tree-path">        <span class="dir">└─ commands/</span></div><div class="tree-desc">Slash commands for Claude Code. Becomes /apex-start, /apex-end, etc. <span class="tree-tag tag-cmd">native Claude Code feature</span></div></div>
-      <div class="tree-item"><div class="tree-path">              <span class="dir">├─ </span>apex-start.md</div><div class="tree-desc">→ runs /apex-start in Claude Code</div></div>
-      <div class="tree-item"><div class="tree-path">              <span class="dir">├─ </span>apex-end.md</div><div class="tree-desc">→ runs /apex-end</div></div>
-      <div class="tree-item"><div class="tree-path">              <span class="dir">├─ </span>apex-schema.md</div><div class="tree-desc">→ runs /apex-schema — validates DB change against SCHEMA.md</div></div>
-      <div class="tree-item"><div class="tree-path">              <span class="dir">└─ </span>apex-plan.md</div><div class="tree-desc">→ runs /apex-plan — feature planning without writing code</div></div>
-    </div>
-  </section>
+<!-- ══════════ OVERVIEW ══════════ -->
+<div class="page active" id="page-overview">
+<div class="container">
 
   <section>
-    <div class="section-label">// Standard Session Loop</div>
-    <div class="section-title">How every session flows</div>
-    <div class="flow">
-      <div class="flow-step"><div class="flow-num">01</div><div class="flow-name">Load Brain</div><div class="flow-desc">Type /apex-start. Reads all context files silently.</div></div>
-      <div class="flow-step"><div class="flow-num">02</div><div class="flow-name">Read Tasks</div><div class="flow-desc">Knows what to work on. No asking. Picks next [LEAD] task.</div></div>
-      <div class="flow-step"><div class="flow-num">03</div><div class="flow-name">DB Check</div><div class="flow-desc">Any DB work? Type /apex-schema first. Validates against SCHEMA.md.</div></div>
-      <div class="flow-step"><div class="flow-num">04</div><div class="flow-name">Execute</div><div class="flow-desc">Works on task. Only reads files relevant to the task from MAP.md.</div></div>
-      <div class="flow-step"><div class="flow-num">05</div><div class="flow-name">End Session</div><div class="flow-desc">Type /apex-end. Updates PROGRESS, TASKS, SCHEMA if needed.</div></div>
-    </div>
-  </section>
-</div>
+    <div class="eyebrow">Claude Code Framework</div>
+    <h2>Read the map.<br>Don't explore the territory.</h2>
+    <p class="lead">APEX keeps a pre-digested <code style="font-family:'JetBrains Mono';font-size:12px;background:var(--bg-muted);padding:1px 5px;border-radius:3px">.claude/</code> brain per project. Every session starts by reading context files — not scanning source code. Skills auto-invoke the right workflow. Works with Claude Code and OpenAI Codex from the same files.</p>
 
-<!-- ════════════════════════════════════════ PAGE: SETUP -->
-<div class="page" id="page-setup">
-  <section>
-    <div class="section-label">// Project Setup</div>
-    <div class="section-title">Bootstrap APEX on any project</div>
-
-    <div class="callout">
-      <div class="callout-title">Two paths — pick yours</div>
-      <div class="callout-desc">
-        <strong style="color:var(--accent)">New project</strong> — Claude generates context from your description.<br>
-        <strong style="color:var(--accent4)">Existing project</strong> — Claude audits your codebase and generates context from reality.
+    <div class="callout green">
+      <div class="callout-icon">✦</div>
+      <div class="callout-body">
+        <div class="callout-title">v3 — What's new</div>
+        <div class="callout-desc">Skills replace slash commands (merged in Claude Code v2.1.3). Skills auto-invoke — Claude loads them only when relevant, loading metadata first and full instructions on demand. Token cost: near zero until needed. Cross-model: both Claude Code and Codex follow the <strong>open Agent Skills standard</strong>, so your <code>.agents/skills/</code> folder works in both tools.</div>
       </div>
     </div>
+  </section>
 
-    <div class="prompt-grid">
+  <section>
+    <div class="eyebrow">Folder Structure</div>
+    <h2>The APEX brain</h2>
+    <p class="lead">One <code style="font-family:'JetBrains Mono';font-size:12px;background:var(--bg-muted);padding:1px 5px;border-radius:3px">.agents/</code> folder shared across Claude Code and Codex. Two thin entry-point files pointing to the same brain.</p>
 
-      <div class="prompt-card mode-new">
+    <div class="tree">
+      <div class="tree-row"><div class="tree-path"><span class="dim">your-project/</span></div><div class="tree-desc"></div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ </span>CLAUDE.md</div><div class="tree-desc">Claude Code entry point — auto-read every session. Points to .agents/ brain.</div><div class="pill pill-purple">auto-read</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ </span>AGENTS.md</div><div class="tree-desc">Codex entry point — same purpose, different model. Shares the same .agents/ brain.</div><div class="pill pill-blue">auto-read</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">└─ .agents/</span></div><div class="tree-desc">Shared brain directory. Model-agnostic. Git-tracked for team sync.</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>CONTEXT.md</div><div class="tree-desc">Stack, services, integrations, env vars. The what and why.</div><div class="pill pill-purple">session start</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>MAP.md</div><div class="tree-desc">Codebase map — every module described. Replaces file scanning entirely.</div><div class="pill pill-purple">session start</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span><span style="color:var(--amber)">SCHEMA.md</span></div><div class="tree-desc">All tables, fields, types, relationships, indexes, change log.</div><div class="pill pill-amber">DB guard</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>TASKS.md</div><div class="tree-desc">Numbered sprint queue with [LEAD] / [CONTRACTOR] tags.</div><div class="pill pill-green">each session</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>PROGRESS.md</div><div class="tree-desc">Milestone timeline + session log. Appended automatically at session end.</div><div class="pill pill-green">session end</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>DECISIONS.md</div><div class="tree-desc">Architecture Decision Records. Never re-debate settled choices.</div><div class="pill pill-green">when decided</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>CONTRACTS.md</div><div class="tree-desc">API endpoints, shared interfaces, data contracts.</div><div class="pill pill-amber">on change</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">└─ skills/</span></div><div class="tree-desc">Skills folder — open standard, works with Claude Code and Codex both.</div><div class="pill pill-purple">auto-invoked</div></div>
+      <div class="tree-row"><div class="tree-path">            <span class="dim">├─ </span>apex-start/</div><div class="tree-desc">→ /apex-start skill — loads context, picks next task</div></div>
+      <div class="tree-row"><div class="tree-path">            <span class="dim">├─ </span>apex-end/</div><div class="tree-desc">→ /apex-end skill — commits the brain after each session</div></div>
+      <div class="tree-row"><div class="tree-path">            <span class="dim">├─ </span>apex-schema/</div><div class="tree-desc">→ /apex-schema skill — DB change guard, auto-invoked on DB tasks</div></div>
+      <div class="tree-row"><div class="tree-path">            <span class="dim">└─ </span>apex-plan/</div><div class="tree-desc">→ /apex-plan skill — feature planning before any code</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Session Flow</div>
+    <h2>The daily loop</h2>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">01</div>
+        <div class="flow-name">Load Brain</div>
+        <div class="flow-desc">Context files loaded. No file scanning.</div>
+        <div class="flow-cmd">/apex-start</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">02</div>
+        <div class="flow-name">Check Tasks</div>
+        <div class="flow-desc">Picks next [LEAD] task. No questions.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">03</div>
+        <div class="flow-name">DB Work?</div>
+        <div class="flow-desc">apex-schema skill auto-invokes or run manually.</div>
+        <div class="flow-cmd">/apex-schema</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div class="flow-name">Execute</div>
+        <div class="flow-desc">Works only on MAP.md-scoped files.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">05</div>
+        <div class="flow-name">Commit Brain</div>
+        <div class="flow-desc">PROGRESS, TASKS, SCHEMA updated.</div>
+        <div class="flow-cmd">/apex-end</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+
+<!-- ══════════ SETUP ══════════ -->
+<div class="page" id="page-setup">
+<div class="container">
+
+  <section>
+    <div class="eyebrow">Project Setup</div>
+    <h2>Bootstrap APEX on any project</h2>
+    <p class="lead">Two paths. New projects get generated from description. Existing projects get audited first — Claude reads the actual codebase before generating any documentation.</p>
+
+    <div class="card-stack">
+
+      <div class="card accent-purple">
         <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-num">01</div>
-          <div class="card-title-group">
-            <div class="card-title">🌱 Bootstrap — New Project</div>
-            <div class="card-when">Run once at project start · Generates all .claude/ files from your description</div>
+          <div class="card-emoji">🌱</div>
+          <div class="card-meta">
+            <div class="card-title">Bootstrap — New Project</div>
+            <div class="card-sub">Run once at project start · Generates all .agents/ files from your description</div>
           </div>
-          <div class="badge badge-new">New</div>
+          <div class="pill pill-purple">New</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
-          <div class="prompt-block">
+          <div class="prompt-section">
             <div class="prompt-label">Full bootstrap prompt</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX BOOTSTRAP — New Project</span>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># APEX BOOTSTRAP — New Project</span>
+<span class="cm"># Creates full .agents/ brain + skills from scratch</span>
 
 You are initializing the APEX context system for a new project.
-Create all files below with REAL content — no placeholders.
+Create all files with REAL content — no placeholders.
 
-<span class="kw">Project:</span> <span class="var">[PROJECT_NAME]</span>
-<span class="kw">Stack:</span> <span class="var">[e.g. SvelteKit + TypeScript + Supabase + Drizzle + Cloudflare]</span>
-<span class="kw">Purpose:</span> <span class="var">[one sentence]</span>
-<span class="kw">Team:</span> <span class="var">[e.g. 1 lead + 2 contractors]</span>
+<span class="kw">Project:</span> <span class="val">[PROJECT_NAME]</span>
+<span class="kw">Stack:</span> <span class="val">[e.g. SvelteKit + TypeScript + Supabase + Drizzle + Cloudflare]</span>
+<span class="kw">Purpose:</span> <span class="val">[one sentence]</span>
+<span class="kw">Team:</span> <span class="val">[e.g. 1 lead + 2 contractors]</span>
 
 <span class="kw">Architecture:</span>
-<span class="var">[Describe your folder structure, main modules, external services]</span>
+<span class="val">[Describe folder structure, main modules, external services]</span>
 
-<span class="kw">Database tables (list what you know so far):</span>
-<span class="var">[e.g. users, cases, documents, audit_log]</span>
-<span class="var">[For each table, list the main fields you know]</span>
+<span class="kw">Database tables you know so far:</span>
+<span class="val">[List tables + main fields per table]</span>
 
-<span class="kw">First tasks (priority order):</span>
-<span class="var">[List your first 5-10 tasks]</span>
+<span class="kw">First 5–10 tasks in priority order:</span>
+<span class="val">[List them]</span>
 
-<span class="kw">Decisions already made:</span>
-<span class="var">[e.g. Supabase over PlanetScale because RLS. Drizzle over Prisma because edge.]</span>
+<span class="kw">Architecture decisions already made:</span>
+<span class="val">[e.g. Supabase over PlanetScale because RLS. Drizzle over Prisma because edge.]</span>
 
-<span class="kw">Create these files now:</span>
-- CLAUDE.md
-- .claude/CONTEXT.md
-- .claude/MAP.md
-- .claude/SCHEMA.md  ← include all tables/fields described above
-- .claude/TASKS.md
-- .claude/PROGRESS.md
-- .claude/DECISIONS.md
-- .claude/CONTRACTS.md
-- .claude/commands/apex-start.md
-- .claude/commands/apex-end.md
-- .claude/commands/apex-schema.md
-- .claude/commands/apex-plan.md
+Create these files:
+- CLAUDE.md           ← Claude Code entry point
+- AGENTS.md           ← Codex entry point (same content, different file name)
+- .agents/CONTEXT.md
+- .agents/MAP.md
+- .agents/SCHEMA.md   ← tables/fields from the DB description above
+- .agents/TASKS.md
+- .agents/PROGRESS.md
+- .agents/DECISIONS.md
+- .agents/CONTRACTS.md
+- .agents/skills/apex-start/SKILL.md
+- .agents/skills/apex-end/SKILL.md
+- .agents/skills/apex-schema/SKILL.md
+- .agents/skills/apex-plan/SKILL.md
 
 Confirm with a tree view when done.</div>
           </div>
         </div>
       </div>
 
-      <div class="prompt-card mode-existing">
+      <div class="card accent-amber">
         <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-num">02</div>
-          <div class="card-title-group">
-            <div class="card-title">🔍 Bootstrap — Existing Project</div>
-            <div class="card-when">Run on an existing codebase · Claude audits first, then generates context</div>
+          <div class="card-emoji">🔍</div>
+          <div class="card-meta">
+            <div class="card-title">Bootstrap — Existing Project</div>
+            <div class="card-sub">3-step process: audit → confirm → generate · Claude reads real files before writing docs</div>
           </div>
-          <div class="badge" style="border-color:var(--accent4);color:var(--accent4);background:rgba(240,192,96,0.06)">Existing</div>
+          <div class="pill pill-amber">Existing</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
-          <div class="prompt-block">
-            <div class="prompt-label">Step 1 — Audit the codebase (run this first)</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX AUDIT — Existing Project Discovery</span>
-<span class="cmt"># Run this BEFORE generating any .claude/ files</span>
+          <div class="prompt-section">
+            <div class="prompt-label">Step 1 — Audit the codebase (run this first, no files created yet)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># APEX AUDIT — Existing project discovery</span>
+<span class="cm"># Do NOT create any .agents/ files yet. Analyze only.</span>
 
-You are auditing an existing project to build its APEX context system.
-Do NOT create any files yet. Just analyze and report.
+Run these commands and report findings:
 
-<span class="kw">Run these discovery commands and report findings:</span>
-
-1. `find . -type f -name "*.ts" -o -name "*.tsx" -o -name "*.svelte" -o -name "*.js" | grep -v node_modules | grep -v .git | grep -v dist | head -80`
+1. `find . -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.svelte" -o -name "*.js" \) | grep -v node_modules | grep -v .git | grep -v dist | head -80`
 2. `cat package.json`
-3. `ls -la` (project root)
-4. If exists: `cat drizzle.config.ts` or `cat prisma/schema.prisma` or any schema file
+3. `ls -la`
+4. If exists: `cat drizzle.config.ts` or `cat prisma/schema.prisma`
 5. If exists: `cat .env.example` or `cat .env.local`
+6. If exists: `ls supabase/migrations/`
 
-From this, produce a discovery report with:
+Produce a discovery report:
 
-<span class="kw">DISCOVERED STACK:</span> [framework, db, orm, auth, hosting...]
-<span class="kw">FOLDER STRUCTURE:</span> [main directories and their apparent purpose]
-<span class="kw">DATABASE:</span> [tables found, ORM used, migration tool]
-<span class="kw">EXTERNAL SERVICES:</span> [APIs, auth providers, queues, storage...]
-<span class="kw">UNKNOWN AREAS:</span> [folders/files you couldn't classify]
-<span class="kw">QUESTIONS:</span> [max 5 questions to fill gaps before generating docs]
+<span class="hi">STACK:</span> [framework, db, orm, auth, hosting]
+<span class="hi">STRUCTURE:</span> [main dirs and apparent purpose]
+<span class="hi">DATABASE:</span> [tables found, ORM, migration tool]
+<span class="hi">SERVICES:</span> [external APIs, auth providers, queues, storage]
+<span class="hi">UNKNOWNS:</span> [folders you couldn't classify]
+<span class="hi">QUESTIONS:</span> [max 5 gaps to fill]
 
-Do not generate .claude/ files until I confirm the report is accurate.</div>
+Do not create any files until I confirm the report.</div>
           </div>
+          <div class="prompt-section">
+            <div class="prompt-label">Step 2 — Generate after confirming the audit</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># APEX GENERATE — After audit confirmation</span>
 
-          <div class="prompt-block">
-            <div class="prompt-label">Step 2 — Generate context (after confirming the audit)</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX GENERATE — After audit confirmation</span>
+The audit report is confirmed. Generate the full APEX brain now.
 
-The audit report is confirmed. Now generate the full APEX brain.
+<span class="kw">Your answers to Claude's questions:</span>
+<span class="val">[Fill in answers]</span>
 
-<span class="kw">Additional context from me:</span>
-<span class="var">[Answer the questions Claude asked in the audit]</span>
+<span class="kw">Current project status:</span> <span class="val">[Active dev / Stable / ~60% done]</span>
+<span class="kw">Project mode to set:</span> <span class="val">[NEW / ACTIVE / STABLE]</span>
+<span class="kw">Team:</span> <span class="val">[e.g. me + 1 contractor on frontend]</span>
+<span class="kw">Next 5 tasks I need done:</span>
+<span class="val">[List them — Claude adds to TASKS.md]</span>
 
-<span class="kw">Current project status:</span>
-<span class="var">[e.g. "In active development, about 60% done" / "Stable, just maintenance"]</span>
-
-<span class="kw">Project mode to set:</span> <span class="var">[NEW / ACTIVE / STABLE]</span>
-
-<span class="kw">Team working on this:</span>
-<span class="var">[e.g. "Just me" / "Me + 1 contractor handling frontend"]</span>
-
-<span class="kw">Top 5 things I need to work on next:</span>
-<span class="var">[List them — Claude will turn these into TASKS.md entries]</span>
-
-Now create all .claude/ files based on the audit + this context.
-For SCHEMA.md, read the actual schema files found (prisma/drizzle/SQL migrations).
-Extract real tables, fields, types, and relationships — not summaries.
+For SCHEMA.md: read the actual schema files found in the audit.
+Extract real tables, fields, types, relationships — not summaries.
 
 Files to create:
-- CLAUDE.md (set mode to <span class="var">[ACTIVE/STABLE]</span>)
-- .claude/CONTEXT.md
-- .claude/MAP.md
-- .claude/SCHEMA.md  ← built from real schema files
-- .claude/TASKS.md
-- .claude/PROGRESS.md (mark pre-APEX work as "prior to APEX setup")
-- .claude/DECISIONS.md (ask me for key past decisions)
-- .claude/CONTRACTS.md
-- .claude/commands/apex-start.md
-- .claude/commands/apex-end.md
-- .claude/commands/apex-schema.md
-- .claude/commands/apex-plan.md</div>
+- CLAUDE.md + AGENTS.md (entry points)
+- All .agents/ context files
+- .agents/SCHEMA.md built from REAL schema source
+- .agents/PROGRESS.md (prior work tagged "pre-APEX")
+- .agents/DECISIONS.md (ask me for key past decisions)
+- All 4 skills in .agents/skills/</div>
           </div>
+          <div class="prompt-section">
+            <div class="prompt-label">Step 3 — Deep schema extraction (DB-heavy projects)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># APEX SCHEMA EXTRACT — For projects with complex DB</span>
 
-          <div class="prompt-block">
-            <div class="prompt-label">Step 3 — Schema extraction (if DB-heavy project)</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX SCHEMA EXTRACT — For existing DB-heavy projects</span>
-<span class="cmt"># Run this if the project has complex DB schema to fully capture</span>
+Read all schema source files:
+- `prisma/schema.prisma` (Prisma)
+- `src/db/schema.ts` or `src/lib/server/schema.ts` (Drizzle)
+- `supabase/migrations/*.sql` (Supabase)
 
-Read all schema-related files:
-- `prisma/schema.prisma` (if Prisma)
-- `src/db/schema.ts` or `src/lib/server/schema.ts` (if Drizzle)
-- `supabase/migrations/*.sql` (if Supabase migrations)
-- Any `*schema*`, `*migration*`, or `*model*` files in the project
-
-Build .claude/SCHEMA.md with:
-1. Every table (name, purpose in one line)
-2. Every field (name, type, nullable, default, description)
-3. All foreign key relationships drawn as: TableA.field → TableB.field
-4. All indexes and unique constraints
-5. Enum values if any
+Build .agents/SCHEMA.md with:
+1. Every table — name, purpose in one line
+2. Every field — name, type, nullable, default, notes
+3. All FK relationships: TableA.field → TableB.field
+4. Indexes, unique constraints, check constraints
+5. Enum values
 6. RLS policies summary (if Supabase)
-7. A "Change Log" section (empty, to be filled as schema evolves)
+7. Empty "Change Log" section at the bottom
 
-Flag any inconsistencies found between migrations and current schema.</div>
+Flag any inconsistencies between migrations and current schema.</div>
           </div>
         </div>
       </div>
 
     </div>
   </section>
+
+</div>
 </div>
 
-<!-- ════════════════════════════════════════ PAGE: SESSION PROMPTS -->
-<div class="page" id="page-session">
+
+<!-- ══════════ SKILLS ══════════ -->
+<div class="page" id="page-skills">
+<div class="container">
+
   <section>
-    <div class="section-label">// Session Prompts</div>
-    <div class="section-title">Daily prompts for every project mode</div>
-    <div class="callout cmd">
-      <div class="callout-title">💡 Better as slash commands</div>
-      <div class="callout-desc">These prompts are what your <code style="color:var(--accent3)">/apex-start</code> and <code style="color:var(--accent3)">/apex-end</code> slash commands run automatically. See the Slash Commands tab to set that up — you'll never type these manually.</div>
+    <div class="eyebrow">Agent Skills</div>
+    <h2>Auto-invoked workflows — zero token cost until needed</h2>
+    <p class="lead">Skills are loaded progressively — Claude reads metadata first (a few tokens), then loads full instructions only when it decides to use the skill. Auto-invocation means you don't have to type a command — Claude recognizes when a task matches.</p>
+
+    <div class="callout">
+      <div class="callout-icon">✦</div>
+      <div class="callout-body">
+        <div class="callout-title">Skills vs old slash commands</div>
+        <div class="callout-desc">The <code>.claude/commands/</code> pattern still works but is superseded. Skills in <code>.agents/skills/</code> auto-invoke when Claude detects the task matches the description. For DB work, <code>apex-schema</code> fires automatically — you don't need to type <code>/apex-schema</code>. Manual invocation (<code>/apex-start</code>) still works too.</div>
+      </div>
     </div>
 
-    <div class="prompt-grid">
+    <div class="callout blue">
+      <div class="callout-icon">⇄</div>
+      <div class="callout-body">
+        <div class="callout-title">Skill file format — same for Claude Code and Codex</div>
+        <div class="callout-desc">Both tools follow the open Agent Skills standard. A <code>SKILL.md</code> with YAML frontmatter (<code>name</code>, <code>description</code>) works in both. Claude Code adds optional <code>allowed-tools</code> and <code>invocation</code> frontmatter. Codex reads the same file and ignores unknown fields gracefully.</div>
+      </div>
+    </div>
 
-      <div class="prompt-card mode-active">
+    <div class="card-stack">
+
+      <div class="card accent-purple">
         <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-num">01</div>
-          <div class="card-title-group">
-            <div class="card-title">⚡ Session Start — Active Development</div>
-            <div class="card-when">Every session on a project in heavy dev · Also the /apex-start command body</div>
+          <div class="card-emoji">▶</div>
+          <div class="card-meta">
+            <div class="card-title">apex-start — Session opener skill</div>
+            <div class="card-sub">.agents/skills/apex-start/SKILL.md · Invoked manually at session start</div>
           </div>
-          <div class="badge badge-active">Active</div>
+          <div class="pill pill-purple">Manual + Auto</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
-          <div class="prompt-block">
-            <div class="prompt-label">Standard session opener</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX SESSION START — Active Mode</span>
+          <div class="prompt-section">
+            <div class="prompt-label">File: .agents/skills/apex-start/SKILL.md</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
+name: apex-start
+description: Start a new APEX development session. Load project context, review tasks, and prepare to work. Use when beginning any work session on this project or when the user says "start session", "begin", "what should I work on", or "let's get started".
+allowed-tools: Read
+---
 
-Read these files silently before responding:
-1. CLAUDE.md
-2. .claude/CONTEXT.md
-3. .claude/MAP.md
-4. .claude/TASKS.md
-5. .claude/PROGRESS.md
+Read the following files silently, in order:
+1. CLAUDE.md (or AGENTS.md if using Codex)
+2. .agents/CONTEXT.md
+3. .agents/MAP.md
+4. .agents/TASKS.md
+5. .agents/PROGRESS.md
 
-Respond ONLY with this block:
+Then respond ONLY with this block — nothing else:
 
 ---
-<span class="str">✓ SESSION LOADED</span>
-Project: [name] · Mode: [mode]
-Last completed: [most recent entry from PROGRESS.md]
+✓ SESSION LOADED
+Project: [name] · Mode: [mode from entry file]
+Last completed: [most recent PROGRESS.md entry, one line]
 Active task: [next task from TASKS.md]
 Blocked: [blocked tasks or "none"]
 ---
 
-Then begin working on the active task immediately.
-Do not ask clarifying questions unless a [BLOCKED] flag exists on the task.
+Immediately begin working on the active task.
+Do not ask clarifying questions unless the task has a [BLOCKED] flag.
 Do not read files outside MAP.md scope unless the task explicitly requires it.
-If the task touches the database, read .claude/SCHEMA.md before writing any query or migration.</div>
-          </div>
-          <div class="prompt-block">
-            <div class="prompt-label">Task switch (mid-session)</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX TASK SWITCH</span>
-
-Mark current task as [DONE] in TASKS.md with today's date.
-Add a one-line completion note to PROGRESS.md under today's date.
-Read the next task from TASKS.md and begin.
-
-Confirm: "✓ [old task] → starting [new task]"</div>
+If the active task involves the database, also read .agents/SCHEMA.md.</div>
           </div>
         </div>
       </div>
 
-      <div class="prompt-card mode-stable">
+      <div class="card accent-green">
         <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-num">02</div>
-          <div class="card-title-group">
-            <div class="card-title">🔒 Session Start — Stable / Maintenance</div>
-            <div class="card-when">For bug fixes, patches, or production-stable projects</div>
+          <div class="card-emoji">■</div>
+          <div class="card-meta">
+            <div class="card-title">apex-end — Session closer skill</div>
+            <div class="card-sub">.agents/skills/apex-end/SKILL.md · Always run before closing a session</div>
           </div>
-          <div class="badge badge-stable">Stable</div>
+          <div class="pill pill-green">Manual</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
-          <div class="prompt-block">
-            <div class="prompt-label">Maintenance session opener</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX SESSION START — Stable Mode</span>
+          <div class="prompt-section">
+            <div class="prompt-label">File: .agents/skills/apex-end/SKILL.md</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+name: apex-end
+description: End the current APEX development session by updating all context files. Use when the user says "end session", "wrap up", "closing", "done for today", or explicitly asks to update the project docs.
+allowed-tools: Read, Write
+---
 
-Read: CLAUDE.md, .claude/CONTEXT.md, .claude/MAP.md, .claude/CONTRACTS.md
+Update these files to close the session:
 
-This is a STABLE project. Constraints for this session:
-- No refactoring unless explicitly required by the task
-- No dependency upgrades unless the task requires it
-- No CONTRACTS.md changes without explicit approval
-- Surgical changes only — prefer minimal diffs
-- Every change needs a clear rollback path
+1. **PROGRESS.md** — Append today's date entry:
+   - What was completed (✅)
+   - What was started but not finished (🔄)
+   - Any decisions made or surprises (🧠)
 
-<span class="kw">Task for this session:</span>
-<span class="var">[describe bug fix or small feature]</span>
-
-Before writing code, tell me:
-1. Which MAP.md modules are affected
-2. What the minimal change is
-3. If DB is involved, what SCHEMA.md tables are touched
-4. What could break as a side effect</div>
-          </div>
-          <div class="prompt-block">
-            <div class="prompt-label">Token-efficient bug investigation</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX BUG MODE — Read map, don't scan files</span>
-
-Load: CLAUDE.md and .claude/MAP.md only.
-
-<span class="kw">Bug:</span> <span class="var">[error message / steps to reproduce / observed vs expected]</span>
-
-From MAP.md, identify which modules are likely responsible.
-Tell me which specific files to paste for diagnosis.
-Do NOT read files proactively — ask me to paste them.
-Minimum information to diagnose, then fix.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="prompt-card mode-active">
-        <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-num">03</div>
-          <div class="card-title-group">
-            <div class="card-title">🏁 Session End — All Modes</div>
-            <div class="card-when">End of every session · Also the /apex-end command body</div>
-          </div>
-          <div class="badge badge-active">All Modes</div>
-          <div class="card-toggle">+</div>
-        </div>
-        <div class="card-body">
-          <div class="prompt-block">
-            <div class="prompt-label">Session end — commit the brain</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX SESSION END</span>
-
-Update the following files before I close this session:
-
-1. <span class="kw">PROGRESS.md</span> — Append today's date entry:
-   - What was completed
-   - What was started but not finished
-   - Any decisions or surprises
-
-2. <span class="kw">TASKS.md</span> — Update statuses:
+2. **TASKS.md** — Update statuses:
    - Mark completed tasks [DONE] with date
-   - Add any new tasks discovered
+   - Add any new tasks discovered this session
    - Re-prioritize if needed
 
-3. <span class="kw">MAP.md</span> — Add any new files/modules created
+3. **MAP.md** — Add any new files or modules created this session
 
-4. <span class="kw">SCHEMA.md</span> — If any DB changes were made:
-   - Update affected tables
-   - Add entry to the Change Log section at the bottom
+4. **SCHEMA.md** — If any DB changes were made:
+   - Update affected table entries
+   - Append to the Change Log section
 
-5. <span class="kw">DECISIONS.md</span> — Add any architectural choices made
+5. **DECISIONS.md** — Add any architectural decisions made
 
-Output a git commit message for the .claude/ folder in this format:
-`chore(apex): session [date] — [main task completed]`</div>
-          </div>
-          <div class="prompt-block">
-            <div class="prompt-label">Contractor onboarding — share this with new devs</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX ONBOARD — New contractor</span>
-
-You are joining an existing project. Read in order:
-1. CLAUDE.md — rules you must follow, non-negotiable
-2. .claude/CONTEXT.md — stack, services, env setup
-3. .claude/MAP.md — codebase map, understand before touching files
-4. .claude/SCHEMA.md — database structure, check this before any DB work
-5. .claude/DECISIONS.md — why things are the way they are, do not redo these
-6. .claude/CONTRACTS.md — API and interface contracts you must respect
-7. .claude/TASKS.md — find tasks tagged [CONTRACTOR] for your work
-
-Confirm you're ready by answering:
-1. What does this project do?
-2. What is your assigned task?
-3. Which SCHEMA.md tables will you touch?
-4. Are there CONTRACTS.md interfaces affected by your task?
-5. Are there DECISIONS that constrain your approach?
-
-Do not write code until all 5 are answered.</div>
+Output a ready-to-use git commit message:
+`chore(apex): [date] — [main thing accomplished]`</div>
           </div>
         </div>
       </div>
 
-    </div>
-  </section>
-</div>
-
-<!-- ════════════════════════════════════════ PAGE: SCHEMA -->
-<div class="page" id="page-schema">
-  <section>
-    <div class="section-label">// Database Schema File</div>
-    <div class="section-title">SCHEMA.md — the DB source of truth</div>
-
-    <div class="callout db">
-      <div class="callout-title">Why SCHEMA.md instead of just reading the schema file?</div>
-      <div class="callout-desc">
-        Raw schema files (Prisma, Drizzle, SQL) are machine-optimized. SCHEMA.md is human+AI-optimized: it adds intent, relationships in plain English, business rules, and a change log. Claude reads SCHEMA.md at the start of any DB task instead of parsing raw migration files — faster, less tokens, more context.
-      </div>
-    </div>
-
-    <div class="prompt-grid">
-
-      <div class="prompt-card mode-db">
+      <div class="card accent-amber">
         <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-num">01</div>
-          <div class="card-title-group">
-            <div class="card-title">🗄 /apex-schema — Before any DB change</div>
-            <div class="card-when">Run before writing any migration, query, or model change</div>
+          <div class="card-emoji">⬡</div>
+          <div class="card-meta">
+            <div class="card-title">apex-schema — DB change guard skill</div>
+            <div class="card-sub">.agents/skills/apex-schema/SKILL.md · Auto-invoked on any DB task</div>
           </div>
-          <div class="badge badge-db">DB</div>
+          <div class="pill pill-amber">Auto-invoked ✦</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
-          <div class="prompt-block">
-            <div class="prompt-label">Schema check prompt (the /apex-schema command)</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX SCHEMA CHECK — Run before any DB work</span>
+          <div class="prompt-section">
+            <div class="prompt-label">File: .agents/skills/apex-schema/SKILL.md</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+name: apex-schema
+description: Guard against unsafe database changes by checking SCHEMA.md before any DB work. Auto-invoke whenever the user asks to create a migration, add a column, change a table, write a DB query, modify an ORM model, or do anything involving the database schema. Trigger phrases: "add column", "create table", "migration", "schema change", "alter table", "new table", "FK", "relationship", "index".
+allowed-tools: Read, Write
+---
 
-Read .claude/SCHEMA.md.
+Read .agents/SCHEMA.md and .agents/CONTRACTS.md.
 
-<span class="kw">DB change I want to make:</span>
-<span class="var">[describe the change: new table, new column, index, relation, rename...]</span>
+DB change requested: $ARGUMENTS
 
 Before writing any migration or query, analyze:
 
-1. <span class="kw">Affected tables:</span> Which tables in SCHEMA.md are touched?
-2. <span class="kw">Relationship impact:</span> Does this break or require updating any FK relationships?
-3. <span class="kw">Constraint check:</span> Does this conflict with existing unique/check constraints?
-4. <span class="kw">Downstream impact:</span> Which CONTRACTS.md interfaces or MAP.md modules query these tables?
-5. <span class="kw">Migration safety:</span> Is this a destructive change? (column removal, type change, rename)
-6. <span class="kw">RLS impact:</span> If Supabase, are existing RLS policies still valid after this change?
+1. **Affected tables** — which tables in SCHEMA.md are touched?
+2. **Relationship impact** — does this change break or require updating FK relationships?
+3. **Constraint conflicts** — does this conflict with existing unique/check constraints?
+4. **Downstream impact** — which CONTRACTS.md interfaces or MAP.md modules query these tables?
+5. **Destructive?** — column removal, type change, or rename? If yes, state the rollback path.
+6. **RLS impact** — if Supabase, are existing RLS policies still valid after this change?
 
-Propose the migration/change.
-Wait for my approval before writing migration files.
-After approval and execution, update SCHEMA.md and add a Change Log entry.</div>
+Propose the migration. Wait for explicit approval before writing any migration files.
+
+After I approve and the migration runs:
+- Update the affected table entries in .agents/SCHEMA.md
+- Append a row to the Change Log section at the bottom of SCHEMA.md</div>
           </div>
-          <div class="prompt-block">
-            <div class="prompt-label">Schema drift check — when things get out of sync</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button><span class="cmt"># APEX SCHEMA DRIFT — Check for inconsistencies</span>
+        </div>
+      </div>
 
-Compare .claude/SCHEMA.md against the actual schema source:
-- Drizzle: read `src/db/schema.ts` or `src/lib/server/schema.ts`
-- Prisma: read `prisma/schema.prisma`
-- Supabase: check `supabase/migrations/` for the latest state
+      <div class="card accent-blue">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">◈</div>
+          <div class="card-meta">
+            <div class="card-title">apex-plan — Feature planning skill</div>
+            <div class="card-sub">.agents/skills/apex-plan/SKILL.md · Plan before writing any code</div>
+          </div>
+          <div class="pill pill-blue">Manual</div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="prompt-label">File: .agents/skills/apex-plan/SKILL.md</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+name: apex-plan
+description: Plan a new feature or large task before writing any code. Use when the user says "I want to build X", "plan this feature", "what would it take to add Y", or starts describing a significant new capability.
+allowed-tools: Read
+---
 
-Report:
-1. Tables in SCHEMA.md but not in actual schema (stale)
-2. Tables in actual schema but not in SCHEMA.md (missing)
-3. Field mismatches (type changes, added/removed columns)
-4. Relationship discrepancies
+Read: CLAUDE.md (or AGENTS.md), .agents/CONTEXT.md, .agents/MAP.md, .agents/SCHEMA.md, .agents/CONTRACTS.md
 
-Update SCHEMA.md to match the actual schema.
-Do not change the actual schema — only update the documentation.</div>
+Feature to plan: $ARGUMENTS
+
+Without writing any code, produce:
+
+1. **Impact analysis** — which existing modules from MAP.md are affected
+2. **Schema changes** — new or modified tables needed (validate against SCHEMA.md)
+3. **New files** — what to add to MAP.md after implementation
+4. **Contract changes** — any CONTRACTS.md updates needed
+5. **Task breakdown** — ordered task list formatted for TASKS.md
+6. **Risk flags** — anything that could break existing functionality
+
+Wait for my approval before adding tasks to TASKS.md or writing any code.</div>
           </div>
         </div>
       </div>
@@ -654,41 +845,89 @@ Do not change the actual schema — only update the documentation.</div>
   </section>
 
   <section>
-    <div class="section-label">// SCHEMA.md File Template</div>
-    <div class="section-title">What the file looks like</div>
-
-    <div class="file-card">
-      <div class="file-card-header" onclick="toggleFile(this)">
-        <div class="file-name db">.claude/SCHEMA.md</div>
-        <div class="file-purpose">Complete example — expand to copy</div>
-        <div class="file-toggle">+</div>
+    <div class="eyebrow">Token Savings</div>
+    <h2>Why skills beat the old approach</h2>
+    <div class="two-col">
+      <div class="info-card">
+        <div class="ic-icon">📉</div>
+        <div class="ic-title">Progressive loading</div>
+        <div class="ic-desc">Skills load metadata only at session start (name + description ≈ 30 tokens each). Full <code>SKILL.md</code> content loads only when the skill is actually invoked. 4 skills = ~120 tokens overhead vs ~2,000 for loading all skill content upfront.</div>
       </div>
-      <div class="file-content">
-        <div class="file-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button># SCHEMA.md — Database Schema
-<span class="cmt"># Source of truth for all DB structure. Update this whenever schema changes.</span>
-<span class="cmt"># ORM: Drizzle | DB: Supabase (PostgreSQL) | Last updated: [date]</span>
+      <div class="info-card">
+        <div class="ic-icon">🎯</div>
+        <div class="ic-title">Auto-invocation on DB tasks</div>
+        <div class="ic-desc">The <code>apex-schema</code> description includes trigger phrases like "migration", "add column", "alter table". Claude reads the description, matches it to the task, and loads the skill without you typing anything. DB guard runs automatically.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-icon">🗺</div>
+        <div class="ic-title">MAP.md eliminates file scanning</div>
+        <div class="ic-desc">Without MAP.md, Claude reads 5–20 source files to understand architecture. With MAP.md, it reads one file. On a 40-file project, that's 80–90% fewer tokens per session just for context loading.</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-icon">🔄</div>
+        <div class="ic-title">Session-to-session continuity</div>
+        <div class="ic-desc">PROGRESS.md stores what happened last session. Claude picks up exactly where you left off — no re-explaining, no "what were we doing". Context re-hydration in one file read instead of re-reading a chat history.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+
+<!-- ══════════ SCHEMA ══════════ -->
+<div class="page" id="page-schema">
+<div class="container">
+
+  <section>
+    <div class="eyebrow">Database Schema</div>
+    <h2>SCHEMA.md — the DB source of truth</h2>
+    <p class="lead">Raw schema files (Prisma, Drizzle, SQL) are machine-optimized. SCHEMA.md is human + AI-optimized: it adds intent, relationships in plain English, business rules, and a change log. The <code>apex-schema</code> skill reads this before any DB work.</p>
+
+    <div class="callout amber">
+      <div class="callout-icon">⬡</div>
+      <div class="callout-body">
+        <div class="callout-title">The CLAUDE.md DB rule — the simplest enforcement</div>
+        <div class="callout-desc">Add this exact line to CLAUDE.md: <code>"Never write a migration, query, or ORM model without first reading .agents/SCHEMA.md."</code> Claude Code treats CLAUDE.md as hard rules. Combined with apex-schema auto-invocation, you get two layers of DB protection for zero ongoing effort.</div>
+      </div>
+    </div>
+
+    <div class="card-stack">
+      <div class="card accent-amber">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">⬡</div>
+          <div class="card-meta">
+            <div class="card-title">SCHEMA.md — Full template</div>
+            <div class="card-sub">.agents/SCHEMA.md · Expand to copy the full template</div>
+          </div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># SCHEMA.md — Database Schema
+<span class="cm"># Source of truth for all DB structure.</span>
+<span class="cm"># ORM: Drizzle | DB: Supabase (PostgreSQL) | Updated: [date]</span>
 
 ---
 
 ## Tables Overview
 | Table | Purpose |
 |---|---|
-| users | Auth + profile for all platform users |
+| users | Auth + profile, synced from Supabase auth.users |
 | cases | Core insolvency/conciliation cases |
 | case_documents | Files attached to a case |
-| case_parties | People/orgs involved in a case |
+| case_parties | Debtors, creditors, orgs involved |
 | audit_log | Immutable log of all case mutations |
-| sessions | JWT session tracking |
 
 ---
 
 ## Table: users
-**Purpose:** Auth users + extended profile. Synced from Supabase auth.users via trigger.
+**Purpose:** Extended user profile. Synced from Supabase auth.users via trigger.
 
 | Field | Type | Nullable | Default | Notes |
 |---|---|---|---|---|
-| id | uuid | NO | gen_random_uuid() | PK, matches auth.users.id |
-| email | text | NO | — | Unique, lowercase enforced |
+| id | uuid | NO | gen_random_uuid() | PK — matches auth.users.id |
+| email | text | NO | — | Unique, enforced lowercase |
 | full_name | text | YES | — | |
 | role | user_role | NO | 'user' | Enum: admin, mediator, user |
 | org_id | uuid | YES | — | FK → organizations.id |
@@ -697,7 +936,7 @@ Do not change the actual schema — only update the documentation.</div>
 | is_active | boolean | NO | true | Soft-disable without delete |
 
 **Indexes:** idx_users_email (unique), idx_users_org_id
-**RLS:** Users can only read their own row. Admins read all.
+**RLS:** Users see only their own row. Admins see all in their org.
 
 ---
 
@@ -707,14 +946,14 @@ Do not change the actual schema — only update the documentation.</div>
 | Field | Type | Nullable | Default | Notes |
 |---|---|---|---|---|
 | id | uuid | NO | gen_random_uuid() | PK |
-| case_number | text | NO | — | Unique, generated: CASE-YYYY-XXXX |
+| case_number | text | NO | — | Unique, format: CASE-YYYY-XXXX |
 | status | case_status | NO | 'draft' | Enum: draft, active, suspended, closed |
 | type | case_type | NO | — | Enum: insolvency, conciliation |
 | debtor_id | uuid | NO | — | FK → case_parties.id |
-| mediator_id | uuid | YES | — | FK → users.id (role=mediator) |
+| mediator_id | uuid | YES | — | FK → users.id (role = mediator) |
 | org_id | uuid | NO | — | FK → organizations.id |
 | filed_at | timestamptz | YES | — | When formally filed |
-| closed_at | timestamptz | YES | — | |
+| closed_at | timestamptz | YES | — | Null unless status = 'closed' |
 | total_debt | numeric(15,2) | YES | — | Summed from liabilities |
 | created_by | uuid | NO | — | FK → users.id |
 | created_at | timestamptz | NO | now() | |
@@ -722,52 +961,34 @@ Do not change the actual schema — only update the documentation.</div>
 
 **Indexes:** idx_cases_org_id, idx_cases_status, idx_cases_mediator_id
 **Constraints:** closed_at must be NULL if status != 'closed'
-**RLS:** Mediators see cases assigned to them. Admins see all in their org.
-
----
-
-## Table: case_documents
-**Purpose:** Files attached to a case (PDFs, agreements, evidence).
-
-| Field | Type | Nullable | Default | Notes |
-|---|---|---|---|---|
-| id | uuid | NO | gen_random_uuid() | PK |
-| case_id | uuid | NO | — | FK → cases.id (CASCADE DELETE) |
-| name | text | NO | — | Display name |
-| storage_path | text | NO | — | Supabase Storage path |
-| mime_type | text | NO | — | |
-| size_bytes | integer | NO | — | |
-| uploaded_by | uuid | NO | — | FK → users.id |
-| uploaded_at | timestamptz | NO | now() | |
+**RLS:** Mediators see cases assigned to them. Admins see all in org.
 
 ---
 
 ## Table: audit_log
-**Purpose:** Immutable append-only log. Never updated or deleted.
+**Purpose:** Immutable, append-only log. Populated via DB trigger — never via app code.
 
 | Field | Type | Nullable | Default | Notes |
 |---|---|---|---|---|
 | id | bigserial | NO | auto | PK |
-| table_name | text | NO | — | Which table was mutated |
-| record_id | uuid | NO | — | PK of the mutated record |
+| table_name | text | NO | — | Mutated table name |
+| record_id | uuid | NO | — | PK of mutated record |
 | action | text | NO | — | INSERT / UPDATE / DELETE |
 | old_data | jsonb | YES | — | Previous state |
 | new_data | jsonb | YES | — | New state |
 | actor_id | uuid | YES | — | FK → users.id (null = system) |
 | created_at | timestamptz | NO | now() | |
 
-**Note:** Populated via DB triggers, NOT application code.
 **RLS:** Admins read-only. No insert/update/delete via API.
 
 ---
 
 ## Relationships Map
 ```
-users ──< cases (as mediator_id)
-users ──< cases (as created_by)
-users ──< case_documents (as uploaded_by)
-organizations ──< users
-organizations ──< cases
+organizations ──< users (org_id)
+organizations ──< cases (org_id)
+users ──< cases (mediator_id)
+users ──< cases (created_by)
 cases ──< case_documents (CASCADE DELETE)
 cases ──< case_parties
 cases ──< audit_log (via trigger)
@@ -783,156 +1004,228 @@ cases ──< audit_log (via trigger)
 ---
 
 ## ⚠️ Schema Change Log
-<span class="cmt"># Claude appends here after every approved migration</span>
+<span class="cm"># apex-schema skill appends here after every approved migration</span>
 
 | Date | Change | Migration File | Author |
 |---|---|---|---|
 | 2024-01-15 | Added is_active to users | 0003_users_soft_delete.sql | @camilo |
 | 2024-01-12 | Created audit_log + triggers | 0002_audit_log.sql | @camilo |
 | 2024-01-10 | Initial schema | 0001_initial.sql | @camilo |</div>
+          </div>
+        </div>
       </div>
+
+      <div class="card accent-purple">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">🔍</div>
+          <div class="card-meta">
+            <div class="card-title">Schema drift check — when SCHEMA.md gets stale</div>
+            <div class="card-sub">Run weekly or after a big feature branch merges</div>
+          </div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button"><span class="cm"># APEX SCHEMA DRIFT CHECK</span>
+
+Compare .agents/SCHEMA.md against the actual schema source:
+- Drizzle: read src/db/schema.ts
+- Prisma: read prisma/schema.prisma
+- Supabase: read latest in supabase/migrations/
+
+Report:
+1. Tables in SCHEMA.md but not in actual schema (stale)
+2. Tables in actual schema but not in SCHEMA.md (missing)
+3. Field mismatches (type changes, added/removed columns)
+4. Relationship discrepancies
+
+Update SCHEMA.md to match. Do not change the actual schema.</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
+
+</div>
 </div>
 
-<!-- ════════════════════════════════════════ PAGE: SLASH COMMANDS -->
-<div class="page" id="page-commands">
-  <section>
-    <div class="section-label">// Claude Code Native Feature</div>
-    <div class="section-title">Slash commands — zero-friction enforcement</div>
 
-    <div class="callout cmd">
-      <div class="callout-title">How Claude Code slash commands work</div>
-      <div class="callout-desc">
-        Create markdown files in <code style="color:var(--accent3)">.claude/commands/</code> and they become <code style="color:var(--accent3)">/command-name</code> shortcuts in Claude Code. The file content is injected as the prompt automatically. No plugins. No config. Just files in a folder — git-tracked and shared with the whole team instantly.
+<!-- ══════════ MULTI-MODEL ══════════ -->
+<div class="page" id="page-multimodel">
+<div class="container">
+
+  <section>
+    <div class="eyebrow">Multi-Model Compatibility</div>
+    <h2>Same workflow.<br>Claude Code and Codex.</h2>
+    <p class="lead">Both tools follow the open Agent Skills standard. APEX uses a shared <code>.agents/</code> brain that both models read. The only difference is the entry-point filename. One codebase, two tools, zero duplication.</div>
+
+    <div class="callout green">
+      <div class="callout-icon">⇄</div>
+      <div class="callout-body">
+        <div class="callout-title">The key insight — shared brain, two entry points</div>
+        <div class="callout-desc">Claude Code reads <code>CLAUDE.md</code> automatically. Codex reads <code>AGENTS.md</code> automatically. Both files contain identical content pointing to <code>.agents/</code>. The entire brain — CONTEXT, MAP, SCHEMA, TASKS, PROGRESS, skills — is shared and model-agnostic.</div>
       </div>
     </div>
 
-    <div class="prompt-grid">
+    <div class="compare">
+      <div class="compare-col">
+        <div class="compare-head purple">✦ Claude Code</div>
+        <div class="compare-body">
+          <div class="compare-row"><div class="cr-key">Entry file</div><div class="cr-val">CLAUDE.md</div></div>
+          <div class="compare-row"><div class="cr-key">Skills dir</div><div class="cr-val">.agents/skills/</div></div>
+          <div class="compare-row"><div class="cr-key">Skill format</div><div class="cr-val">SKILL.md + frontmatter</div></div>
+          <div class="compare-row"><div class="cr-key">Invocation</div><div class="cr-val">/apex-start or auto</div></div>
+          <div class="compare-row"><div class="cr-key">Extra fields</div><div class="cr-val">allowed-tools, invocation</div></div>
+          <div class="compare-row"><div class="cr-key">Brain files</div><div class="cr-val">.agents/* (shared)</div></div>
+        </div>
+      </div>
+      <div class="compare-col">
+        <div class="compare-head blue">⧉ OpenAI Codex</div>
+        <div class="compare-body">
+          <div class="compare-row"><div class="cr-key">Entry file</div><div class="cr-val">AGENTS.md</div></div>
+          <div class="compare-row"><div class="cr-key">Skills dir</div><div class="cr-val">.agents/skills/</div></div>
+          <div class="compare-row"><div class="cr-key">Skill format</div><div class="cr-val">SKILL.md + frontmatter</div></div>
+          <div class="compare-row"><div class="cr-key">Invocation</div><div class="cr-val">$ mention or /apex-start</div></div>
+          <div class="compare-row"><div class="cr-key">Extra fields</div><div class="cr-val">agents/openai.yaml (optional)</div></div>
+          <div class="compare-row"><div class="cr-key">Brain files</div><div class="cr-val">.agents/* (shared)</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <div class="prompt-card mode-cmd">
+  <section>
+    <div class="eyebrow">Entry Point Files</div>
+    <h2>CLAUDE.md and AGENTS.md — nearly identical</h2>
+
+    <div class="card-stack">
+      <div class="card accent-purple">
         <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-num">01</div>
-          <div class="card-title-group">
-            <div class="card-title">/ apex-start — Session opener</div>
-            <div class="card-when">.claude/commands/apex-start.md · Type /apex-start at session start</div>
+          <div class="card-emoji">✦</div>
+          <div class="card-meta">
+            <div class="card-title">CLAUDE.md — Claude Code entry point</div>
+            <div class="card-sub">Project root · Auto-read by Claude Code on every session</div>
           </div>
-          <div class="badge badge-cmd">Command</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
-          <div class="prompt-block">
-            <div class="prompt-label">File: .claude/commands/apex-start.md</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button>Read the following files silently before responding:
-1. CLAUDE.md
-2. .claude/CONTEXT.md
-3. .claude/MAP.md
-4. .claude/TASKS.md
-5. .claude/PROGRESS.md
+          <div class="prompt-section">
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># [PROJECT NAME] — CLAUDE.md
 
-Then respond ONLY with:
+## Read Order (every session, no exceptions)
+1. `.agents/CONTEXT.md` — stack and services
+2. `.agents/MAP.md` — codebase map (read this, do not scan folders)
+3. `.agents/TASKS.md` — what to work on
+4. `.agents/PROGRESS.md` — where we left off
 
----
-✓ SESSION LOADED
-Project: [name] · Mode: [mode from CLAUDE.md]
-Last completed: [most recent PROGRESS.md entry]
-Active task: [next task from TASKS.md]
-Blocked: [blocked tasks or "none"]
----
+## DB Rule — Non-negotiable
+Never write a migration, query, or ORM model without reading `.agents/SCHEMA.md` first.
+The `apex-schema` skill handles this automatically, but you must also read SCHEMA.md manually
+if the task references any table or field.
 
-Begin working on the active task immediately.
-Do not read files outside MAP.md scope unless the task requires it.
-If the task involves DB changes, read .claude/SCHEMA.md before proceeding.</div>
+## Golden Rules
+- Never rewrite working modules unless explicitly required
+- Never change `.agents/CONTRACTS.md` interfaces without approval
+- Never install dependencies not in CONTEXT.md stack
+- Always check DECISIONS.md before proposing alternatives already debated
+- Always run the apex-end skill before closing a session
+
+## Project Mode
+Current mode: **[NEW / ACTIVE / STABLE]**
+
+## Team
+- Lead: [name]
+- Contractors: [names + scope]
+- Tasks tagged [CONTRACTOR] in TASKS.md are contractor-only scope
+
+## Skills Available
+- apex-start — load context and begin session
+- apex-end — commit the brain before closing
+- apex-schema — DB change guard (also auto-invokes on DB tasks)
+- apex-plan — plan features before coding</div>
           </div>
         </div>
       </div>
 
-      <div class="prompt-card mode-cmd">
+      <div class="card accent-blue">
         <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-num">02</div>
-          <div class="card-title-group">
-            <div class="card-title">/ apex-end — Session closer</div>
-            <div class="card-when">.claude/commands/apex-end.md · Type /apex-end before closing</div>
+          <div class="card-emoji">⧉</div>
+          <div class="card-meta">
+            <div class="card-title">AGENTS.md — Codex entry point</div>
+            <div class="card-sub">Project root · Auto-read by OpenAI Codex on every session</div>
           </div>
-          <div class="badge badge-cmd">Command</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
-          <div class="prompt-block">
-            <div class="prompt-label">File: .claude/commands/apex-end.md</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button">Update these files to close the session:
+          <div class="prompt-section">
+            <div class="prompt-label">Same content as CLAUDE.md — just a different filename</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># [PROJECT NAME] — AGENTS.md
+<span class="cm"># This is the Codex entry point. Mirrors CLAUDE.md exactly.</span>
+<span class="cm"># Both files point to the shared .agents/ brain.</span>
 
-1. **PROGRESS.md** — Append today's date entry with what was completed, what carries forward, and any decisions.
-2. **TASKS.md** — Mark completed tasks [DONE] with date. Add any new tasks discovered. Re-prioritize if needed.
-3. **MAP.md** — Add any new files or modules created this session.
-4. **SCHEMA.md** — If any DB changes were made, update affected tables and append to the Change Log.
-5. **DECISIONS.md** — Add any architectural decisions made this session.
+## Read Order (every session, no exceptions)
+1. `.agents/CONTEXT.md` — stack and services
+2. `.agents/MAP.md` — codebase map (read this, do not scan folders)
+3. `.agents/TASKS.md` — what to work on
+4. `.agents/PROGRESS.md` — where we left off
 
-Then output a git commit message:
-`chore(apex): [date] — [main thing accomplished]`</div>
+## DB Rule — Non-negotiable
+Never write a migration, query, or ORM model without reading `.agents/SCHEMA.md` first.
+
+## Golden Rules
+- Never rewrite working modules unless explicitly required
+- Never change `.agents/CONTRACTS.md` interfaces without approval
+- Never install dependencies not in CONTEXT.md stack
+- Always check DECISIONS.md before proposing alternatives already debated
+
+## Project Mode
+Current mode: **[NEW / ACTIVE / STABLE]**
+
+## Team
+- Lead: [name]
+- Contractors: [names + scope]
+
+## Skills Available (invoke with $ or by description)
+- apex-start — load context and begin session
+- apex-end — commit the brain before closing
+- apex-schema — DB change guard
+- apex-plan — plan features before coding</div>
           </div>
         </div>
       </div>
 
-      <div class="prompt-card mode-cmd">
+      <div class="card accent-amber">
         <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-num">03</div>
-          <div class="card-title-group">
-            <div class="card-title">/ apex-schema — DB change guard</div>
-            <div class="card-when">.claude/commands/apex-schema.md · Type /apex-schema before any DB work</div>
+          <div class="card-emoji">📋</div>
+          <div class="card-meta">
+            <div class="card-title">Contractor onboarding — works with both tools</div>
+            <div class="card-sub">Share with new contractors regardless of which tool they use</div>
           </div>
-          <div class="badge badge-db">DB Guard</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
-          <div class="prompt-block">
-            <div class="prompt-label">File: .claude/commands/apex-schema.md</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button>Read .claude/SCHEMA.md and .claude/CONTRACTS.md.
+          <div class="prompt-section">
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># APEX ONBOARD — New contractor</span>
+<span class="cm"># Works with Claude Code (type this) or Codex (paste as task)</span>
 
-I need to make a DB change. Analyze it before I proceed:
+You are joining an existing project. Read these files in order before touching anything:
 
-$ARGUMENTS
+1. CLAUDE.md or AGENTS.md — rules you must follow
+2. .agents/CONTEXT.md — stack, services, how to set up locally
+3. .agents/MAP.md — codebase map, understand this before opening any file
+4. .agents/SCHEMA.md — database structure, read before any DB work
+5. .agents/DECISIONS.md — why things are the way they are, do not redo these
+6. .agents/CONTRACTS.md — API and interface contracts you must respect
+7. .agents/TASKS.md — find tasks tagged [CONTRACTOR] for your assigned work
 
-For the proposed change, check:
-1. **Affected tables** — which tables in SCHEMA.md are touched?
-2. **Relationship impact** — does this affect any FK relationships?
-3. **Constraint conflicts** — does this violate existing unique/check constraints?
-4. **Downstream impact** — which CONTRACTS.md interfaces or MAP.md modules query these tables?
-5. **Destructive?** — is this a column removal, type change, or rename? State rollback path.
-6. **RLS impact** — are existing RLS policies still valid?
+Confirm you are ready by answering all 5:
+1. What does this project do? (one sentence)
+2. What is your assigned task from TASKS.md?
+3. Which SCHEMA.md tables will your task touch?
+4. Are there CONTRACTS.md interfaces affected by your task?
+5. Are there DECISIONS that constrain how you approach your task?
 
-Propose the migration. Wait for my approval before writing migration files.
-After execution, update SCHEMA.md and add a Change Log entry.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="prompt-card mode-cmd">
-        <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-num">04</div>
-          <div class="card-title-group">
-            <div class="card-title">/ apex-plan — Feature planning</div>
-            <div class="card-when">.claude/commands/apex-plan.md · Plan before coding any new feature</div>
-          </div>
-          <div class="badge badge-active">Plan</div>
-          <div class="card-toggle">+</div>
-        </div>
-        <div class="card-body">
-          <div class="prompt-block">
-            <div class="prompt-label">File: .claude/commands/apex-plan.md</div>
-            <div class="prompt-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button>Read: CLAUDE.md, .claude/CONTEXT.md, .claude/MAP.md, .claude/SCHEMA.md, .claude/CONTRACTS.md
-
-New feature to plan: $ARGUMENTS
-
-Without writing any code, produce:
-1. **Impact analysis** — existing modules affected (from MAP.md)
-2. **Schema changes** — new/modified tables needed (validate against SCHEMA.md)
-3. **New files** — what to add to MAP.md
-4. **Contract changes** — CONTRACTS.md updates needed
-5. **Task breakdown** — ordered task list ready to paste into TASKS.md
-6. **Risk flags** — anything that could break existing functionality
-
-Wait for my approval before adding tasks to TASKS.md or writing any code.</div>
+Do not write any code until all 5 are answered.</div>
           </div>
         </div>
       </div>
@@ -941,161 +1234,497 @@ Wait for my approval before adding tasks to TASKS.md or writing any code.</div>
   </section>
 
   <section>
-    <div class="section-label">// Using $ARGUMENTS</div>
-    <div class="section-title">Pass context directly to commands</div>
-    <div class="section-desc">
-      Some commands use <code style="color:var(--accent3)">$ARGUMENTS</code> — a Claude Code variable that captures whatever you type after the command name. So you can type:
-      <br><br>
-      <code style="color:var(--db)">/apex-schema add a "processed_at" timestamp column to the cases table</code>
-      <br><br>
-      ...and Claude receives that description inline in the prompt. You get full context without copy-pasting anything.
+    <div class="eyebrow">Practical Usage</div>
+    <h2>When to use which tool</h2>
+    <div class="two-col">
+      <div class="info-card" style="border-left: 3px solid var(--accent);">
+        <div class="ic-icon">✦</div>
+        <div class="ic-title">Use Claude Code when…</div>
+        <div class="ic-desc">Interactive sessions, complex multi-step tasks, architecture decisions, code review, contractor onboarding. Claude Code's skill auto-invocation and CLAUDE.md rules make it the better choice for open-ended work where you need judgment.</div>
+      </div>
+      <div class="info-card" style="border-left: 3px solid var(--blue);">
+        <div class="ic-icon">⧉</div>
+        <div class="ic-title">Use Codex when…</div>
+        <div class="ic-desc">Batch tasks, parallel feature branches, well-scoped automated work. Codex's cloud execution and multi-agent parallelism makes it strong for "run 5 of these tasks simultaneously while I work on something else."</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:12px;">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">The handoff pattern</div>
+        <div class="callout-desc">Plan in Claude Code (interactive, architectural) → run bulk tasks in Codex (parallel, cloud) → review and merge in Claude Code. Both read the same <code>.agents/</code> brain, so context is never lost between tools. Run <code>apex-end</code> in Claude Code before handing off to Codex so TASKS.md is current.</div>
+      </div>
     </div>
   </section>
+
+</div>
 </div>
 
-<!-- ════════════════════════════════════════ PAGE: ENFORCEMENT -->
-<div class="page" id="page-enforce">
+
+<!-- ══════════ LINEAR ══════════ -->
+<div class="page" id="page-linear">
+<div class="container">
+
   <section>
-    <div class="section-label">// Enforcement Strategy</div>
-    <div class="section-title">How to make APEX stick — without effort</div>
+    <div class="eyebrow">Linear Integration</div>
+    <h2>One source of truth.<br>TASKS.md + Linear in sync.</h2>
+    <p class="lead">The strategy is simple: TASKS.md is the read layer (zero API cost every session), Linear is the visibility and collaboration layer. Linear IDs are stored directly inside TASKS.md — no lookup needed. The MCP only fires when a state actually changes.</p>
 
-    <div class="section-desc">Ranked by effectiveness and setup cost. The answer is: use all three layers together.</div>
+    <div class="callout green">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">The token-efficient principle</div>
+        <div class="callout-desc">Claude reads TASKS.md locally every session — <strong>no API call</strong>. Linear only gets touched when: (1) bootstrapping a new project, (2) a task moves to In Progress, (3) a task is marked Done. Three operations, not continuous polling. The Linear ID stored in TASKS.md means Claude always knows exactly which issue to update without searching.</div>
+      </div>
+    </div>
+  </section>
 
-    <table class="enforce-table">
+  <section>
+    <div class="eyebrow">Step 0 — Setup</div>
+    <h2>Connect Linear MCP once per machine</h2>
+
+    <div class="card-stack">
+
+      <div class="card accent-purple">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">✦</div>
+          <div class="card-meta">
+            <div class="card-title">Claude Code — MCP setup</div>
+            <div class="card-sub">One-time setup · Run in terminal · Auth persists across projects</div>
+          </div>
+          <div class="pill pill-purple">Claude Code</div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="prompt-label">Option A — Official Linear MCP (recommended)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># Run this once in your terminal</span>
+claude mcp add-json linear '{"command":"npx","args":["-y","mcp-remote","https://mcp.linear.app/sse"]}'
+
+<span class="cm"># Then inside a Claude Code session, authenticate:</span>
+/mcp
+<span class="cm"># Follow the OAuth flow — log in with your Linear account</span>
+
+<span class="cm"># Verify connection:</span>
+<span class="cm"># Ask Claude: "List my assigned Linear issues"</span></div>
+          </div>
+          <div class="prompt-section">
+            <div class="prompt-label">Option B — Direct HTTP (if SSE gives issues)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">claude mcp add --transport http linear-server https://mcp.linear.app/mcp
+
+<span class="cm"># Or via claude.ai Settings → Connectors → Linear</span>
+<span class="cm"># This is the zero-config path if you use Claude.ai already</span></div>
+          </div>
+          <div class="prompt-section">
+            <div class="prompt-label">Add to .agents/CONTEXT.md once connected</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button"><span class="cm"># Add this block to .agents/CONTEXT.md under "External Services"</span>
+
+| Linear | Issue tracking | MCP (OAuth) — run /mcp to auth |
+| Linear Team ID | <span class="val">[YOUR-TEAM-ID]</span> | Settings → General in Linear |
+| Linear Project | <span class="val">[PROJECT-NAME]</span> | The Linear project tasks sync to |</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card accent-blue">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">⧉</div>
+          <div class="card-meta">
+            <div class="card-title">OpenAI Codex — MCP setup</div>
+            <div class="card-sub">Add to ~/.codex/config.toml · Requires rmcp feature flag</div>
+          </div>
+          <div class="pill pill-blue">Codex</div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="prompt-label">~/.codex/config.toml</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button"><span class="cm"># Add to ~/.codex/config.toml</span>
+
+[features]
+experimental_use_rmcp_client = true
+
+[mcp_servers.linear]
+url = "https://mcp.linear.app/mcp"
+
+<span class="cm"># Then authenticate:</span>
+codex mcp login linear
+<span class="cm"># Follow the OAuth flow in your browser</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">ID Mapping — The Core Pattern</div>
+    <h2>Linear IDs live inside TASKS.md</h2>
+    <p class="lead">After bootstrapping, every task in TASKS.md gets a Linear ID appended inline. Claude reads this ID from the file — no API call to look it up. Updates go directly to the right issue.</p>
+
+    <div class="card accent-amber">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-emoji">🗂</div>
+        <div class="card-meta">
+          <div class="card-title">TASKS.md format with Linear IDs</div>
+          <div class="card-sub">How tasks look after bootstrapping — ID appended to each entry</div>
+        </div>
+        <div class="card-toggle">+</div>
+      </div>
+      <div class="card-body">
+        <div class="prompt-section">
+          <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># TASKS.md — Sprint Queue
+<span class="cm"># Linear project: [PROJECT-NAME] | Team: [TEAM-ID]</span>
+<span class="cm"># Format: T-NNN [LIN: ABC-NNN] — task title `[OWNER]`</span>
+
+## 🔴 In Progress
+- [ ] **T-012** `[LIN: ENG-47]` — JWT refresh token rotation `[LEAD]`
+  - Files: `lib/server/auth.ts`, `hooks.server.ts`
+  - Notes: 15min access + 7d refresh. See ADR-004.
+
+## 🟡 Up Next
+- [ ] **T-013** `[LIN: ENG-48]` — Rate limiting on /api/cases `[LEAD]`
+- [ ] **T-014** `[LIN: ENG-49]` — Case detail page UI `[CONTRACTOR: @maria]`
+- [ ] **T-015** `[LIN: ENG-50]` — Playwright auth flow tests `[CONTRACTOR: @carlos]`
+
+## 🔵 Backlog
+- [ ] **T-020** `[LIN: ENG-55]` — Audit log triggers `[LEAD]`
+- [ ] **T-021** `[LIN: ENG-56]` — PDF export for cases `[LEAD]`
+
+## ✅ Done
+- [x] **T-011** `[LIN: ENG-46]` — Cases table schema (2024-01-15)
+- [x] **T-010** `[LIN: ENG-45]` — Supabase RLS policies (2024-01-14)
+
+## 🚫 Blocked
+- [ ] **T-019** `[LIN: ENG-54]` — Datacredito sandbox `[BLOCKED: waiting on client]`</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Linear Skills</div>
+    <h2>Three skills, three operations</h2>
+    <p class="lead">Bootstrap once. Update on state change. That's it. Linear never gets called just to read — reading always comes from TASKS.md locally.</p>
+
+    <div class="card-stack">
+
+      <div class="card accent-green">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">🚀</div>
+          <div class="card-meta">
+            <div class="card-title">apex-linear-bootstrap — Create all Linear issues from TASKS.md</div>
+            <div class="card-sub">.agents/skills/apex-linear-bootstrap/SKILL.md · Run once per project · Writes Linear IDs back to TASKS.md</div>
+          </div>
+          <div class="pill pill-green">Run Once</div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="prompt-label">File: .agents/skills/apex-linear-bootstrap/SKILL.md</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+name: apex-linear-bootstrap
+description: Bootstrap Linear by creating issues from TASKS.md. Use when the user says "push tasks to Linear", "bootstrap Linear", "sync tasks to Linear for the first time", or "create Linear issues from TASKS.md". Only run this once per project.
+allowed-tools: Read, Write, mcp__linear__createIssue, mcp__linear__searchTeams, mcp__linear__searchProjects
+---
+
+Read .agents/TASKS.md and .agents/CONTEXT.md.
+
+Extract the Linear Team ID and Project from CONTEXT.md.
+
+For every task that does NOT already have a `[LIN: ...]` tag:
+
+1. Create a Linear issue with:
+   - **title:** the task title from TASKS.md (strip the T-NNN prefix)
+   - **team:** the team ID from CONTEXT.md
+   - **status:** map TASKS.md status to Linear:
+     - "In Progress" → In Progress
+     - "Up Next" or "Backlog" → Todo
+     - "Done" → Done
+     - "Blocked" → use Todo + add a comment with the blocker reason
+   - **description:** include the task ID (T-NNN), any notes, and files from TASKS.md
+   - **label:** add "apex" label so APEX tasks are filterable in Linear
+
+2. After each issue is created, immediately update TASKS.md:
+   - Append `[LIN: ABC-NNN]` to that task line (use the Linear identifier returned by the API, e.g. ENG-47)
+
+3. After all issues are created, report:
+   - How many issues were created
+   - Any that failed (and why)
+   - Confirm TASKS.md has been updated with all Linear IDs
+
+Do not create duplicate issues. If a task already has `[LIN: ...]`, skip it.
+Do not create issues for tasks marked [DONE] unless explicitly asked.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card accent-amber">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">⟳</div>
+          <div class="card-meta">
+            <div class="card-title">apex-linear-sync — Update Linear when task status changes</div>
+            <div class="card-sub">.agents/skills/apex-linear-sync/SKILL.md · Auto-invoked on task state changes</div>
+          </div>
+          <div class="pill pill-amber">Auto-invoked ✦</div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="prompt-label">File: .agents/skills/apex-linear-sync/SKILL.md</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+name: apex-linear-sync
+description: Sync a task status change to Linear. Auto-invoke whenever a task in TASKS.md changes state — when moving to In Progress, marking as Done, marking as Blocked, or unblocking. Trigger phrases: "mark done", "task complete", "starting task", "moving to in progress", "blocked on", "unblocked".
+allowed-tools: Read, Write, mcp__linear__updateIssue, mcp__linear__createComment
+---
+
+Read .agents/TASKS.md to find the task being updated.
+
+Extract the Linear ID from the `[LIN: ABC-NNN]` tag on that task line.
+
+If the task has no `[LIN: ...]` tag: stop and say "This task has no Linear ID — run /apex-linear-bootstrap first or add it manually."
+
+Based on the state change, call Linear MCP:
+
+**Starting a task (moving to In Progress):**
+- Update issue status → "In Progress"
+- Add comment: "Started via APEX — session [today's date]"
+
+**Completing a task:**
+- Update issue status → "Done"
+- Add comment: "Completed via APEX — [one-line summary of what was done]"
+- Update TASKS.md: mark task [DONE] with date
+
+**Blocking a task:**
+- Update issue status → "Todo" (keep out of active)
+- Add comment: "BLOCKED: [reason] — [date]"
+- Update TASKS.md: add [BLOCKED: reason] tag
+
+**Unblocking a task:**
+- Update issue status → "Todo"
+- Add comment: "Unblocked — [date]. Ready to pick up."
+- Update TASKS.md: remove [BLOCKED] tag
+
+After updating Linear, confirm: "✓ Linear [ABC-NNN] updated to [status]"</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card accent-purple">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">➕</div>
+          <div class="card-meta">
+            <div class="card-title">apex-linear-add — Create a single new Linear issue</div>
+            <div class="card-sub">.agents/skills/apex-linear-add/SKILL.md · For tasks added mid-sprint</div>
+          </div>
+          <div class="pill pill-purple">Manual</div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="prompt-label">File: .agents/skills/apex-linear-add/SKILL.md</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+name: apex-linear-add
+description: Add a new task to both TASKS.md and Linear simultaneously. Use when the user wants to add a new task, issue, or work item that should exist in both places. Trigger: "add task", "new task", "create issue", "add to backlog".
+allowed-tools: Read, Write, mcp__linear__createIssue
+---
+
+Read .agents/TASKS.md and .agents/CONTEXT.md.
+
+New task to add: $ARGUMENTS
+
+1. Determine the next T-NNN number from TASKS.md
+2. Create a Linear issue:
+   - title: [task description]
+   - team: [from CONTEXT.md]
+   - status: Todo
+   - description: APEX task [T-NNN] — [any details from $ARGUMENTS]
+   - label: "apex"
+3. Add the task to TASKS.md in the correct section (Up Next by default):
+   `- [ ] **T-NNN** \`[LIN: ABC-NNN]\` — [title] \`[LEAD]\``
+4. Confirm: "✓ T-NNN created in TASKS.md and Linear [ABC-NNN]"</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Token Strategy</div>
+    <h2>When Linear MCP is called — and when it isn't</h2>
+
+    <table class="data-table">
       <thead>
         <tr>
-          <th>Method</th>
-          <th>Effort</th>
-          <th>How it works</th>
-          <th>Best for</th>
+          <th>Operation</th>
+          <th>API call?</th>
+          <th>When</th>
+          <th>Token cost</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="enforce-method">CLAUDE.md<br><span style="font-size:10px;color:var(--muted)">auto-loaded</span></td>
-          <td><span class="enforce-effort effort-zero">zero</span></td>
-          <td class="enforce-desc">Claude Code reads CLAUDE.md automatically at every session. Put your golden rules and "read .claude/ first" instruction here. It's the only guaranteed enforcement you have.</td>
-          <td class="enforce-rec">Foundation. Always.</td>
+          <td class="td-name">Read task list</td>
+          <td><span class="pill pill-green">Never</span></td>
+          <td style="color:var(--text-2);font-size:13px">Every session start — reads TASKS.md locally</td>
+          <td style="color:var(--green);font-size:12px;font-weight:600">0 tokens</td>
         </tr>
         <tr>
-          <td class="enforce-method">Slash Commands<br><span style="font-size:10px;color:var(--muted)">.claude/commands/</span></td>
-          <td><span class="enforce-effort effort-zero">zero</span></td>
-          <td class="enforce-desc">Create once, use forever. The team types /apex-start instead of remembering a long prompt. Git-tracked so contractors automatically have the same commands when they clone the repo.</td>
-          <td class="enforce-rec">Daily workflow. Best ROI.</td>
+          <td class="td-name">Bootstrap project</td>
+          <td><span class="pill pill-amber">Once</span></td>
+          <td style="color:var(--text-2);font-size:13px">Once per project — creates all issues, writes IDs back</td>
+          <td style="color:var(--amber);font-size:12px;font-weight:600">~50 tokens / issue</td>
         </tr>
         <tr>
-          <td class="enforce-method">CLAUDE.md DB Rule<br><span style="font-size:10px;color:var(--muted)">explicit gate</span></td>
-          <td><span class="enforce-effort effort-zero">zero</span></td>
-          <td class="enforce-desc">Add one line to CLAUDE.md: "Never write a migration or query without first reading .claude/SCHEMA.md and running /apex-schema." Claude will follow this as a rule on every session.</td>
-          <td class="enforce-rec">DB change protection.</td>
+          <td class="td-name">Move to In Progress</td>
+          <td><span class="pill pill-amber">On change</span></td>
+          <td style="color:var(--text-2);font-size:13px">apex-linear-sync auto-invokes, 1 API update call</td>
+          <td style="color:var(--amber);font-size:12px;font-weight:600">~80 tokens</td>
         </tr>
         <tr>
-          <td class="enforce-method">Git pre-commit hook<br><span style="font-size:10px;color:var(--muted)">.husky / lefthook</span></td>
-          <td><span class="enforce-effort effort-low">low</span></td>
-          <td class="enforce-desc">A hook that checks if any migration files were added without a corresponding SCHEMA.md update. Blocks commits if .claude/SCHEMA.md wasn't modified alongside a migration. Simple bash script.</td>
-          <td class="enforce-rec">Team enforcement.</td>
+          <td class="td-name">Mark task Done</td>
+          <td><span class="pill pill-amber">On change</span></td>
+          <td style="color:var(--text-2);font-size:13px">apex-linear-sync: 1 status update + 1 comment</td>
+          <td style="color:var(--amber);font-size:12px;font-weight:600">~120 tokens</td>
         </tr>
         <tr>
-          <td class="enforce-method">PR checklist<br><span style="font-size:10px;color:var(--muted)">GitHub template</span></td>
-          <td><span class="enforce-effort effort-low">low</span></td>
-          <td class="enforce-desc">Add a .github/pull_request_template.md with checkboxes: "[ ] Updated .claude/SCHEMA.md if DB changed", "[ ] Updated .claude/MAP.md if new files added", "[ ] /apex-end was run". Human accountability layer.</td>
-          <td class="enforce-rec">Contractor oversight.</td>
+          <td class="td-name">Add new task</td>
+          <td><span class="pill pill-amber">On create</span></td>
+          <td style="color:var(--text-2);font-size:13px">apex-linear-add: 1 create call, writes ID to TASKS.md</td>
+          <td style="color:var(--amber);font-size:12px;font-weight:600">~100 tokens</td>
         </tr>
         <tr>
-          <td class="enforce-method">Claude Code hooks<br><span style="font-size:10px;color:var(--muted)">settings.json</span></td>
-          <td><span class="enforce-effort effort-low">low</span></td>
-          <td class="enforce-desc">Claude Code supports pre/post tool hooks. You can add a PostToolUse hook that fires after file edits and reminds Claude to check MAP.md. More advanced but powerful for large teams.</td>
-          <td class="enforce-rec">Advanced / big teams.</td>
+          <td class="td-name">Read Linear for context</td>
+          <td><span class="pill pill-red">Never</span></td>
+          <td style="color:var(--text-2);font-size:13px">Claude reads TASKS.md instead — Linear is write-only in APEX</td>
+          <td style="color:var(--green);font-size:12px;font-weight:600">0 tokens</td>
         </tr>
       </tbody>
     </table>
 
-    <div style="margin-top: 28px;">
-      <div class="section-label">// Recommended Setup (3-layer stack)</div>
-      <div class="tips-grid" style="margin-top:12px;">
-        <div class="tip">
-          <div class="tip-icon">1️⃣</div>
-          <div class="tip-title">Layer 1 — CLAUDE.md rules (10 min setup)</div>
-          <div class="tip-desc">Add explicit rules: "Read .claude/ before any file", "Run /apex-schema before DB work", "Run /apex-end before closing." Claude follows instructions in CLAUDE.md as hard rules. Free enforcement.</div>
+    <div class="callout" style="margin-top:16px;">
+      <div class="callout-icon">⚡</div>
+      <div class="callout-body">
+        <div class="callout-title">Linear is write-only in APEX — never a read source</div>
+        <div class="callout-desc">The most common token trap with any issue tracker integration is reading from it every session to "stay in sync." In APEX, Linear is downstream — TASKS.md is the source of truth. Claude writes <em>to</em> Linear when things change. It never reads <em>from</em> Linear to figure out what to work on. The <code>[LIN: ENG-47]</code> tag in TASKS.md is all the reference Claude needs to push an update.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Session Integration</div>
+    <h2>Update apex-start and apex-end skills</h2>
+    <p class="lead">Add one line to each skill so Linear sync happens automatically at the right moments — no extra commands needed.</p>
+
+    <div class="two-col">
+      <div class="info-card" style="border-left:3px solid var(--accent)">
+        <div class="ic-icon">▶</div>
+        <div class="ic-title">apex-start — add this line</div>
+        <div class="ic-desc">After loading TASKS.md, add:<br><br><code>If the active task has a [LIN: ...] tag and its status is "Up Next", call apex-linear-sync to move it to In Progress in Linear before beginning work.</code><br><br>This means picking up a task automatically marks it In Progress in Linear.</div>
+      </div>
+      <div class="info-card" style="border-left:3px solid var(--green)">
+        <div class="ic-icon">■</div>
+        <div class="ic-title">apex-end — add this line</div>
+        <div class="ic-desc">After updating TASKS.md, add:<br><br><code>For every task marked [DONE] this session that has a [LIN: ...] tag and hasn't been synced yet, call apex-linear-sync to mark it Done in Linear.</code><br><br>Session close automatically pushes completions to Linear.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Prompts</div>
+    <h2>Useful ad-hoc prompts</h2>
+
+    <div class="card-stack">
+      <div class="card accent-purple">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">📋</div>
+          <div class="card-meta">
+            <div class="card-title">Utility prompts — ad-hoc Linear actions</div>
+            <div class="card-sub">For when you need something specific not covered by the skills</div>
+          </div>
+          <div class="card-toggle">+</div>
         </div>
-        <div class="tip">
-          <div class="tip-icon">2️⃣</div>
-          <div class="tip-title">Layer 2 — Slash commands (15 min setup)</div>
-          <div class="tip-desc">Create the 4 command files in .claude/commands/. Commit to git. Team clones, commands available immediately. No config, no installs. /apex-start becomes muscle memory in one week.</div>
-        </div>
-        <div class="tip">
-          <div class="tip-icon">3️⃣</div>
-          <div class="tip-title">Layer 3 — PR checklist (5 min setup)</div>
-          <div class="tip-desc">Add .github/pull_request_template.md with APEX checkboxes. Contractors must check boxes before merge. Creates accountability without needing to review every change manually.</div>
-        </div>
-        <div class="tip">
-          <div class="tip-icon">💡</div>
-          <div class="tip-title">The only rule that matters in practice</div>
-          <div class="tip-desc">In CLAUDE.md, write this exactly: "If you did not read .claude/SCHEMA.md, do not write any SQL, migration, or ORM query. No exceptions." Claude treats this as a hard gate and will ask you to run /apex-schema if it hasn't loaded the schema yet.</div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="prompt-label">Backfill Linear IDs (when you already have Linear issues)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># APEX LINEAR BACKFILL — Map existing Linear issues to TASKS.md</span>
+<span class="cm"># Use when you have existing Linear issues before setting up APEX</span>
+
+Read .agents/TASKS.md.
+Search Linear for issues in project [PROJECT-NAME].
+
+For each task in TASKS.md that has no `[LIN: ...]` tag:
+1. Search Linear for an issue whose title closely matches the task title
+2. If a match is found, append `[LIN: ABC-NNN]` to that task line
+3. If no match found, flag it as "needs manual mapping or new issue"
+
+Report all mappings made and all tasks still unmapped.
+Do not create new Linear issues — only map existing ones.</div>
+          </div>
+          <div class="prompt-section">
+            <div class="prompt-label">Pull Linear changes back to TASKS.md (when team updates Linear directly)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button"><span class="cm"># APEX LINEAR PULL — Sync Linear status back to TASKS.md</span>
+<span class="cm"># Use sparingly — only when team has moved issues in Linear without going through APEX</span>
+
+Read .agents/TASKS.md.
+For each task with a `[LIN: ...]` tag, check its current status in Linear.
+
+Compare Linear status to TASKS.md status.
+For any mismatch, update TASKS.md to reflect Linear's current state:
+- Linear "Done" → mark task [DONE] with today's date
+- Linear "In Progress" → move to In Progress section
+- Linear "Cancelled" → note as [CANCELLED: reason]
+
+Report all changes made. Do not update Linear — only update TASKS.md.</div>
+          </div>
+          <div class="prompt-section">
+            <div class="prompt-label">Contractor task view (what Linear issues are assigned to them)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button"><span class="cm"># APEX LINEAR CONTRACTOR VIEW</span>
+
+Read .agents/TASKS.md.
+Find all tasks tagged `[CONTRACTOR: @name]` that have `[LIN: ...]` IDs.
+
+Report a clean list:
+- Linear ID (ABC-NNN)
+- Task title
+- Current status
+- Any notes or blockers
+
+This gives contractors their Linear issue list directly from TASKS.md
+without needing to search Linear themselves.</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+</div>
 </div>
 
-<!-- ════════════════════════════════════════ PAGE: TEMPLATES -->
+<!-- ══════════ TEMPLATES ══════════ -->
 <div class="page" id="page-templates">
+<div class="container">
+
   <section>
-    <div class="section-label">// File Templates</div>
-    <div class="section-title">Starter content for every .claude/ file</div>
+    <div class="eyebrow">File Templates</div>
+    <h2>Starter content for every .agents/ file</h2>
 
-    <div class="file-card">
-      <div class="file-card-header" onclick="toggleFile(this)">
-        <div class="file-name">CLAUDE.md</div>
-        <div class="file-purpose">Entry point — auto-read by Claude Code on every session</div>
-        <div class="file-toggle">+</div>
-      </div>
-      <div class="file-content">
-        <div class="file-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button"># [PROJECT NAME] — CLAUDE.md
-# APEX Context System v2
+    <div class="card-stack">
 
-## ⚡ Read Order (every session)
-1. `.claude/CONTEXT.md` — stack, services, integrations
-2. `.claude/MAP.md` — codebase map (do not scan folders, read this instead)
-3. `.claude/TASKS.md` — what to work on
-4. `.claude/PROGRESS.md` — where we are
-
-## 🗄 DB Rule — Non-negotiable
-If your task involves any database work (queries, migrations, models, seeds):
-**Read `.claude/SCHEMA.md` before writing a single line.**
-**Run /apex-schema [description] and wait for approval before creating migration files.**
-
-## 🚫 Golden Rules
-- Never rewrite working modules unless the task explicitly says to
-- Never change `.claude/CONTRACTS.md` interfaces without explicit approval
-- Never install new dependencies without checking CONTEXT.md stack first
-- Always check DECISIONS.md before proposing alternatives we've debated
-- Always run /apex-end before closing a session
-
-## 🏗 Project Mode
-Current mode: **[NEW / ACTIVE / STABLE]**
-- ACTIVE → update .claude/ files every session
-- STABLE → surgical changes only, no refactoring, no dep upgrades
-
-## 👥 Team
-- Lead: [name]
-- Contractors: [names + what they own]
-- Tasks tagged [CONTRACTOR] in TASKS.md are contractor scope</div>
-      </div>
-    </div>
-
-    <div class="file-card">
-      <div class="file-card-header" onclick="toggleFile(this)">
-        <div class="file-name">.claude/CONTEXT.md</div>
-        <div class="file-purpose">Stack, services, env vars — the "what and why"</div>
-        <div class="file-toggle">+</div>
-      </div>
-      <div class="file-content">
-        <div class="file-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button"># CONTEXT.md
-# Last updated: [date]
+      <div class="card accent-purple">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">📋</div>
+          <div class="card-meta"><div class="card-title">.agents/CONTEXT.md</div><div class="card-sub">Stack, services, environment — the what and why</div></div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># CONTEXT.md
+<span class="cm"># Last updated: [date]</span>
 
 ## What This Is
-[One paragraph: what the product does, who uses it, what problem it solves]
+[One paragraph: product description, who uses it, what problem it solves]
 
 ## Stack
 - **Framework:** SvelteKit 2 + TypeScript
@@ -1103,17 +1732,14 @@ Current mode: **[NEW / ACTIVE / STABLE]**
 - **ORM:** Drizzle
 - **Auth:** Supabase Auth
 - **Hosting:** Cloudflare Pages + Workers
-- **File Storage:** Supabase Storage
 - **Email:** Resend
-- **Payments:** [if applicable]
 
 ## External Services
 | Service | Purpose | Credentials in |
 |---|---|---|
-| Supabase | DB + Auth + Storage | .env (SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_KEY) |
-| Cloudflare | Hosting + DNS | wrangler.toml |
-| Resend | Transactional email | .env (RESEND_API_KEY) |
-| Datacredito | Credit bureau API | .env (DATACREDITO_KEY) |
+| Supabase | DB + Auth + Storage | .env |
+| Cloudflare | Hosting + CDN | wrangler.toml |
+| Resend | Email | .env |
 
 ## Required .env Variables
 ```
@@ -1122,79 +1748,136 @@ SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_KEY=
 DATABASE_URL=
 RESEND_API_KEY=
-[add all required vars]
 ```
 
 ## Key Conventions
-- All server code lives in `src/lib/server/` — never import in client components
-- API routes use `+server.ts`, pages use `+page.svelte` + `+page.server.ts`
-- All DB queries go through Drizzle in `src/lib/server/db/`
+- All server code lives in `src/lib/server/` — never import in client
+- API routes: `+server.ts` / Pages: `+page.svelte` + `+page.server.ts`
+- All DB queries through Drizzle in `src/lib/server/db/`
 - Auth guard runs in `hooks.server.ts`</div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="file-card">
-      <div class="file-card-header" onclick="toggleFile(this)">
-        <div class="file-name">.claude/TASKS.md</div>
-        <div class="file-purpose">Sprint queue with numbered tasks and owner tags</div>
-        <div class="file-toggle">+</div>
+      <div class="card accent-purple">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">🗺</div>
+          <div class="card-meta"><div class="card-title">.agents/MAP.md</div><div class="card-sub">Codebase map — the biggest token saver in the system</div></div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># MAP.md — Codebase Map
+<span class="cm"># Updated: [date] by [who]</span>
+<span class="cm"># Claude: read this instead of scanning folders. Never scan src/ speculatively.</span>
+
+## /src/routes/
+- `(app)/` — authenticated app routes, protected by auth guard
+- `(public)/` — public-facing pages, no auth required
+- `api/` — REST endpoints using +server.ts pattern
+
+## /src/lib/
+- `server/` — server-only code (DB, auth, external APIs) — never import client-side
+  - `db/schema.ts` — Drizzle schema definition (source of truth for DB)
+  - `db/index.ts` — Drizzle client singleton
+  - `auth.ts` — Auth helpers, JWT logic
+- `components/` — reusable Svelte components
+- `stores/` — Svelte stores (client state only)
+- `utils/` — shared utilities
+
+## /src/
+- `hooks.server.ts` — auth guard, request interceptors, runs on every request
+- `app.d.ts` — TypeScript types for SvelteKit
+
+## /supabase/
+- `migrations/` — SQL migration files, chronological
+- `seed.sql` — development seed data
+
+## ⚠️ Do Not Touch
+- `.svelte-kit/` — build output, auto-generated
+- `node_modules/` — dependencies</div>
+          </div>
+        </div>
       </div>
-      <div class="file-content">
-        <div class="file-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button"># TASKS.md — Sprint Queue
-# Updated: [date] | Goal: [sprint goal in one line]
+
+      <div class="card accent-green">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">✅</div>
+          <div class="card-meta"><div class="card-title">.agents/TASKS.md</div><div class="card-sub">Numbered sprint queue with owner tags</div></div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># TASKS.md — Sprint Queue
+<span class="cm"># Updated: [date] | Sprint goal: [one line]</span>
 
 ## 🔴 In Progress
 - [ ] **T-012** — JWT refresh token rotation `[LEAD]`
   - Files: `lib/server/auth.ts`, `hooks.server.ts`
   - Notes: 15min access + 7d refresh. See ADR-004.
 
-## 🟡 Up Next
+## 🟡 Up Next (priority order)
 - [ ] **T-013** — Rate limiting on /api/cases `[LEAD]`
 - [ ] **T-014** — Case detail page UI `[CONTRACTOR: @maria]`
 - [ ] **T-015** — Playwright auth flow tests `[CONTRACTOR: @carlos]`
 
 ## 🔵 Backlog
-- [ ] **T-020** — Audit log triggers for all mutations `[LEAD]`
+- [ ] **T-020** — Audit log triggers `[LEAD]`
 - [ ] **T-021** — PDF export for cases `[LEAD]`
 
 ## ✅ Done
-- [x] **T-011** — Cases table schema + migration (2024-01-15)
+- [x] **T-011** — Cases table schema (2024-01-15)
 - [x] **T-010** — Supabase RLS policies (2024-01-14)
 
 ## 🚫 Blocked
 - [ ] **T-019** — Datacredito sandbox `[BLOCKED: waiting on client credentials]`</div>
+          </div>
+        </div>
       </div>
+
+      <div class="card accent-purple">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">📅</div>
+          <div class="card-meta"><div class="card-title">.agents/PROGRESS.md</div><div class="card-sub">Timeline + session log — written by Claude at apex-end</div></div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># PROGRESS.md — Project Timeline
+<span class="cm"># Claude appends to this file via apex-end after every session.</span>
+
+## Milestones
+- [x] M1 — Project setup & schema (2024-01-10)
+- [x] M2 — Auth + RLS (2024-01-15)
+- [ ] M3 — Core case management ← WE ARE HERE
+- [ ] M4 — External integrations (Experian, Datacredito)
+- [ ] M5 — Client portal
+- [ ] M6 — Production launch
+
+---
+
+## Session Log
+
+### 2024-01-20
+- ✅ Supabase RLS policies for cases table
+- ✅ JWT auth flow working end-to-end
+- 🔄 Rate limiting middleware started (carry forward)
+- 🧠 Decision: Upstash Redis for rate limiting (see ADR-005)
+
+### 2024-01-18
+- ✅ Database schema finalized + migrated
+- ✅ Drizzle configured and tested
+- ❌ Datacredito sandbox blocked — emailed client</div>
+          </div>
+        </div>
+      </div>
+
     </div>
-
-    <div class="file-card">
-      <div class="file-card-header" onclick="toggleFile(this)">
-        <div class="file-name">.claude/DECISIONS.md</div>
-        <div class="file-purpose">Architecture decisions — never re-debate settled choices</div>
-        <div class="file-toggle">+</div>
-      </div>
-      <div class="file-content">
-        <div class="file-text"><button class="copy-btn" onclick="copyPrompt(this)">copy</button"># DECISIONS.md — Architecture Decision Records
-# Format: ## ADR-NNN Title (date)
-
-## ADR-001 — SvelteKit over Next.js (2024-01-10)
-**Decision:** SvelteKit as frontend framework.
-**Reason:** Native Cloudflare Pages support, smaller bundle, better DX for this team.
-**Status:** Final ✅
-
-## ADR-002 — Supabase over PlanetScale (2024-01-10)
-**Decision:** Supabase for DB + auth.
-**Reason:** RLS is critical for multi-tenant case isolation. PlanetScale has no RLS.
-**Status:** Final ✅
-
-## ADR-003 — Drizzle over Prisma (2024-01-12)
-**Decision:** Drizzle ORM.
-**Reason:** Prisma has edge runtime issues with Cloudflare Workers. Drizzle is lightweight and edge-compatible.
-**Status:** Final ✅</div>
-      </div>
-    </div>
-
   </section>
+
 </div>
+</div>
+
 
 <script>
 function showPage(id) {
@@ -1210,23 +1893,17 @@ function toggleCard(header) {
   const isOpen = body.classList.contains('open');
   body.classList.toggle('open', !isOpen);
   toggle.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
 }
-function toggleFile(header) {
-  const content = header.nextElementSibling;
-  const toggle = header.querySelector('.file-toggle');
-  const isOpen = content.classList.contains('open');
-  content.classList.toggle('open', !isOpen);
-  toggle.classList.toggle('open', !isOpen);
-}
-function copyPrompt(btn) {
+function copyBlock(btn) {
   const block = btn.parentElement;
   const clone = block.cloneNode(true);
   clone.querySelector('.copy-btn')?.remove();
   const text = clone.innerText.trim();
   navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = 'copied ✓';
+    btn.textContent = 'Copied ✓';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
   });
 }
 </script>

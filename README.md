@@ -1,6 +1,6 @@
-# APEX — Claude Code Operating Framework
+# APEX v3 — Claude Code & Codex Operating Framework
 
-Adaptive Project EXecution. A token-efficient context system for Claude Code that keeps mixed teams aligned across all project phases — enforced via slash commands.
+Adaptive Project EXecution. A token-efficient context system that keeps mixed teams aligned across all project phases — works with **Claude Code and OpenAI Codex from the same files**.
 
 No plugins. No installs. Just markdown files in a folder.
 
@@ -10,12 +10,24 @@ No plugins. No installs. Just markdown files in a folder.
 
 A reference implementation of the APEX context system, delivered as a single `index.html` file you can open locally or host anywhere. It documents:
 
-- The `.claude/` folder structure Claude Code reads automatically
+- The `.agents/` shared brain structure — read by both Claude Code and Codex
+- `CLAUDE.md` (Claude Code entry point) and `AGENTS.md` (Codex entry point)
+- Skills that auto-invoke the right workflow — zero token cost until needed
+- DB schema management with `SCHEMA.md` and the `apex-schema` skill
 - Bootstrap prompts for new and existing projects
-- Session start/end prompts (and the slash commands that run them)
-- DB schema management with `SCHEMA.md`
-- Enforcement strategies (CLAUDE.md rules, slash commands, git hooks, PR checklists)
-- Starter templates for every `.claude/` file
+- Session start/end skills and how to run them
+- Linear MCP integration for both Claude Code and Codex
+- Starter templates for every `.agents/` file
+
+---
+
+## What's new in v3
+
+- **Skills replace slash commands** — moved from `.claude/commands/` to `.agents/skills/` as `SKILL.md` files with YAML frontmatter (merged in Claude Code v2.1.3)
+- **Auto-invocation** — Claude loads skills only when the task matches. `apex-schema` fires automatically on any DB work; you don't need to type `/apex-schema`
+- **Cross-model** — both Claude Code and Codex follow the open Agent Skills standard. Your `.agents/skills/` folder works in both tools
+- **Shared brain** — one `.agents/` folder, two thin entry-point files (`CLAUDE.md` for Claude Code, `AGENTS.md` for Codex). No duplication
+- **Linear integration** — MCP setup for both tools, Linear IDs stored inline in `TASKS.md`
 
 ---
 
@@ -46,10 +58,10 @@ No build step. No dependencies. It's a single HTML file.
 
 ### 3. Apply APEX to your own project
 
-Open the **Setup Prompts** tab in the reference. Pick your path:
+Open the **Setup** tab in the reference. Pick your path:
 
-- **New project** — paste the bootstrap prompt into Claude Code with your project details
-- **Existing project** — run the audit prompt first, confirm the report, then generate the `.claude/` files
+- **New project** — paste the bootstrap prompt into Claude Code or Codex with your project details
+- **Existing project** — run the audit prompt first, confirm the report, then generate the `.agents/` files
 
 Claude will create all context files for you. This takes one session and you never do it again.
 
@@ -59,7 +71,7 @@ Claude will create all context files for you. This takes one session and you nev
 
 This is what a normal day looks like once APEX is set up on a project.
 
-### 1. Open Claude Code and load the brain
+### 1. Open Claude Code (or Codex) and load the brain
 
 The very first thing, before anything else:
 
@@ -67,11 +79,11 @@ The very first thing, before anything else:
 /apex-start
 ```
 
-Claude reads `CLAUDE.md`, `CONTEXT.md`, `MAP.md`, `TASKS.md`, and `PROGRESS.md` silently, then responds with a short summary:
+Claude reads `.agents/CONTEXT.md`, `.agents/MAP.md`, `.agents/TASKS.md`, and `.agents/PROGRESS.md` silently, then responds with a short summary:
 
 ```
 ---
-✓ SESSION LOADED
+SESSION LOADED
 Project: my-app · Mode: ACTIVE
 Last completed: T-011 — Cases table schema + migration (2024-01-15)
 Active task: T-012 — JWT refresh token rotation
@@ -79,13 +91,13 @@ Blocked: T-019 — waiting on client credentials
 ---
 ```
 
-You now know exactly where you left off, what's next, and what's stuck. No scrolling through old messages. No re-reading code to remember context. Claude already knows the codebase map — it won't waste tokens scanning files it doesn't need.
+You now know exactly where you left off, what's next, and what's stuck.
 
 ### 2. Work on the active task
 
 Claude picks up `T-012` and starts. You review, approve, redirect. Normal coding session.
 
-**If the task involves database changes**, run this before writing any migration:
+**If the task involves database changes**, the `apex-schema` skill fires automatically — no command needed. Or run it manually:
 
 ```
 /apex-schema add a "refresh_token" column to the sessions table
@@ -109,7 +121,7 @@ Finished a task early, or pivoting? Tell Claude:
 Mark T-012 done, move to T-013
 ```
 
-Claude marks `[DONE]` with today's date in `TASKS.md`, appends a completion note to `PROGRESS.md`, and immediately loads the next task. No manual file editing.
+Claude marks `[DONE]` with today's date in `TASKS.md`, appends a completion note to `PROGRESS.md`, and immediately loads the next task.
 
 ### 4. End the session
 
@@ -132,13 +144,52 @@ Then outputs a ready-to-use commit message:
 chore(apex): 2024-01-16 — JWT refresh token rotation complete
 ```
 
-Commit the `.claude/` folder. Done.
+Commit the `.agents/` folder. Done.
+
+---
+
+## Claude Code vs Codex — when to use which
+
+Both tools read the same `.agents/` brain. Context is never lost between them.
+
+**Use Claude Code for** interactive sessions, complex multi-step tasks, architecture decisions, code review, and contractor onboarding. Skill auto-invocation and `CLAUDE.md` rules make it the better choice for open-ended work requiring judgment.
+
+**Use Codex for** batch tasks, parallel feature branches, well-scoped automated work. Codex's cloud execution and multi-agent parallelism makes it strong for running several tasks simultaneously.
+
+**The handoff pattern:** Plan in Claude Code (interactive, architectural) → run bulk tasks in Codex (parallel, cloud) → review and merge in Claude Code. Run `/apex-end` in Claude Code before handing off to Codex so `TASKS.md` is current.
+
+---
+
+## The `.agents/` folder structure
+
+```
+your-project/
+├── CLAUDE.md                    # Claude Code entry point — auto-read every session
+├── AGENTS.md                    # Codex entry point — same content, different filename
+└── .agents/
+    ├── CONTEXT.md               # Stack, services, env vars
+    ├── MAP.md                   # Every module described — replaces file scanning
+    ├── SCHEMA.md                # All tables, fields, relationships, change log
+    ├── TASKS.md                 # Numbered sprint queue with [LEAD]/[CONTRACTOR] tags
+    ├── PROGRESS.md              # Milestone timeline + session log
+    ├── DECISIONS.md             # Architecture decisions — never re-debate
+    ├── CONTRACTS.md             # API endpoints, shared interfaces
+    └── skills/
+        ├── apex-start/
+        │   └── SKILL.md         # /apex-start — loads context, picks next task
+        ├── apex-end/
+        │   └── SKILL.md         # /apex-end — commits the brain after each session
+        ├── apex-schema/
+        │   └── SKILL.md         # /apex-schema — DB change guard, auto-invoked
+        └── apex-plan/
+            └── SKILL.md         # /apex-plan — feature planning before any code
+```
+
+Skills use YAML frontmatter (`name`, `description`) and follow the open Agent Skills standard — the same `SKILL.md` file works in both Claude Code and Codex.
 
 ---
 
 ## What to do when you don't know what to work on next
-
-This happens. The task list feels stale, priorities shifted, you're not sure what's actually blocking what.
 
 **Ask Claude directly:**
 
@@ -148,15 +199,13 @@ This happens. The task list feels stale, priorities shifted, you're not sure wha
 I'm not sure what to pick up. Can you read TASKS.md and PROGRESS.md and give me a priority recommendation based on what's blocked, what's been idle longest, and what's closest to done?
 ```
 
-Claude will give you a reasoned prioritization from the actual state of your task list — not a guess.
-
 **If the task list itself is out of date**, ask Claude to audit it:
 
 ```
 Read TASKS.md and PROGRESS.md. Flag any tasks that seem stale (no progress in over a week), any that are marked In Progress but have no recent PROGRESS.md entry, and any that might be unblocked now. Suggest what to cut, what to move up, and what's genuinely next.
 ```
 
-**If you're waiting on someone else** (a contractor, a client, an external API), mark the task explicitly in `TASKS.md`:
+**If you're waiting on someone else**, mark the task explicitly in `TASKS.md`:
 
 ```
 T-019 — Datacredito sandbox [BLOCKED: waiting on client credentials since 2024-01-10]
@@ -168,18 +217,12 @@ Then `/apex-start` will surface it as blocked every session, and you won't accid
 
 ## Tracking the timeline and staying on top of progress
 
-`PROGRESS.md` is your session log. Every `/apex-end` appends an entry. Over time it becomes a precise record of what happened, when, and why — useful for retrospectives, for onboarding contractors, and for your own sanity.
+`PROGRESS.md` is your session log. Every `/apex-end` appends an entry. Over time it becomes a precise record of what happened, when, and why.
 
 To review where things stand at any point:
 
 ```
 Read PROGRESS.md. Summarize the last 2 weeks of sessions: what was accomplished, what got de-prioritized, and what's taking longer than expected.
-```
-
-If you're working with contractors, check their task progress:
-
-```
-Read TASKS.md. List all [CONTRACTOR] tasks and their current status. Which ones have no recent PROGRESS.md update?
 ```
 
 To get a milestone-level view:
@@ -188,21 +231,9 @@ To get a milestone-level view:
 Read PROGRESS.md and TASKS.md. Given what's done and what's left, how far along is the project overall? What are the remaining open threads?
 ```
 
-Claude synthesizes the actual written state of both files — no estimating, no hallucinating. It reads what was committed.
-
 ---
 
 ## What happens if you forget to run `/apex-end`
-
-It happens. You finish a task, close your laptop, and the context files never got updated. Here's the damage and how to fix it.
-
-**What breaks:**
-- `PROGRESS.md` has no entry for that session — the work is invisible in the log
-- `TASKS.md` still shows the task as In Progress instead of Done
-- If you made DB changes, `SCHEMA.md` is stale — the next session's schema check will be based on wrong data
-- The next developer (or you, tomorrow) opens the project and `/apex-start` surfaces the wrong active task
-
-**How to recover:**
 
 At the start of the next session, before or after `/apex-start`, run:
 
@@ -210,38 +241,10 @@ At the start of the next session, before or after `/apex-start`, run:
 I forgot to run /apex-end last session. Here's what I actually did: [describe what you completed, any DB changes, any decisions made]. Please update PROGRESS.md, TASKS.md, MAP.md, SCHEMA.md, and DECISIONS.md as if /apex-end had been run at the end of that session. Use yesterday's date for the PROGRESS.md entry.
 ```
 
-Claude will reconstruct the session end from your description and update all files correctly. Then commit the `.claude/` folder.
-
-**If you don't remember what you did:**
+If you don't remember what you did:
 
 ```
 Read PROGRESS.md and TASKS.md. Look at git log for the last 48 hours and tell me what changed, then update the context files accordingly.
-```
-
-Claude cross-references the actual git history against the context files and patches the gaps.
-
-**Prevention:** The simplest habit is to type `/apex-end` before you commit your code. The two actions belong together — commit the work, commit the brain update. If you use the git commit message Claude outputs from `/apex-end`, it becomes a natural forcing function.
-
----
-
-## The `.claude/` folder structure
-
-```
-your-project/
-├── CLAUDE.md                    # Auto-read by Claude Code on every session
-└── .claude/
-    ├── CONTEXT.md               # Stack, services, env vars
-    ├── MAP.md                   # Every module described — replaces file scanning
-    ├── SCHEMA.md                # All tables, fields, relationships, change log
-    ├── TASKS.md                 # Numbered sprint queue with [LEAD]/[CONTRACTOR] tags
-    ├── PROGRESS.md              # Milestone timeline + session log
-    ├── DECISIONS.md             # Architecture decisions — never re-debate
-    ├── CONTRACTS.md             # API endpoints, shared interfaces
-    └── commands/
-        ├── apex-start.md        # /apex-start
-        ├── apex-end.md          # /apex-end
-        ├── apex-schema.md       # /apex-schema
-        └── apex-plan.md         # /apex-plan
 ```
 
 ---
