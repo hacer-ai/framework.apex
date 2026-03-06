@@ -47,13 +47,15 @@ framework.apex/
         │       ├── start-session.md
         │       ├── end-session.md
         │       ├── db-change.md
-        │       └── plan-feature.md
+        │       ├── plan-feature.md
+        │       └── onboard.md
         └── .claude/
             └── commands/
                 ├── apex-start.md
                 ├── apex-end.md
                 ├── apex-schema.md
-                └── apex-plan.md
+                ├── apex-plan.md
+                └── apex-onboard.md
 ```
 
 ## Install into a project
@@ -98,10 +100,10 @@ This folder is durable project memory:
 - `CONTEXT.md`: stack, services, environment assumptions
 - `MAP.md`: high-value map of the codebase
 - `SCHEMA.md`: application-facing database view
-- `TASKS.md`: current work queue
-- `PROGRESS.md`: session log
+- `TASKS.md`: current work queue with active-work signal (`🔒 ACTIVO`)
+- `PROGRESS.md`: session log with attribution (human / Claude / Codex)
 - `DECISIONS.md`: architectural decisions
-- `CONTRACTS.md`: stable interfaces between modules or teams
+- `CONTRACTS.md`: stable interfaces between modules or teams, with change log
 
 ### `.agents/playbooks/`
 
@@ -111,6 +113,7 @@ These are shared workflows used by both tools:
 - `end-session.md`
 - `db-change.md`
 - `plan-feature.md`
+- `onboard.md`
 
 This is the cross-model layer. It is plain markdown, committed with the project, and referenced explicitly by both entry points.
 
