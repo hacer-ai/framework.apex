@@ -4,10 +4,11 @@ This file documents the application-facing view of the database.
 It is not the only source of truth.
 Always verify schema changes against migrations, ORM definitions, and live constraints before editing.
 
-## Última verificación
-- Commit: [hash corto]
-- Fecha: YYYY-MM-DD
-- Verificado por: [Nombre / Claude / Codex]
+## Last verified
+- Commit: [short-hash]
+- Date: YYYY-MM-DD
+- By: [Name / Claude / Codex]
+<!-- apex-start compares this hash to git HEAD and warns if stale -->
 
 ---
 

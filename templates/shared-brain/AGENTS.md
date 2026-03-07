@@ -1,38 +1,33 @@
 # __PROJECT_NAME__ — AGENTS.md
 
-This file is the Codex entry point for the APEX shared-brain workflow.
+Codex entry point. Mirrors CLAUDE.md — points to the same `.agents/` brain.
 
-## Shared Brain
-The source of continuity for this project lives in `.agents/`.
-Read it first, but do not treat it as a replacement for the codebase.
-Use it to focus your exploration, then verify assumptions against source files before making edits.
+## Read Order (every session, no exceptions)
+1. `.agents/CONTEXT.md` — stack and services
+2. `.agents/MAP.md` — codebase map (read this, do not scan folders)
+3. `.agents/TASKS.md` — work queue
+4. `.agents/PROGRESS.md` — where we left off
 
-## Read Order
-1. `.agents/CONTEXT.md`
-2. `.agents/MAP.md`
-3. `.agents/TASKS.md`
-4. `.agents/PROGRESS.md`
-5. `.agents/DECISIONS.md`
-6. `.agents/CONTRACTS.md` when API or shared interface work is involved
-7. `.agents/SCHEMA.md` before any DB query, migration, ORM, or schema change
+## DB Rule — Non-negotiable
+Never write a migration, query, or ORM model without reading `.agents/SCHEMA.md` first.
 
-## Shared Workflows
-Open the relevant playbook and follow it when the task matches:
-- `.agents/playbooks/start-session.md` for "start session", "what should I work on", or project handoff
-- `.agents/playbooks/end-session.md` for wrap-up, status sync, or updating shared memory
-- `.agents/playbooks/db-change.md` for any database work
-- `.agents/playbooks/plan-feature.md` for planning before implementation
-
-## Operating Rules
-- Validate shared-brain docs against real code before changing production files.
-- Update `.agents/` whenever a code change invalidates project memory.
-- Never perform destructive DB changes without an explicit rollback path and user approval.
-- If `MAP.md` is stale, fix `MAP.md`; do not pretend the map is current.
-- When a task is ambiguous, prefer inspecting the code over inventing missing context.
+## Golden Rules
+- Never rewrite working modules unless explicitly required
+- Never change `.agents/CONTRACTS.md` interfaces without approval
+- Always check `.agents/DECISIONS.md` before proposing alternatives already debated
 
 ## Project Mode
-Current mode: `ACTIVE`
+Current mode: **ACTIVE**
 
 ## Team
 - Lead: [fill in]
 - Contributors: [fill in]
+
+## Skills (invoke by name or by description)
+- `apex-start` — load brain and show task list
+- `apex-end` — close session, update brain files
+- `apex-schema` — DB change guard
+- `apex-plan` — plan features before coding
+- `apex-linear-bootstrap` — push all tasks to Linear (once per project)
+- `apex-linear-sync` — sync a task status change to Linear
+- `apex-linear-add` — add a new task to TASKS.md + Linear

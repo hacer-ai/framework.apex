@@ -1,26 +1,33 @@
-# TASKS.md
+# TASKS.md — __PROJECT_NAME__
 
-## Formato de tarea
+## Task format
 ```
-- [ ] T-NNN — [descripción] `[LEAD]` [🔒 ACTIVO: Nombre · fecha]
+- [ ] T-NNN [LIN: ABC-NNN] — title `[LEAD]`
+  - Files: relevant files (optional)
+  - Notes: context (optional)
 ```
-- `[LEAD]` — responsable principal (humano o agente: Claude/Codex)
-- `🔒 ACTIVO` — señal de que alguien está trabajando en esto ahora mismo. Quitar al terminar o al hacer commit.
-- Una tarea activa por persona/agente a la vez. Si ves 🔒 en la tarea que ibas a tomar, elige otra o coordina primero.
+- `[LEAD]` — who owns this (human name, Claude, or Codex)
+- `[CONTRACTOR: @name]` — scoped to a specific contractor
+- `[LIN: ABC-NNN]` — Linear issue ID, added by apex-linear-bootstrap or apex-linear-add
+- `🔒 ACTIVO: Name · date` — someone is actively working on this now. Remove on commit.
+
+One active task per person/agent at a time. If you see 🔒 on a task you were about to take, pick another.
 
 ---
 
-## In Progress
-- [ ] T-001 — [current task] `[LEAD]` 🔒 ACTIVO: [Nombre · YYYY-MM-DD]
+## 🔴 In Progress
+- [ ] T-001 — [current task] `[LEAD]` 🔒 ACTIVO: [Name · YYYY-MM-DD]
+  - Notes: [what needs to happen]
 
-## Up Next
-- [ ] T-002 — [next task] `[LEAD]`
+## 🟡 Up Next
+- [ ] T-002 — [next priority task] `[LEAD]`
+- [ ] T-003 — [another task] `[LEAD]`
 
-## Backlog
+## 🔵 Backlog
 - [ ] T-010 — [future task] `[LEAD]`
 
-## Blocked
+## 🚫 Blocked
 - [ ] T-099 — [blocked task] `[BLOCKED: reason · since YYYY-MM-DD]`
 
-## Done
+## ✅ Done
 - [x] T-000 — Initial shared-brain setup

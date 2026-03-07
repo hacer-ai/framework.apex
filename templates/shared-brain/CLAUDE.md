@@ -1,42 +1,36 @@
 # __PROJECT_NAME__ — CLAUDE.md
 
-This file is the Claude entry point for the APEX shared-brain workflow.
+Claude Code entry point. Auto-read every session.
 
-## Shared Brain
-The durable project memory lives in `.agents/`.
-Read it first, but do not substitute it for source inspection.
-Use the map to narrow the search space, then confirm details in the repo before editing.
+## Read Order (every session, no exceptions)
+1. `.agents/CONTEXT.md` — stack and services
+2. `.agents/MAP.md` — codebase map (read this, do not scan folders)
+3. `.agents/TASKS.md` — work queue
+4. `.agents/PROGRESS.md` — where we left off
 
-## Read Order
-1. `.agents/CONTEXT.md`
-2. `.agents/MAP.md`
-3. `.agents/TASKS.md`
-4. `.agents/PROGRESS.md`
-5. `.agents/DECISIONS.md`
-6. `.agents/CONTRACTS.md` when contracts or APIs are touched
-7. `.agents/SCHEMA.md` before any DB work
+## DB Rule — Non-negotiable
+Never write a migration, query, or ORM model without reading `.agents/SCHEMA.md` first.
+The `apex-schema` skill handles this automatically, but also read SCHEMA.md manually
+when the task references any table or field.
 
-## Shared Workflows
-The canonical workflow docs live in `.agents/playbooks/`.
-Use the relevant playbook when the user intent matches:
-- `.agents/playbooks/start-session.md`
-- `.agents/playbooks/end-session.md`
-- `.agents/playbooks/db-change.md`
-- `.agents/playbooks/plan-feature.md`
-
-## Claude Convenience
-If `.claude/commands/` exists, the slash commands there are wrappers around the same playbooks.
-Those commands are convenience only; `.agents/playbooks/` remains the source of truth.
-
-## Operating Rules
-- Validate shared-brain docs against real code before making edits.
-- Update `.agents/` whenever the implementation changes project memory.
-- Never write a migration, query, or ORM model before reading `.agents/SCHEMA.md`.
-- If shared docs are stale, repair them as part of the task.
+## Golden Rules
+- Never rewrite working modules unless explicitly required
+- Never change `.agents/CONTRACTS.md` interfaces without approval
+- Always check `.agents/DECISIONS.md` before proposing alternatives already debated
+- Always run `/apex-end` before closing a session
 
 ## Project Mode
-Current mode: `ACTIVE`
+Current mode: **ACTIVE**
 
 ## Team
 - Lead: [fill in]
-- Contributors: [fill in]
+- Contributors: [fill in — names + scope]
+- Tasks tagged `[CONTRACTOR: @name]` are scoped to that person
+
+## Commands
+- `/apex-start` — load brain and show task list
+- `/apex-task` — show task board, pick or add a task
+- `/apex-end` — close session, update brain files
+- `/apex-schema [change]` — DB change guard (also auto-fires on DB phrases)
+- `/apex-plan [feature]` — plan before coding
+- `/apex-onboard` — onboard a new team member or agent

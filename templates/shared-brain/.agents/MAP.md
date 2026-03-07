@@ -3,10 +3,11 @@
 Use this file as a guide to the codebase, not as a replacement for code inspection.
 If the map contradicts the source, fix the map.
 
-## Última verificación
-- Commit: [hash corto]
-- Fecha: YYYY-MM-DD
-- Verificado por: [Nombre / Claude / Codex]
+## Last verified
+- Commit: [short-hash]
+- Date: YYYY-MM-DD
+- By: [Name / Claude / Codex]
+<!-- apex-start compares this hash to git HEAD and warns if stale -->
 
 ---
 

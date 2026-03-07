@@ -1,18 +1,17 @@
-# APEX — Shared Brain for Codex and Claude
+# APEX — Shared Brain for Claude Code & Codex
 
-APEX is an installable scaffold that gives a software team — humans and AI agents together — a single shared memory layer. Every session, every tool, and every contributor reads from and writes to the same `.agents/` folder.
+APEX is an installable scaffold that gives a software team — humans, Claude Code, and Codex — a single shared memory layer. Every session starts by reading pre-digested context files rather than scanning source code.
 
-- `AGENTS.md` — Codex entry point
-- `CLAUDE.md` — Claude entry point
-- `.agents/` — shared project memory (context, map, schema, tasks, decisions, contracts)
-- `.agents/playbooks/` — model-agnostic workflows
-- `.claude/commands/` — optional Claude slash-command wrappers
-
-One shared brain. Two thin entry points. No fake cross-tool parity.
+- `CLAUDE.md` — Claude Code entry point (auto-read every session)
+- `AGENTS.md` — Codex entry point (same purpose, different filename)
+- `.agents/` — shared brain: context, map, schema, tasks, progress, decisions, contracts
+- `.claude/commands/` — slash commands for Claude Code (`/apex-start`, `/apex-end`, etc.)
+- `.claude/skills/` — auto-invoked skills (apex-schema fires automatically on DB work)
+- `.agents/skills/` — Codex skills (same content as `.claude/commands/`)
 
 ---
 
-## How to use APEX in three steps
+## Setup in two steps
 
 ### 1. Install the scaffold
 
@@ -28,9 +27,15 @@ Or for the current directory:
 ./scripts/install-apex.sh .
 ```
 
-The installer creates all scaffold files. **It never overwrites `CLAUDE.md` or `AGENTS.md`** — those are yours. Framework files under `.agents/` and `.claude/commands/` can be refreshed with `--force`.
+To also get Linear MCP setup instructions printed in your terminal:
 
-### 2. Initialize the shared brain
+```sh
+./scripts/install-apex.sh . --linear
+```
+
+**`CLAUDE.md` and `AGENTS.md` are never overwritten** — those are yours. Framework files under `.agents/` and `.claude/` can be refreshed with `--force`.
+
+### 2. Initialize the brain
 
 Open Claude Code inside the project and run:
 
@@ -38,67 +43,95 @@ Open Claude Code inside the project and run:
 /apex-init
 ```
 
-Claude reads the real codebase and fills in `.agents/` automatically:
-- Detects stack, services, and environment variables → writes `CONTEXT.md`
-- Maps folders and key modules → writes `MAP.md`
+Claude reads the real codebase and fills `.agents/` automatically:
+- Detects stack, services, env vars → writes `CONTEXT.md`
+- Maps folders and modules → writes `MAP.md`
 - Reads migrations and ORM models → writes `SCHEMA.md` (if DB found)
-- Asks whether you have existing tasks to import → writes `TASKS.md`
+- Asks about existing tasks before writing `TASKS.md`
 
-After init, review the generated files and correct anything Claude could not infer.
-
-### 3. Start every work session
-
-```
-/apex-start
-```
-
-Claude loads the shared brain and returns a compact handoff:
-
-```
-SESSION LOADED
-Project: My App · Mode: ACTIVE
-Last completed: T-003 — Auth migration
-Active task: T-004 — Payment webhook
-Blocked: none
-Risks: none
-```
+For manual control or new projects with no code yet, use the bootstrap prompts in the **Setup** tab of `index.html`.
 
 ---
 
 ## Daily workflow
 
+```
+/apex-start
+```
+
+Claude loads the shared brain and shows the task list — **you pick what to work on**:
+
+```
+✓ SESSION LOADED
+Project: My App · Mode: ACTIVE
+Last completed: T-011 — Auth migration
+Blocked: none
+
+## Tasks available
+In Progress: T-012 — JWT refresh token rotation
+Up Next: T-013 — Rate limiting, T-014 — Case detail page
+
+Which task should I work on? (or say "show backlog" / "add task: [description]")
+```
+
+Select a task or add a new one. New tasks are created in `TASKS.md` **and** Linear simultaneously.
+
 | When | Run | What happens |
 | --- | --- | --- |
-| Starting work | `/apex-start` | Loads shared brain, surfaces active task |
-| Planning a feature | `/apex-plan` | Plans across modules before writing code |
-| DB work | `/apex-schema` | Forces schema review before any migration |
-| New contributor | `/apex-onboard` | Structured onboarding checklist |
+| Starting work | `/apex-start` | Loads brain, shows task list, you pick a task |
+| Mid-session task switch | `/apex-task` | Shows full task board with T-IDs and descriptions |
+| Planning a feature | `/apex-plan [feature]` | Plans across modules before writing code |
+| DB work | `/apex-schema [change]` | Schema review guard (also auto-fires on DB phrases) |
+| Adding a task | "add task: [desc]" | Creates in TASKS.md + Linear, returns ID |
 | Ending work | `/apex-end` | Updates PROGRESS, TASKS, MAP, SCHEMA |
 
 ---
 
-## Team conventions
+## Task management
 
-### Active-work signal
-When taking a task, add `🔒 ACTIVO` to the line in `TASKS.md`:
+### Selecting a task
+After `/apex-start`, Claude shows In Progress and Up Next tasks. Just say which one (by number or T-ID) to begin. Claude marks it In Progress in TASKS.md and syncs to Linear.
 
-```md
-- [ ] T-004 — Payment webhook `[Ana]` 🔒 ACTIVO: Ana · 2026-03-06
+### Adding a task
+At any point say: `add task: [description]`. The `apex-linear-add` skill:
+1. Assigns the next T-NNN number
+2. Creates the Linear issue and gets the ID
+3. Appends the task to TASKS.md with `[LIN: ABC-NNN]` inline
+
+### Linear sync
+Linear is write-only — TASKS.md is always the read source. Linear only gets called when:
+- Bootstrapping all tasks for the first time (`/apex-linear-bootstrap`)
+- A task moves to In Progress
+- A task is marked Done
+- A new task is added
+
+Set up the Linear MCP once per machine:
+
+```sh
+claude mcp add-json linear '{"command":"npx","args":["-y","mcp-remote","https://mcp.linear.app/sse"]}'
 ```
 
-Remove it when done or when committing. Prevents two agents or contributors from taking the same task simultaneously.
+Then authenticate in Claude Code: `/mcp` → follow the OAuth flow.
 
-### Session attribution
-Every entry in `PROGRESS.md` records who did the work:
+---
 
-```md
-### 2026-03-06 · Ana · work
-### 2026-03-06 · Claude · planning
-### 2026-03-06 · Codex · work
-```
+## Commands reference
 
-### Staleness tracking
-`MAP.md` and `SCHEMA.md` include a "Última verificación" block with commit hash, date, and author. If the map contradicts the source, fix the map.
+| Command | Where | What it does |
+| --- | --- | --- |
+| `/apex-init` | Claude Code | One-time init — fills `.agents/` from the real codebase |
+| `/apex-start` | Claude Code / Codex | Load brain, staleness check, show task list, pick a task |
+| `/apex-task` | Claude Code | Show task board with T-IDs and descriptions — pick or add |
+| `/apex-end` | Claude Code / Codex | Update PROGRESS, TASKS, MAP, SCHEMA, Linear sync |
+| `/apex-ship` | Claude Code / Codex | End session + create task branch + commit + optional PR |
+| `/apex-review` | Claude Code / Codex | Check changes against CONTRACTS.md and DECISIONS.md |
+| `/apex-schema [change]` | Claude Code / Codex | DB change guard — reviews impact before any migration |
+| `/apex-plan [feature]` | Claude Code / Codex | Feature planning across modules, no code written yet |
+| `/apex-onboard` | Claude Code | New human or agent joining — structured checklist |
+| `"add task: [desc]"` | Natural language | Create task in TASKS.md + Linear simultaneously |
+
+### Auto-invocation
+`apex-schema` is also installed as a skill in `.claude/skills/apex-schema/` so it fires automatically when you say things like "add a column", "migration", "create table", or "alter table" — without you typing the command.
 
 ---
 
@@ -106,30 +139,13 @@ Every entry in `PROGRESS.md` records who did the work:
 
 | File | Purpose |
 | --- | --- |
-| `CONTEXT.md` | Stack, services, environment variables, constraints |
-| `MAP.md` | Codebase map with last-verified commit |
-| `SCHEMA.md` | Application-facing DB view with last-verified commit |
-| `TASKS.md` | Work queue with ownership and active-work signal |
+| `CONTEXT.md` | Stack, services, env vars, constraints |
+| `MAP.md` | Codebase map — read this, never scan folders |
+| `SCHEMA.md` | All tables, fields, relationships, change log |
+| `TASKS.md` | Sprint queue with T-NNN IDs and Linear IDs |
 | `PROGRESS.md` | Session log with attribution per entry |
-| `DECISIONS.md` | Architectural decisions (ADR format) |
-| `CONTRACTS.md` | Stable interfaces between modules or teams, with change log |
-
----
-
-## Playbooks
-
-Playbooks are model-agnostic markdown workflows in `.agents/playbooks/`. Both Codex and Claude follow the same playbooks.
-
-| Playbook | When to use |
-| --- | --- |
-| `init.md` | Once, after install — fills `.agents/` from the real codebase |
-| `start-session.md` | Beginning of every work session |
-| `end-session.md` | End of every work session |
-| `plan-feature.md` | Before implementing anything that spans multiple modules |
-| `db-change.md` | Any migration, schema edit, or DB-dependent feature |
-| `onboard.md` | When a new human or agent joins the project |
-
-`.claude/commands/` are thin wrappers that open the corresponding playbook. No logic lives in the commands themselves.
+| `DECISIONS.md` | Architecture Decision Records |
+| `CONTRACTS.md` | Stable interfaces between modules, with change log |
 
 ---
 
@@ -138,7 +154,7 @@ Playbooks are model-agnostic markdown workflows in `.agents/playbooks/`. Both Co
 ```text
 your-project/
 ├── AGENTS.md                        ← Codex entry point (user-owned)
-├── CLAUDE.md                        ← Claude entry point (user-owned)
+├── CLAUDE.md                        ← Claude Code entry point (user-owned)
 ├── .agents/
 │   ├── CONTEXT.md
 │   ├── MAP.md
@@ -147,33 +163,48 @@ your-project/
 │   ├── PROGRESS.md
 │   ├── DECISIONS.md
 │   ├── CONTRACTS.md
-│   └── playbooks/
-│       ├── init.md
-│       ├── start-session.md
-│       ├── end-session.md
-│       ├── plan-feature.md
-│       ├── db-change.md
-│       └── onboard.md
+│   └── skills/                      ← Codex skills
+│       ├── apex-start/SKILL.md
+│       ├── apex-end/SKILL.md
+│       ├── apex-schema/SKILL.md
+│       ├── apex-plan/SKILL.md
+│       ├── apex-linear-bootstrap/SKILL.md
+│       ├── apex-linear-sync/SKILL.md
+│       └── apex-linear-add/SKILL.md
 └── .claude/
-    └── commands/
-        ├── apex-init.md
-        ├── apex-start.md
-        ├── apex-end.md
-        ├── apex-plan.md
-        ├── apex-schema.md
-        └── apex-onboard.md
+    ├── commands/                    ← Claude Code slash commands
+    │   ├── apex-init.md
+    │   ├── apex-start.md
+    │   ├── apex-end.md
+    │   ├── apex-schema.md
+    │   ├── apex-plan.md
+    │   └── apex-onboard.md
+    └── skills/                      ← Auto-invoked skills
+        └── apex-schema/SKILL.md     ← Fires automatically on DB phrases
 ```
 
 ---
 
 ## Operating rules
 
-- Shared memory is an accelerator, not a substitute for reading the code that is about to change.
-- If the map is stale, fix the map before using it.
-- For DB work, always check both `SCHEMA.md` and the real migration/ORM source.
+- Read MAP.md first. Never scan source folders speculatively.
+- For any DB work, `apex-schema` reads SCHEMA.md before writing anything.
+- TASKS.md is the source of truth. Linear is downstream — never read from it.
 - Record decisions once in `DECISIONS.md` — stop re-debating them.
-- When a contract changes, update `CONTRACTS.md` and notify all listed consumers.
-- If `🔒 ACTIVO` is on a task, coordinate before taking it.
+- When a contract changes, update `CONTRACTS.md` and notify consumers.
+
+---
+
+## Phase 2 — Planned
+
+These features are designed but not yet built:
+
+| Feature | What it does |
+| --- | --- |
+| Contractor task filtering | `/apex-task` shows only `[CONTRACTOR: @name]` tasks for that person |
+| `apex-standup` | One-paragraph async standup from last 3 PROGRESS.md entries |
+| Session locking | Blocks a second agent from picking an already-active task |
+| `apex-brief` | Self-contained task brief for contractors — no full codebase access needed |
 
 ---
 
