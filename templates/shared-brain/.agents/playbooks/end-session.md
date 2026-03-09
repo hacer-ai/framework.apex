@@ -2,6 +2,18 @@
 
 Use this workflow to close a work session and update shared memory.
 
+## Pre-commit Checklist
+
+Before updating shared memory, verify the session leaves the codebase in a clean state:
+
+- [ ] Code lints without errors (run `ruff check` / `eslint` as appropriate for the stack).
+- [ ] Changed modules have tests that pass.
+- [ ] No hardcoded secrets, tokens, or credentials introduced.
+- [ ] Every commit in this session is atomic with a descriptive message.
+- [ ] If a DB migration was written, `.agents/SCHEMA.md` reflects it.
+
+If any item fails, fix it before proceeding.
+
 ## Gather Evidence
 - Review the files changed in this session.
 - Inspect the current task state.

@@ -97,6 +97,7 @@ copy_file() {
 USER_FILES=(
   "AGENTS.md"
   "CLAUDE.md"
+  ".claude/settings.json"
 )
 
 # Framework files — safe to overwrite with --force.
@@ -114,12 +115,21 @@ FILES=(
   ".agents/playbooks/db-change.md"
   ".agents/playbooks/plan-feature.md"
   ".agents/playbooks/onboard.md"
+  ".agents/playbooks/review.md"
+  ".agents/rules/code-quality.md"
+  ".agents/rules/git-workflow.md"
+  ".agents/rules/security.md"
+  ".agents/rules/error-handling.md"
+  ".agents/rules/testing.md"
   ".claude/commands/apex-init.md"
   ".claude/commands/apex-start.md"
   ".claude/commands/apex-end.md"
   ".claude/commands/apex-schema.md"
   ".claude/commands/apex-plan.md"
   ".claude/commands/apex-onboard.md"
+  ".claude/commands/apex-review.md"
+  ".claude/agents/security-reviewer.md"
+  ".claude/hooks/lint-on-save.sh"
 )
 
 for file in "${USER_FILES[@]}"; do
@@ -129,6 +139,12 @@ done
 for file in "${FILES[@]}"; do
   copy_file "$file"
 done
+
+# Make hook scripts executable.
+HOOK_PATH="$TARGET_DIR/.claude/hooks/lint-on-save.sh"
+if [[ -f "$HOOK_PATH" ]]; then
+  chmod +x "$HOOK_PATH"
+fi
 
 printf '\nInstalled APEX shared-brain scaffold into %s\n' "$(cd "$TARGET_DIR" && pwd)"
 printf 'Next steps:\n'

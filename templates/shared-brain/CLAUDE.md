@@ -16,6 +16,14 @@ Use the map to narrow the search space, then confirm details in the repo before 
 6. `.agents/CONTRACTS.md` when contracts or APIs are touched
 7. `.agents/SCHEMA.md` before any DB work
 
+## Ambient Rules
+Read `.agents/rules/` at the start of every session. These are not workflow steps — they are standing principles that shape how every task is approached:
+- `.agents/rules/code-quality.md`
+- `.agents/rules/git-workflow.md`
+- `.agents/rules/security.md`
+- `.agents/rules/error-handling.md`
+- `.agents/rules/testing.md`
+
 ## Shared Workflows
 The canonical workflow docs live in `.agents/playbooks/`.
 Use the relevant playbook when the user intent matches:
