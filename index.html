@@ -396,13 +396,13 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; 
   <div class="logo">
     <span>APEX</span><span class="logo-dot">·</span><span style="font-weight:400;color:var(--text-muted);font-size:12px">v3</span>
   </div>
-  <div class="tab active" onclick="showPage('overview')"><span class="tab-icon">◻</span> Overview</div>
-  <div class="tab" onclick="showPage('setup')"><span class="tab-icon">⚡</span> Setup</div>
-  <div class="tab" onclick="showPage('skills')"><span class="tab-icon">✦</span> Skills</div>
-  <div class="tab" onclick="showPage('schema')"><span class="tab-icon">⬡</span> DB Schema</div>
-  <div class="tab" onclick="showPage('multimodel')"><span class="tab-icon">⇄</span> Multi-Model</div>
-  <div class="tab" onclick="showPage('linear')"><span class="tab-icon">⬡</span> Linear</div>
-  <div class="tab" onclick="showPage('templates')"><span class="tab-icon">◈</span> Templates</div>
+  <div class="tab active" onclick="showPage('overview', this)"><span class="tab-icon">◻</span> Overview</div>
+  <div class="tab" onclick="showPage('setup', this)"><span class="tab-icon">⚡</span> Setup</div>
+  <div class="tab" onclick="showPage('skills', this)"><span class="tab-icon">✦</span> Skills</div>
+  <div class="tab" onclick="showPage('schema', this)"><span class="tab-icon">⬡</span> DB Schema</div>
+  <div class="tab" onclick="showPage('multimodel', this)"><span class="tab-icon">⇄</span> Multi-Model</div>
+  <div class="tab" onclick="showPage('linear', this)"><span class="tab-icon">⬡</span> Linear</div>
+  <div class="tab" onclick="showPage('templates', this)"><span class="tab-icon">◈</span> Templates</div>
 </nav>
 
 
@@ -513,7 +513,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; 
       <div class="callout-icon">⚡</div>
       <div class="callout-body">
         <div class="callout-title">Step 0 — Install the scaffold (run once per project)</div>
-        <div class="callout-desc">Run the installer from this repo into your project directory. It creates all scaffold files in seconds. <code>CLAUDE.md</code> and <code>AGENTS.md</code> are never overwritten, even with <code>--force</code>.</div>
+        <div class="callout-desc">Run the installer from this repo into your project directory. It creates all scaffold files in seconds. <strong>Project-owned files</strong> (<code>CLAUDE.md</code>, <code>AGENTS.md</code>, and all <code>.agents/*.md</code> brain files) are created once and never overwritten — even with <code>--force</code>. Only framework files (commands, skills) are refreshed by <code>--force</code>.</div>
       </div>
     </div>
     <div class="code-block" style="margin-bottom:8px;"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># Install into a target project</span>
@@ -522,7 +522,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; 
 <span class="cm"># Install with Linear MCP setup instructions (optional)</span>
 ./scripts/install-apex.sh . --linear
 
-<span class="cm"># Refresh framework files without touching CLAUDE.md or AGENTS.md</span>
+<span class="cm"># Refresh framework files (commands + skills) without touching project-owned brain files</span>
 ./scripts/install-apex.sh . --force</div>
     <div class="callout" style="margin-bottom:16px;">
       <div class="callout-icon">✦</div>
@@ -761,8 +761,6 @@ Flag any inconsistencies between migrations and current schema.</div>
 
     <div class="card-stack">
 
-    <div class="card-stack">
-
       <div class="card accent-purple">
         <div class="card-header" onclick="toggleCard(this)">
           <div class="card-emoji">🚀</div>
@@ -880,7 +878,7 @@ Do not read files outside MAP.md scope unless the task requires it.</div>
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Codex → .agents/skills/apex-start/SKILL.md (directory + frontmatter)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-start
 description: Start a new APEX development session. Load project context, review tasks, and let the user pick what to work on. Use when beginning any work session or when the user says "start session", "begin", "what should I work on", or "let's get started".
 ---
@@ -927,7 +925,7 @@ If the task touches the database, read .agents/SCHEMA.md first.</div>
         <div class="card-body">
           <div class="prompt-section">
             <div class="prompt-label">Claude Code → .claude/commands/apex-end.md</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">Update these files to close the session:
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Update these files to close the session:
 
 1. **.agents/PROGRESS.md** — Append today's date entry:
    - What was completed (✅)
@@ -952,7 +950,7 @@ Output a ready-to-use git commit message:
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Codex → .agents/skills/apex-end/SKILL.md</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-end
 description: End the current APEX development session by updating all context files. Use when the user says "end session", "wrap up", "closing", "done for today", or asks to update the project docs.
 ---
@@ -983,7 +981,7 @@ Output: `chore(apex): [date] — [main thing accomplished]`</div>
         <div class="card-body">
           <div class="prompt-section">
             <div class="prompt-label">Claude Code → .claude/commands/apex-schema.md (for /apex-schema manual use)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">Read .agents/SCHEMA.md and .agents/CONTRACTS.md.
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Read .agents/SCHEMA.md and .agents/CONTRACTS.md.
 
 DB change: $ARGUMENTS
 
@@ -1001,7 +999,7 @@ After approval + execution: update .agents/SCHEMA.md tables and append to Change
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Claude Code → .claude/skills/apex-schema/SKILL.md (for auto-invocation on DB tasks)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-schema
 description: Guard against unsafe database changes. Auto-invoke whenever the task involves creating a migration, adding a column, changing a table, writing a DB query, modifying an ORM model, or anything involving database schema. Trigger phrases include: "add column", "create table", "migration", "schema change", "alter table", "new table", "foreign key", "FK", "index", "drizzle", "prisma schema".
 allowed-tools: Read, Write
@@ -1025,7 +1023,7 @@ After approval + execution: update .agents/SCHEMA.md and append to Change Log.</
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Codex → .agents/skills/apex-schema/SKILL.md (same as Claude Code skill above)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-schema
 description: Guard against unsafe database changes. Auto-invoke for any task involving migrations, schema changes, adding columns, creating tables, modifying ORM models, or any database structure work.
 ---
@@ -1110,7 +1108,7 @@ When the user selects a task:
         <div class="card-body">
           <div class="prompt-section">
             <div class="prompt-label">Claude Code → .claude/commands/apex-plan.md</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">Read: CLAUDE.md, .agents/CONTEXT.md, .agents/MAP.md, .agents/SCHEMA.md, .agents/CONTRACTS.md
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Read: CLAUDE.md, .agents/CONTEXT.md, .agents/MAP.md, .agents/SCHEMA.md, .agents/CONTRACTS.md
 
 Feature to plan: $ARGUMENTS
 
@@ -1126,7 +1124,7 @@ Wait for approval before touching TASKS.md or writing code.</div>
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Codex → .agents/skills/apex-plan/SKILL.md</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-plan
 description: Plan a new feature before writing any code. Use when the user says "I want to build X", "plan this feature", "what would it take to add Y", or describes a significant new capability.
 ---
@@ -1152,9 +1150,9 @@ Wait for approval before touching TASKS.md or writing code.</div>
   </section>
 
   <section>
-    <div class="eyebrow">Quick Setup — Copy &amp; Run</div>
-    <h2>6 steps. Paste each block into Claude Code.</h2>
-    <p class="lead">Run these in order on your project root. Each block creates one or more files with their <strong>complete content</strong>. After step 6, your commands will appear in <code>/help</code> immediately.</p>
+    <div class="eyebrow">Manual Setup Reference</div>
+    <h2>Alternative: create files manually</h2>
+    <p class="lead">The installer (<code>install-apex.sh</code>) handles all of this automatically. These blocks are a reference for understanding what each file contains, or for creating files individually without the installer.</p>
 
     <style>
       .qs-step { margin-bottom: 36px; }
@@ -1219,7 +1217,7 @@ Update these files to close the session:
    - Any decisions or surprises (🧠)
 
 2. .agents/TASKS.md — Update statuses:
-   - Mark completed tasks [DONE] with today&#39;s date
+   - Mark completed tasks [DONE] with today's date
    - Add any new tasks discovered this session
    - Re-prioritize if needed
 
@@ -1316,7 +1314,7 @@ After approval and execution: update .agents/SCHEMA.md and append to the Change 
 
 ---
 name: apex-start
-description: Start a new APEX development session. Load project context, show task list, and let the user pick what to work on. Use when beginning any work session or when the user says "start session", "begin", "what should I work on", or "let&#39;s get started".
+description: Start a new APEX development session. Load project context, show task list, and let the user pick what to work on. Use when beginning any work session or when the user says "start session", "begin", "what should I work on", or "let's get started".
 ---
 
 Read the following files silently, in order:
@@ -1355,7 +1353,7 @@ description: End the current APEX development session by updating all context fi
 ---
 
 Update these files to close the session:
-1. .agents/PROGRESS.md — Append today&#39;s entry (✅ done · 🔄 carry-forward · 🧠 decisions)
+1. .agents/PROGRESS.md — Append today's entry (✅ done · 🔄 carry-forward · 🧠 decisions)
 2. .agents/TASKS.md — Mark [DONE] with date, add new tasks, re-prioritize
 3. .agents/MAP.md — Add new files or modules created this session
 4. .agents/SCHEMA.md — If DB changed: update tables + append Change Log row
@@ -1435,7 +1433,6 @@ If any are missing, report which files are absent and recreate them.</div>
     </div>
 
   </section>
-  </section>
 
   <section>
     <div class="eyebrow">Phase 2 — Planned</div>
@@ -1461,6 +1458,31 @@ If any are missing, report which files are absent and recreate them.</div>
         <div class="ic-icon">📋</div>
         <div class="ic-title">apex-brief</div>
         <div class="ic-desc">Self-contained task brief for a contractor: task, relevant schema, affected contracts, constraints — no full codebase access needed. Share as a markdown snippet.</div>
+      </div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:32px;">Phase 3 — Multi-Tool Support</div>
+    <p class="lead">The <code>.agents/</code> brain is already model-agnostic. Future phases will add thin entry-point adapters for additional AI coding tools — same shared brain, more front doors.</p>
+    <div class="two-col">
+      <div class="info-card" style="border-left:3px solid var(--text-muted);">
+        <div class="ic-icon">⬡</div>
+        <div class="ic-title">Cursor</div>
+        <div class="ic-desc">Generate <code>.cursor/rules/</code> entry point that reads the shared <code>.agents/</code> brain. Cursor's rules files follow the same "read this before coding" pattern APEX already uses.</div>
+      </div>
+      <div class="info-card" style="border-left:3px solid var(--text-muted);">
+        <div class="ic-icon">⬡</div>
+        <div class="ic-title">Windsurf</div>
+        <div class="ic-desc">Generate <code>.windsurfrules</code> entry point. Same approach — a thin adapter file that points to <code>.agents/</code> for context, map, tasks, and schema.</div>
+      </div>
+      <div class="info-card" style="border-left:3px solid var(--text-muted);">
+        <div class="ic-icon">⬡</div>
+        <div class="ic-title">Aider</div>
+        <div class="ic-desc">Generate <code>.aider.conf.yml</code> with read directives pointing to the <code>.agents/</code> brain files. Aider's conventions file maps naturally to APEX's read-order pattern.</div>
+      </div>
+      <div class="info-card" style="border-left:3px solid var(--text-muted);">
+        <div class="ic-icon">⬡</div>
+        <div class="ic-title">Copilot Workspace</div>
+        <div class="ic-desc">GitHub Copilot Workspace reads <code>.github/copilot-instructions.md</code>. Another thin entry point — same brain, same workflow, different file name.</div>
       </div>
     </div>
   </section>
@@ -1647,7 +1669,7 @@ cases ──< audit_log (via trigger)
         </div>
         <div class="card-body">
           <div class="prompt-section">
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button"><span class="cm"># APEX SCHEMA DRIFT CHECK</span>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># APEX SCHEMA DRIFT CHECK</span>
 
 Compare .agents/SCHEMA.md against the actual schema source:
 - Drizzle: read src/db/schema.ts
@@ -1679,7 +1701,7 @@ Update SCHEMA.md to match. Do not change the actual schema.</div>
   <section>
     <div class="eyebrow">Multi-Model Compatibility</div>
     <h2>Same workflow.<br>Claude Code and Codex.</h2>
-    <p class="lead">Both tools follow the open Agent Skills standard. APEX uses a shared <code>.agents/</code> brain that both models read. The only difference is the entry-point filename. One codebase, two tools, zero duplication.</div>
+    <p class="lead">Both tools follow the open Agent Skills standard. APEX uses a shared <code>.agents/</code> brain that both models read. The only difference is the entry-point filename. One codebase, two tools, zero duplication.</p>
 
     <div class="callout green">
       <div class="callout-icon">⇄</div>
@@ -1694,10 +1716,10 @@ Update SCHEMA.md to match. Do not change the actual schema.</div>
         <div class="compare-head purple">✦ Claude Code</div>
         <div class="compare-body">
           <div class="compare-row"><div class="cr-key">Entry file</div><div class="cr-val">CLAUDE.md</div></div>
-          <div class="compare-row"><div class="cr-key">Skills dir</div><div class="cr-val">.agents/skills/</div></div>
+          <div class="compare-row"><div class="cr-key">Commands</div><div class="cr-val">.claude/commands/*.md</div></div>
+          <div class="compare-row"><div class="cr-key">Skills dir</div><div class="cr-val">.claude/skills/</div></div>
           <div class="compare-row"><div class="cr-key">Skill format</div><div class="cr-val">SKILL.md + frontmatter</div></div>
-          <div class="compare-row"><div class="cr-key">Invocation</div><div class="cr-val">/apex-start or auto</div></div>
-          <div class="compare-row"><div class="cr-key">Extra fields</div><div class="cr-val">allowed-tools, invocation</div></div>
+          <div class="compare-row"><div class="cr-key">Invocation</div><div class="cr-val">/apex-start or auto-invoke</div></div>
           <div class="compare-row"><div class="cr-key">Brain files</div><div class="cr-val">.agents/* (shared)</div></div>
         </div>
       </div>
@@ -1931,14 +1953,14 @@ claude mcp add-json linear '{"command":"npx","args":["-y","mcp-remote","https://
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Option B — Direct HTTP (if SSE gives issues)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">claude mcp add --transport http linear-server https://mcp.linear.app/mcp
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>claude mcp add --transport http linear-server https://mcp.linear.app/mcp
 
 <span class="cm"># Or via claude.ai Settings → Connectors → Linear</span>
 <span class="cm"># This is the zero-config path if you use Claude.ai already</span></div>
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Add to .agents/CONTEXT.md once connected</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button"><span class="cm"># Add this block to .agents/CONTEXT.md under "External Services"</span>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># Add this block to .agents/CONTEXT.md under "External Services"</span>
 
 | Linear | Issue tracking | MCP (OAuth) — run /mcp to auth |
 | Linear Team ID | <span class="val">[YOUR-TEAM-ID]</span> | Settings → General in Linear |
@@ -1960,7 +1982,7 @@ claude mcp add-json linear '{"command":"npx","args":["-y","mcp-remote","https://
         <div class="card-body">
           <div class="prompt-section">
             <div class="prompt-label">~/.codex/config.toml</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button"><span class="cm"># Add to ~/.codex/config.toml</span>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># Add to ~/.codex/config.toml</span>
 
 [features]
 experimental_use_rmcp_client = true
@@ -2043,7 +2065,7 @@ codex mcp login linear
         <div class="card-body">
           <div class="prompt-section">
             <div class="prompt-label">File: .agents/skills/apex-linear-bootstrap/SKILL.md</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-linear-bootstrap
 description: Bootstrap Linear by creating issues from TASKS.md. Use when the user says "push tasks to Linear", "bootstrap Linear", "sync tasks to Linear for the first time", or "create Linear issues from TASKS.md". Only run this once per project.
 allowed-tools: Read, Write, mcp__linear__createIssue, mcp__linear__searchTeams, mcp__linear__searchProjects
@@ -2093,7 +2115,7 @@ Do not create issues for tasks marked [DONE] unless explicitly asked.</div>
         <div class="card-body">
           <div class="prompt-section">
             <div class="prompt-label">File: .agents/skills/apex-linear-sync/SKILL.md</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-linear-sync
 description: Sync a task status change to Linear. Auto-invoke whenever a task in TASKS.md changes state — when moving to In Progress, marking as Done, marking as Blocked, or unblocking. Trigger phrases: "mark done", "task complete", "starting task", "moving to in progress", "blocked on", "unblocked".
 allowed-tools: Read, Write, mcp__linear__updateIssue, mcp__linear__createComment
@@ -2144,7 +2166,7 @@ After updating Linear, confirm: "✓ Linear [ABC-NNN] updated to [status]"</div>
         <div class="card-body">
           <div class="prompt-section">
             <div class="prompt-label">File: .agents/skills/apex-linear-add/SKILL.md</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button">---
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-linear-add
 description: Add a new task to both TASKS.md and Linear simultaneously. Use when the user wants to add a new task, issue, or work item that should exist in both places. Trigger: "add task", "new task", "create issue", "add to backlog".
 allowed-tools: Read, Write, mcp__linear__createIssue
@@ -2285,7 +2307,7 @@ Do not create new Linear issues — only map existing ones.</div>
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Pull Linear changes back to TASKS.md (when team updates Linear directly)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button"><span class="cm"># APEX LINEAR PULL — Sync Linear status back to TASKS.md</span>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># APEX LINEAR PULL — Sync Linear status back to TASKS.md</span>
 <span class="cm"># Use sparingly — only when team has moved issues in Linear without going through APEX</span>
 
 Read .agents/TASKS.md.
@@ -2301,7 +2323,7 @@ Report all changes made. Do not update Linear — only update TASKS.md.</div>
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Contractor task view (what Linear issues are assigned to them)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button"><span class="cm"># APEX LINEAR CONTRACTOR VIEW</span>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># APEX LINEAR CONTRACTOR VIEW</span>
 
 Read .agents/TASKS.md.
 Find all tasks tagged `[CONTRACTOR: @name]` that have `[LIN: ...]` IDs.
@@ -2501,11 +2523,11 @@ RESEND_API_KEY=
 
 
 <script>
-function showPage(id) {
+function showPage(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  event.target.classList.add('active');
+  el.classList.add('active');
   window.scrollTo(0, 0);
 }
 function toggleCard(header) {

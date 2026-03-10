@@ -104,15 +104,13 @@ copy_file() {
   printf 'write %s\n' "$rel"
 }
 
-# ── User-owned entry-point files — never overwritten ──────────────────────────
+# ── User-owned files — created once, never overwritten (even with --force) ────
 USER_FILES=(
   "AGENTS.md"
   "CLAUDE.md"
-)
 
-# ── Framework files — safe to overwrite with --force ──────────────────────────
-FILES=(
-  # Shared brain
+  # Brain files contain project-specific data that the user maintains.
+  # Created on first install with starter templates, then owned by the project.
   ".agents/CONTEXT.md"
   ".agents/MAP.md"
   ".agents/SCHEMA.md"
@@ -120,7 +118,10 @@ FILES=(
   ".agents/PROGRESS.md"
   ".agents/DECISIONS.md"
   ".agents/CONTRACTS.md"
+)
 
+# ── Framework files — safe to overwrite with --force ──────────────────────────
+FILES=(
   # Claude Code slash commands
   ".claude/commands/apex-init.md"
   ".claude/commands/apex-start.md"
