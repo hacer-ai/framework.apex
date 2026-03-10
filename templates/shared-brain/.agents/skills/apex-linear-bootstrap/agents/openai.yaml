@@ -1,0 +1,17 @@
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "createIssue"
+      description: "Create a new Linear issue"
+      transport: "streamable_http"
+      url: "https://mcp.linear.app/mcp"
+    - type: "mcp"
+      value: "searchTeams"
+      description: "Search Linear teams"
+      transport: "streamable_http"
+      url: "https://mcp.linear.app/mcp"
+    - type: "mcp"
+      value: "searchProjects"
+      description: "Search Linear projects"
+      transport: "streamable_http"
+      url: "https://mcp.linear.app/mcp"

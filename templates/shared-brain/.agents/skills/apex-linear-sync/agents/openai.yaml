@@ -1,0 +1,12 @@
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "updateIssue"
+      description: "Update a Linear issue status"
+      transport: "streamable_http"
+      url: "https://mcp.linear.app/mcp"
+    - type: "mcp"
+      value: "createComment"
+      description: "Add a comment to a Linear issue"
+      transport: "streamable_http"
+      url: "https://mcp.linear.app/mcp"

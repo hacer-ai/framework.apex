@@ -144,8 +144,11 @@ FILES=(
   ".agents/skills/apex-schema/SKILL.md"
   ".agents/skills/apex-plan/SKILL.md"
   ".agents/skills/apex-linear-bootstrap/SKILL.md"
+  ".agents/skills/apex-linear-bootstrap/agents/openai.yaml"
   ".agents/skills/apex-linear-sync/SKILL.md"
+  ".agents/skills/apex-linear-sync/agents/openai.yaml"
   ".agents/skills/apex-linear-add/SKILL.md"
+  ".agents/skills/apex-linear-add/agents/openai.yaml"
 )
 
 for file in "${USER_FILES[@]}"; do

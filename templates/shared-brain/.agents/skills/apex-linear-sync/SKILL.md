@@ -1,7 +1,6 @@
 ---
 name: apex-linear-sync
 description: Sync a task status change to Linear. Auto-invoke whenever a task in TASKS.md changes state — moving to In Progress, marking as Done, marking as Blocked, or unblocking. Trigger phrases: "mark done", "task complete", "starting task", "moving to in progress", "blocked on", "unblocked".
-allowed-tools: Read, Write, mcp__linear__updateIssue, mcp__linear__createComment
 ---
 
 Read .agents/TASKS.md to find the task being updated.

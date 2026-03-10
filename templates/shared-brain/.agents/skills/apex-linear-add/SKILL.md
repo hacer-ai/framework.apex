@@ -1,7 +1,6 @@
 ---
 name: apex-linear-add
 description: Add a new task to both TASKS.md and Linear simultaneously. Use when the user wants to add a new task, issue, or work item. Trigger: "add task", "new task", "create issue", "add to backlog", "add task: [description]".
-allowed-tools: Read, Write, mcp__linear__createIssue
 ---
 
 Read .agents/TASKS.md and .agents/CONTEXT.md.

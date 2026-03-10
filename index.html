@@ -714,13 +714,15 @@ Flag any inconsistencies between migrations and current schema.</div>
         </div>
       </div>
       <div class="compare-col">
-        <div class="compare-head blue">⧉ Codex — where it looks</div>
+        <div class="compare-head blue">⧉ Codex — where it looks (in order)</div>
         <div class="compare-body">
-          <div class="compare-row"><div class="cr-key">Skills</div><div class="cr-val">.agents/skills/name/SKILL.md</div></div>
-          <div class="compare-row"><div class="cr-key">Global skills</div><div class="cr-val">~/.codex/skills/name/SKILL.md</div></div>
+          <div class="compare-row"><div class="cr-key">Project</div><div class="cr-val">.agents/skills/name/SKILL.md</div></div>
+          <div class="compare-row"><div class="cr-key">Parent dir</div><div class="cr-val">../.agents/skills/</div></div>
+          <div class="compare-row"><div class="cr-key">Repo root</div><div class="cr-val">$REPO_ROOT/.agents/skills/</div></div>
+          <div class="compare-row"><div class="cr-key">User global</div><div class="cr-val">~/.agents/skills/</div></div>
           <div class="compare-row"><div class="cr-key">Entry point</div><div class="cr-val">AGENTS.md</div></div>
+          <div class="compare-row"><div class="cr-key">MCP deps</div><div class="cr-val">agents/openai.yaml</div></div>
           <div class="compare-row"><div class="cr-key">Does NOT read</div><div class="cr-val" style="color:var(--red)">.claude/commands/ ✗</div></div>
-          <div class="compare-row"><div class="cr-key">&nbsp;</div><div class="cr-val">&nbsp;</div></div>
         </div>
       </div>
     </div>
@@ -741,11 +743,12 @@ Flag any inconsistencies between migrations and current schema.</div>
       <div class="tree-row"><div class="tree-path">  <span class="dim">│           └─ </span>SKILL.md</div><div class="tree-desc">Same content as commands/apex-schema.md but with frontmatter description</div></div>
       <div class="tree-row"><div class="tree-path">  <span class="dim">├─ .agents/</span></div><div class="tree-desc">Shared brain + Codex commands — model-agnostic</div><div class="pill pill-blue">Codex + shared</div></div>
       <div class="tree-row"><div class="tree-path">  <span class="dim">│   ├─ </span>CONTEXT.md / MAP.md / SCHEMA.md …</div><div class="tree-desc">Brain files — both tools read these explicitly</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│   └─ </span>skills/</div><div class="tree-desc">Codex skills — same content as .claude/commands/</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-start/SKILL.md</div><div class="tree-desc">Codex: invoke with <code>$ apex-start</code> or describe the task</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│   └─ </span>skills/</div><div class="tree-desc">Codex skills — SKILL.md + optional agents/openai.yaml per skill</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-start/SKILL.md</div><div class="tree-desc">Codex: invoke with <code>$apex-start</code> or describe the task</div></div>
       <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-end/SKILL.md</div><div class="tree-desc"></div></div>
       <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-schema/SKILL.md</div><div class="tree-desc"></div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│       └─ </span>apex-plan/SKILL.md</div><div class="tree-desc"></div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-plan/SKILL.md</div><div class="tree-desc"></div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       └─ </span>apex-linear-*/</div><div class="tree-desc">Linear skills with <code>agents/openai.yaml</code> for MCP tool deps</div><div class="pill pill-amber">MCP</div></div>
     </div>
 
     <div class="callout green">
@@ -1727,10 +1730,10 @@ Update SCHEMA.md to match. Do not change the actual schema.</div>
         <div class="compare-head blue">⧉ OpenAI Codex</div>
         <div class="compare-body">
           <div class="compare-row"><div class="cr-key">Entry file</div><div class="cr-val">AGENTS.md</div></div>
-          <div class="compare-row"><div class="cr-key">Skills dir</div><div class="cr-val">.agents/skills/</div></div>
-          <div class="compare-row"><div class="cr-key">Skill format</div><div class="cr-val">SKILL.md + frontmatter</div></div>
-          <div class="compare-row"><div class="cr-key">Invocation</div><div class="cr-val">$ mention or /apex-start</div></div>
-          <div class="compare-row"><div class="cr-key">Extra fields</div><div class="cr-val">agents/openai.yaml (optional)</div></div>
+          <div class="compare-row"><div class="cr-key">Skills dir</div><div class="cr-val">.agents/skills/name/SKILL.md</div></div>
+          <div class="compare-row"><div class="cr-key">Skill format</div><div class="cr-val">SKILL.md + name/description frontmatter</div></div>
+          <div class="compare-row"><div class="cr-key">Invocation</div><div class="cr-val">$skill-name, /skills, or implicit match</div></div>
+          <div class="compare-row"><div class="cr-key">MCP deps</div><div class="cr-val">agents/openai.yaml (per skill)</div></div>
           <div class="compare-row"><div class="cr-key">Brain files</div><div class="cr-val">.agents/* (shared)</div></div>
         </div>
       </div>
@@ -2068,7 +2071,6 @@ codex mcp login linear
             <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-linear-bootstrap
 description: Bootstrap Linear by creating issues from TASKS.md. Use when the user says "push tasks to Linear", "bootstrap Linear", "sync tasks to Linear for the first time", or "create Linear issues from TASKS.md". Only run this once per project.
-allowed-tools: Read, Write, mcp__linear__createIssue, mcp__linear__searchTeams, mcp__linear__searchProjects
 ---
 
 Read .agents/TASKS.md and .agents/CONTEXT.md.
@@ -2118,7 +2120,6 @@ Do not create issues for tasks marked [DONE] unless explicitly asked.</div>
             <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-linear-sync
 description: Sync a task status change to Linear. Auto-invoke whenever a task in TASKS.md changes state — when moving to In Progress, marking as Done, marking as Blocked, or unblocking. Trigger phrases: "mark done", "task complete", "starting task", "moving to in progress", "blocked on", "unblocked".
-allowed-tools: Read, Write, mcp__linear__updateIssue, mcp__linear__createComment
 ---
 
 Read .agents/TASKS.md to find the task being updated.
@@ -2169,7 +2170,6 @@ After updating Linear, confirm: "✓ Linear [ABC-NNN] updated to [status]"</div>
             <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-linear-add
 description: Add a new task to both TASKS.md and Linear simultaneously. Use when the user wants to add a new task, issue, or work item that should exist in both places. Trigger: "add task", "new task", "create issue", "add to backlog".
-allowed-tools: Read, Write, mcp__linear__createIssue
 ---
 
 Read .agents/TASKS.md and .agents/CONTEXT.md.

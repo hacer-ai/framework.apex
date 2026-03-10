@@ -1,7 +1,6 @@
 ---
 name: apex-linear-bootstrap
 description: Bootstrap Linear by creating issues from TASKS.md. Use when the user says "push tasks to Linear", "bootstrap Linear", "sync tasks to Linear for the first time", or "create Linear issues from TASKS.md". Only run this once per project.
-allowed-tools: Read, Write, mcp__linear__createIssue, mcp__linear__searchTeams, mcp__linear__searchProjects
 ---
 
 Read .agents/TASKS.md and .agents/CONTEXT.md.
