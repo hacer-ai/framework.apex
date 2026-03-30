@@ -3,7 +3,7 @@ name: apex-schema
 description: Guard against unsafe database changes. Auto-invoke for any task involving migrations, schema changes, adding columns, creating tables, modifying ORM models, or any database structure work. Trigger phrases: "add column", "create table", "migration", "schema change", "alter table", "drizzle", "prisma schema".
 ---
 
-Read .agents/SCHEMA.md and .agents/CONTRACTS.md.
+Read .agents/SCHEMA.md first. Also read .agents/CONTRACTS.md if it exists (optional file).
 
 DB change: $ARGUMENTS
 

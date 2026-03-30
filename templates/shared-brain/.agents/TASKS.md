@@ -13,6 +13,12 @@
 
 One active task per person/agent at a time. If you see 🔒 on a task you were about to take, pick another.
 
+## Hygiene rules
+- **Unique IDs**: Before creating a new T-NNN, scan for the highest existing number and use +1. NEVER reuse a task ID.
+- **Done format**: When a task is marked DONE, trim it to one line: `- [x] T-NNN — Title [Lead] DONE YYYY-MM-DD`. Delete all sub-bullets — the code and git history have the details.
+- **In Progress integrity**: The "In Progress" section must contain ONLY items NOT marked [x]. Move completed items to Done immediately.
+- **Size control**: If this file exceeds 500 lines, trim Done tasks to one-liners and remove any sub-bullets from completed work.
+
 ---
 
 ## 🔴 In Progress

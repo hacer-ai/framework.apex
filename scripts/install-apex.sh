@@ -117,32 +117,25 @@ USER_FILES=(
   ".agents/TASKS.md"
   ".agents/PROGRESS.md"
   ".agents/DECISIONS.md"
-  ".agents/CONTRACTS.md"
+  # CONTRACTS.md is NOT installed by default — a partially-documented API surface
+  # is worse than none. Create it manually when the project has > 10 API endpoints:
+  #   cp templates/shared-brain/.agents/CONTRACTS.md .agents/CONTRACTS.md
 )
 
 # ── Framework files — safe to overwrite with --force ──────────────────────────
 FILES=(
-  # Claude Code slash commands
+  # Claude Code slash commands (3 core commands)
   ".claude/commands/apex-init.md"
   ".claude/commands/apex-start.md"
-  ".claude/commands/apex-task.md"
   ".claude/commands/apex-end.md"
-  ".claude/commands/apex-ship.md"
-  ".claude/commands/apex-review.md"
-  ".claude/commands/apex-schema.md"
-  ".claude/commands/apex-plan.md"
-  ".claude/commands/apex-onboard.md"
 
-  # Claude Code auto-invocation skill (fires on DB phrases without manual command)
+  # Claude Code auto-invocation skill (fires on DB phrases; also manually invokable as /apex-schema)
   ".claude/skills/apex-schema/SKILL.md"
 
-  # Codex skills (same content, different directory)
+  # Codex skills
   ".agents/skills/apex-start/SKILL.md"
   ".agents/skills/apex-end/SKILL.md"
-  ".agents/skills/apex-ship/SKILL.md"
-  ".agents/skills/apex-review/SKILL.md"
   ".agents/skills/apex-schema/SKILL.md"
-  ".agents/skills/apex-plan/SKILL.md"
   ".agents/skills/apex-linear-bootstrap/SKILL.md"
   ".agents/skills/apex-linear-bootstrap/agents/openai.yaml"
   ".agents/skills/apex-linear-sync/SKILL.md"

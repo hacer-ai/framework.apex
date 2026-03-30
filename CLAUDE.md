@@ -25,7 +25,8 @@ Target users: solo devs and small teams (2-5 people) using AI coding tools.
 
 - **Project-owned files** are created once and never overwritten, even with `--force`:
   - `CLAUDE.md`, `AGENTS.md` (entry points)
-  - `.agents/CONTEXT.md`, `.agents/MAP.md`, `.agents/SCHEMA.md`, `.agents/TASKS.md`, `.agents/PROGRESS.md`, `.agents/DECISIONS.md`, `.agents/CONTRACTS.md` (brain files)
+  - `.agents/CONTEXT.md`, `.agents/MAP.md`, `.agents/SCHEMA.md`, `.agents/TASKS.md`, `.agents/PROGRESS.md`, `.agents/DECISIONS.md` (brain files)
+  - `.agents/CONTRACTS.md` is NOT installed by default (a partially-documented API surface is worse than none). Create manually when the project has > 10 API endpoints.
 - **Framework files** (commands in `.claude/commands/`, skills in `.claude/skills/` and `.agents/skills/`) are safe to overwrite with `--force`.
 - `templates/shared-brain/` is the single source of truth for all scaffold content. Every file uses `__PROJECT_NAME__` as the placeholder, which the installer replaces via `sed`.
 - `.agents/skills/` are Codex-facing skills. `.claude/commands/` are Claude Code slash commands. `.claude/skills/` are Claude Code auto-invocation skills. The brain files in `.agents/*.md` are shared and model-agnostic.

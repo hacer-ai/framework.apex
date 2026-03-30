@@ -1,35 +1,42 @@
 ---
 name: apex-start
-description: Start a new APEX development session. Load project context, check for stale brain files, show the task list, and let the user pick what to work on. Use when beginning any work session or when the user says "start session", "begin", "what should I work on", or "let's get started".
+description: Begin a work session. Load tasks and session status. Use when starting work or saying "let's begin", "what should I work on", "start session".
 ---
 
-Read the following files silently, in order:
-1. AGENTS.md
-2. .agents/CONTEXT.md
-3. .agents/MAP.md
-4. .agents/TASKS.md
-5. .agents/PROGRESS.md
+Read these files silently:
+1. `.agents/TASKS.md` — In Progress and Up Next sections only (stop before Backlog)
+2. `.agents/PROGRESS.md` — last entry only
 
-Run: git log --oneline -1
-Note the current HEAD commit hash (first 7 characters).
-Check MAP.md and SCHEMA.md for a "Last verified:" line. If the stored hash differs from HEAD, mark as stale.
+Check MAP.md for a "Last verified:" line. If the stored commit hash is missing or stale, mark as stale.
 
-Then respond ONLY with this block:
+Health checks (silent, report warnings in output):
+- "In Progress" has items marked [x] or DONE → warn stale tasks stuck in wrong section
+- TASKS.md > 400 lines → warn bloat
+
+Respond ONLY with this block:
 
 ---
 ✓ SESSION LOADED
 Project: [name] · Mode: [mode]
-Last completed: [most recent PROGRESS.md entry, one line]
+Last completed: [last PROGRESS.md entry, one line]
 Blocked: [blocked tasks or "none"]
-[if stale: ⚠️  MAP.md stale (last verified: abc1234 · now: def5678) — type "update map" to fix]
+[if stale: ⚠ MAP.md stale — say "update map" to fix]
+[if health warnings: one line each]
 
-## Tasks
-**In Progress:** [T-NNN — title (what needs to happen)]
-**Up Next:** [T-NNN — title (what needs to happen)]
+**In Progress:** T-NNN — title
+**Up Next:** T-NNN — title
 
-Which task? (T-ID to pick · "show backlog" · "add task: [description]")
+Which task? (T-ID · "show backlog" · "add task: [description]")
 ---
 
-Wait for the user to select a task before starting work.
-When the user picks: move to In Progress in TASKS.md, sync Linear if [LIN:] tag exists, read SCHEMA.md if DB work.
-If user types "update map": scan source dirs, update MAP.md + Last verified line, then resume.
+Wait for task selection before reading any other files or writing code.
+
+On task selection:
+- Move task to In Progress in TASKS.md if not already there
+- If [LIN: ABC-NNN] tag exists, sync Linear status
+- Read `.agents/SCHEMA.md` only if the task involves DB work
+- Read `.agents/MAP.md` only if the task requires navigating unfamiliar modules
+- Read `.agents/DECISIONS.md` only if the task touches architecture decisions
+
+If user says "update map": read source dirs, update MAP.md, then resume.
+If user says "show backlog": read TASKS.md Backlog section and display it.

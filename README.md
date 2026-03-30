@@ -5,8 +5,8 @@ APEX is an installable scaffold that gives a software team — humans, Claude Co
 - `CLAUDE.md` — Claude Code entry point (auto-read every session)
 - `AGENTS.md` — Codex entry point (same purpose, different filename)
 - `.agents/` — shared brain: context, map, schema, tasks, progress, decisions, contracts
-- `.claude/commands/` — slash commands for Claude Code (`/apex-start`, `/apex-end`, etc.)
-- `.claude/skills/` — auto-invoked skills (apex-schema fires automatically on DB work)
+- `.claude/commands/` — slash commands for Claude Code (`/apex-init`, `/apex-start`, `/apex-end`)
+- `.claude/skills/` — auto-invoked skills (`apex-schema` fires automatically on DB work)
 - `.agents/skills/` — Codex skills (same content as `.claude/commands/`)
 
 ---
@@ -33,7 +33,7 @@ To also get Linear MCP setup instructions printed in your terminal:
 ./scripts/install-apex.sh . --linear
 ```
 
-**`CLAUDE.md` and `AGENTS.md` are never overwritten** — those are yours. Framework files under `.agents/` and `.claude/` can be refreshed with `--force`.
+**`CLAUDE.md` and `AGENTS.md` are never overwritten** — those are yours. Framework files under `.agents/skills/` and `.claude/` can be refreshed with `--force`.
 
 ### 2. Initialize the brain
 
@@ -59,7 +59,7 @@ For manual control or new projects with no code yet, use the bootstrap prompts i
 /apex-start
 ```
 
-Claude loads the shared brain and shows the task list — **you pick what to work on**:
+Claude loads the active task list and shows what needs to happen:
 
 ```
 ✓ SESSION LOADED
@@ -67,30 +67,34 @@ Project: My App · Mode: ACTIVE
 Last completed: T-011 — Auth migration
 Blocked: none
 
-## Tasks available
-In Progress: T-012 — JWT refresh token rotation
-Up Next: T-013 — Rate limiting, T-014 — Case detail page
+**In Progress:** T-012 — JWT refresh token rotation
+**Up Next:** T-013 — Rate limiting, T-014 — Case detail page
 
-Which task should I work on? (or say "show backlog" / "add task: [description]")
+Which task? (T-ID · "show backlog" · "add task: [description]")
 ```
 
-Select a task or add a new one. New tasks are created in `TASKS.md` **and** Linear simultaneously.
+Select a task or add a new one. Brain files (MAP.md, CONTEXT.md, DECISIONS.md) are loaded on demand — only when the selected task actually needs them.
+
+```
+/apex-end
+```
+
+Claude updates TASKS.md, PROGRESS.md, MAP.md, SCHEMA.md, and DECISIONS.md. Syncs any DONE tasks to Linear.
 
 | When | Run | What happens |
 | --- | --- | --- |
-| Starting work | `/apex-start` | Loads brain, shows task list, you pick a task |
-| Mid-session task switch | `/apex-task` | Shows full task board with T-IDs and descriptions |
-| Planning a feature | `/apex-plan [feature]` | Plans across modules before writing code |
-| DB work | `/apex-schema [change]` | Schema review guard (also auto-fires on DB phrases) |
-| Adding a task | "add task: [desc]" | Creates in TASKS.md + Linear, returns ID |
-| Ending work | `/apex-end` | Updates PROGRESS, TASKS, MAP, SCHEMA |
+| First setup | `/apex-init` | Fills `.agents/` from the real codebase |
+| Starting work | `/apex-start` | Loads task list (lazy), pick a task |
+| DB work | (automatic) | `apex-schema` fires on DB phrases |
+| Ending work | `/apex-end` | Updates all brain files |
+| Adding a task | "add task: [desc]" | Creates in TASKS.md + Linear |
 
 ---
 
 ## Task management
 
 ### Selecting a task
-After `/apex-start`, Claude shows In Progress and Up Next tasks. Just say which one (by number or T-ID) to begin. Claude marks it In Progress in TASKS.md and syncs to Linear.
+After `/apex-start`, Claude shows In Progress and Up Next tasks. Say which one (by number or T-ID) to begin. Claude marks it In Progress in TASKS.md and syncs to Linear.
 
 ### Adding a task
 At any point say: `add task: [description]`. The `apex-linear-add` skill:
@@ -120,18 +124,15 @@ Then authenticate in Claude Code: `/mcp` → follow the OAuth flow.
 | Command | Where | What it does |
 | --- | --- | --- |
 | `/apex-init` | Claude Code | One-time init — fills `.agents/` from the real codebase |
-| `/apex-start` | Claude Code / Codex | Load brain, staleness check, show task list, pick a task |
-| `/apex-task` | Claude Code | Show task board with T-IDs and descriptions — pick or add |
+| `/apex-start` | Claude Code / Codex | Load task list (lazy), pick a task to work on |
 | `/apex-end` | Claude Code / Codex | Update PROGRESS, TASKS, MAP, SCHEMA, Linear sync |
-| `/apex-ship` | Claude Code / Codex | End session + create task branch + commit + optional PR |
-| `/apex-review` | Claude Code / Codex | Check changes against CONTRACTS.md and DECISIONS.md |
-| `/apex-schema [change]` | Claude Code / Codex | DB change guard — reviews impact before any migration |
-| `/apex-plan [feature]` | Claude Code / Codex | Feature planning across modules, no code written yet |
-| `/apex-onboard` | Claude Code | New human or agent joining — structured checklist |
-| `"add task: [desc]"` | Natural language | Create task in TASKS.md + Linear simultaneously |
+| `apex-schema` | Auto-invoked | DB change guard — fires on migration/schema phrases |
 
 ### Auto-invocation
-`apex-schema` is also installed as a skill in `.claude/skills/apex-schema/` so it fires automatically when you say things like "add a column", "migration", "create table", or "alter table" — without you typing the command.
+`apex-schema` is installed as a skill in `.claude/skills/apex-schema/` so it fires automatically when you say things like "add a column", "migration", "create table", or "alter table" — without typing a command. You can also call it directly as `/apex-schema`.
+
+### Context tip
+Run `/compact` mid-session if the context window is getting heavy. The built-in compactor summarizes conversation history without losing working state.
 
 ---
 
@@ -145,7 +146,7 @@ Then authenticate in Claude Code: `/mcp` → follow the OAuth flow.
 | `TASKS.md` | Sprint queue with T-NNN IDs and Linear IDs |
 | `PROGRESS.md` | Session log with attribution per entry |
 | `DECISIONS.md` | Architecture Decision Records |
-| `CONTRACTS.md` | Stable interfaces between modules, with change log |
+| `CONTRACTS.md` | Stable interfaces between modules (optional, >10 endpoints) |
 
 ---
 
@@ -167,7 +168,6 @@ your-project/
 │       ├── apex-start/SKILL.md
 │       ├── apex-end/SKILL.md
 │       ├── apex-schema/SKILL.md
-│       ├── apex-plan/SKILL.md
 │       ├── apex-linear-bootstrap/SKILL.md
 │       ├── apex-linear-sync/SKILL.md
 │       └── apex-linear-add/SKILL.md
@@ -175,10 +175,7 @@ your-project/
     ├── commands/                    ← Claude Code slash commands
     │   ├── apex-init.md
     │   ├── apex-start.md
-    │   ├── apex-end.md
-    │   ├── apex-schema.md
-    │   ├── apex-plan.md
-    │   └── apex-onboard.md
+    │   └── apex-end.md
     └── skills/                      ← Auto-invoked skills
         └── apex-schema/SKILL.md     ← Fires automatically on DB phrases
 ```
@@ -187,7 +184,7 @@ your-project/
 
 ## Operating rules
 
-- Read MAP.md first. Never scan source folders speculatively.
+- Run `/apex-start` to begin. Do not bulk-read all brain files upfront.
 - For any DB work, `apex-schema` reads SCHEMA.md before writing anything.
 - TASKS.md is the source of truth. Linear is downstream — never read from it.
 - Record decisions once in `DECISIONS.md` — stop re-debating them.
@@ -201,7 +198,7 @@ These features are designed but not yet built:
 
 | Feature | What it does |
 | --- | --- |
-| Contractor task filtering | `/apex-task` shows only `[CONTRACTOR: @name]` tasks for that person |
+| Contractor task filtering | `/apex-start` shows only `[CONTRACTOR: @name]` tasks for that person |
 | `apex-standup` | One-paragraph async standup from last 3 PROGRESS.md entries |
 | Session locking | Blocks a second agent from picking an already-active task |
 | `apex-brief` | Self-contained task brief for contractors — no full codebase access needed |

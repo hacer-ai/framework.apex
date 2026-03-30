@@ -2,11 +2,14 @@
 
 Claude Code entry point. Auto-read every session.
 
-## Read Order (every session, no exceptions)
-1. `.agents/CONTEXT.md` — stack and services
-2. `.agents/MAP.md` — codebase map (read this, do not scan folders)
-3. `.agents/TASKS.md` — work queue
-4. `.agents/PROGRESS.md` — where we left off
+## Session start
+Run `/apex-start` — it loads what's needed. Do not bulk-read all brain files on every session.
+
+Load on demand:
+- `.agents/MAP.md` — when navigating unfamiliar modules (do not scan folders)
+- `.agents/CONTEXT.md` — when you need stack or services info
+- `.agents/DECISIONS.md` — before proposing architecture alternatives
+- `.agents/SCHEMA.md` — before any DB work (non-negotiable, see DB Rule below)
 
 ## DB Rule — Non-negotiable
 Never write a migration, query, or ORM model without reading `.agents/SCHEMA.md` first.
@@ -15,9 +18,16 @@ when the task references any table or field.
 
 ## Golden Rules
 - Never rewrite working modules unless explicitly required
-- Never change `.agents/CONTRACTS.md` interfaces without approval
+- Never change `.agents/CONTRACTS.md` interfaces without approval (if the file exists)
 - Always check `.agents/DECISIONS.md` before proposing alternatives already debated
 - Always run `/apex-end` before closing a session
+
+## Brain File Hygiene — Rules for writing to .agents/
+- **No redundancy across files**: CLAUDE.md is canonical for stack, constraints, conventions, commands, design tokens, auth architecture. CONTEXT.md holds ONLY project metadata, services table, env vars, known risks — nothing that's in CLAUDE.md. DECISIONS.md holds the "why" behind architectural choices. MAP.md holds file paths and route maps only.
+- **Before writing to any file**: ask "Is this already documented elsewhere?" If yes, don't duplicate it.
+- **Unique IDs**: Task IDs (T-NNN) and ADR numbers (ADR-NNN) must never collide. Always scan for the highest existing number before creating a new one.
+- **Completed work is immutable history**: Once a task is DONE, its entry is a one-liner. Session logs older than 2 weeks are archive material, not active context.
+- **CONTRACTS.md is optional**: Only maintain it if the project has > 10 documented API endpoints. A partially-documented API surface is worse than no documentation.
 
 ## Project Mode
 Current mode: **ACTIVE**
@@ -28,9 +38,7 @@ Current mode: **ACTIVE**
 - Tasks tagged `[CONTRACTOR: @name]` are scoped to that person
 
 ## Commands
-- `/apex-start` — load brain and show task list
-- `/apex-task` — show task board, pick or add a task
-- `/apex-end` — close session, update brain files
-- `/apex-schema [change]` — DB change guard (also auto-fires on DB phrases)
-- `/apex-plan [feature]` — plan before coding
-- `/apex-onboard` — onboard a new team member or agent
+- `/apex-init` — one-time setup: fill brain files from the real codebase
+- `/apex-start` — begin session: load tasks, pick what to work on
+- `/apex-end` — close session: update brain files
+- `apex-schema` — auto-fires on DB phrases; also invokable as `/apex-schema`
