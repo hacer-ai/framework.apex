@@ -1,6 +1,6 @@
 ---
 name: apex-start
-description: Begin a work session. Load tasks and session status. Use when starting work or saying "let's begin", "what should I work on", "start session".
+description: Begin a work session. Load tasks and session status. Use when starting work or when the user says "let's begin", "what should I work on", "start session".
 ---
 
 Read these files silently:
@@ -21,7 +21,7 @@ Respond ONLY with this block:
 Project: [name] · Mode: [mode]
 Last completed: [last PROGRESS.md entry, one line]
 Blocked: [blocked tasks or "none"]
-[if stale: ⚠ MAP.md stale — say "update map" to fix]
+[if stale: ⚠ MAP.md stale (was: abc1234 · now: def5678) — say "update map" to fix]
 [if health warnings: one line each]
 
 **In Progress:** T-NNN — title
@@ -34,10 +34,10 @@ Wait for task selection before reading any other files or writing code.
 
 On task selection:
 - Move task to In Progress in TASKS.md if not already there
-- If [LIN: ABC-NNN] tag exists, sync Linear status
+- If [LIN: ABC-NNN] tag exists, sync Linear status (see apex-linear-sync)
 - Read `.agents/SCHEMA.md` only if the task involves DB work
 - Read `.agents/MAP.md` only if the task requires navigating unfamiliar modules
 - Read `.agents/DECISIONS.md` only if the task touches architecture decisions
 
-If user says "update map": read source dirs, update MAP.md, then resume.
+If user says "update map": read source dirs, update MAP.md + Last verified line, then resume.
 If user says "show backlog": read TASKS.md Backlog section and display it.

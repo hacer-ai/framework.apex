@@ -1,7 +1,6 @@
 ---
 name: apex-end
-description: End the work session. Update all brain files with today's progress. Use when done for the day or wrapping up.
-disable-model-invocation: true
+description: End the work session. Update all brain files with today's progress. Use when the user is done for the day, says "wrap up", "close session", or "end session".
 ---
 
 Update the brain files to close this session. Follow these rules for every file you touch.
@@ -17,7 +16,7 @@ Update the brain files to close this session. Follow these rules for every file 
 - Append today's entry: ✅ done · 🔄 carry-forward · 🧠 decisions · who did the work.
 
 ## MAP.md
-- Add any new files or modules created this session.
+- Add any new files or modules created this session. Update the "Last verified" hash and date.
 
 ## SCHEMA.md
 - Only if DB changes were made: update affected tables, append a Change Log row.
@@ -30,6 +29,6 @@ Update the brain files to close this session. Follow these rules for every file 
 - Unique IDs: T-NNN and ADR-NNN must never collide — always scan before creating.
 - Completed work is immutable: DONE tasks are one-liners. Sessions >2 weeks old are archive material.
 
-For each DONE task with a `[LIN: ABC-NNN]` tag not yet synced: call apex-linear-sync.
+For each DONE task with a `[LIN: ABC-NNN]` tag not yet synced: run apex-linear-sync.
 
 Output: `chore(apex): [YYYY-MM-DD] — [main thing accomplished]`

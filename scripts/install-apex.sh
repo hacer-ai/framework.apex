@@ -124,13 +124,14 @@ USER_FILES=(
 
 # ── Framework files — safe to overwrite with --force ──────────────────────────
 FILES=(
-  # Claude Code slash commands (3 core commands)
-  ".claude/commands/apex-init.md"
-  ".claude/commands/apex-start.md"
-  ".claude/commands/apex-end.md"
-
-  # Claude Code auto-invocation skill (fires on DB phrases; also manually invokable as /apex-schema)
+  # Claude Code skills (each is invokable as /name; some auto-invoke, see frontmatter)
+  ".claude/skills/apex-init/SKILL.md"
+  ".claude/skills/apex-start/SKILL.md"
+  ".claude/skills/apex-end/SKILL.md"
   ".claude/skills/apex-schema/SKILL.md"
+  ".claude/skills/apex-linear-bootstrap/SKILL.md"
+  ".claude/skills/apex-linear-sync/SKILL.md"
+  ".claude/skills/apex-linear-add/SKILL.md"
 
   # Codex skills
   ".agents/skills/apex-start/SKILL.md"
@@ -144,6 +145,14 @@ FILES=(
   ".agents/skills/apex-linear-add/agents/openai.yaml"
 )
 
+# Legacy files from older APEX versions — superseded by .claude/skills/.
+# Removed only if their content still references the framework (never user content).
+LEGACY_FILES=(
+  ".claude/commands/apex-init.md"
+  ".claude/commands/apex-start.md"
+  ".claude/commands/apex-end.md"
+)
+
 for file in "${USER_FILES[@]}"; do
   copy_user_file "$file"
 done
@@ -151,6 +160,15 @@ done
 for file in "${FILES[@]}"; do
   copy_file "$file"
 done
+
+for file in "${LEGACY_FILES[@]}"; do
+  dst="$TARGET_DIR/$file"
+  if [[ -f "$dst" ]] && grep -q "apex" "$dst"; then
+    rm "$dst"
+    printf 'clean %s (legacy command — replaced by .claude/skills/)\n' "$file"
+  fi
+done
+rmdir "$TARGET_DIR/.claude/commands" 2>/dev/null || true
 
 printf '\nInstalled APEX shared-brain scaffold into %s\n' "$(cd "$TARGET_DIR" && pwd)"
 
@@ -164,7 +182,7 @@ if [[ "$SETUP_LINEAR" == true ]]; then
 
 Step 1 — Register the Linear MCP server with Claude Code (run once per machine):
 
-  claude mcp add-json linear '{"command":"npx","args":["-y","mcp-remote","https://mcp.linear.app/sse"]}'
+  claude mcp add --transport http linear https://mcp.linear.app/mcp
 
 Step 2 — Authenticate with Linear (run inside a Claude Code session):
 
@@ -199,8 +217,7 @@ create a Linear issue and write the ID back to TASKS.md.
   Troubleshooting
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-If SSE gives connection issues, try the HTTP transport instead:
-  claude mcp add --transport http linear-server https://mcp.linear.app/mcp
+Check the server status and re-trigger auth at any time with /mcp inside a session.
 
 If you use claude.ai already, you can connect via:
   claude.ai → Settings → Connectors → Linear (zero-config OAuth)

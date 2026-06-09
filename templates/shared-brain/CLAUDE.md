@@ -1,44 +1,15 @@
 # __PROJECT_NAME__ — CLAUDE.md
 
-Claude Code entry point. Auto-read every session.
+@AGENTS.md
 
-## Session start
-Run `/apex-start` — it loads what's needed. Do not bulk-read all brain files on every session.
+## Claude Code
 
-Load on demand:
-- `.agents/MAP.md` — when navigating unfamiliar modules (do not scan folders)
-- `.agents/CONTEXT.md` — when you need stack or services info
-- `.agents/DECISIONS.md` — before proposing architecture alternatives
-- `.agents/SCHEMA.md` — before any DB work (non-negotiable, see DB Rule below)
+All shared rules live in AGENTS.md (imported above) — edit that file, not this one,
+so Codex and Claude Code stay aligned.
 
-## DB Rule — Non-negotiable
-Never write a migration, query, or ORM model without reading `.agents/SCHEMA.md` first.
-The `apex-schema` skill handles this automatically, but also read SCHEMA.md manually
-when the task references any table or field.
-
-## Golden Rules
-- Never rewrite working modules unless explicitly required
-- Never change `.agents/CONTRACTS.md` interfaces without approval (if the file exists)
-- Always check `.agents/DECISIONS.md` before proposing alternatives already debated
-- Always run `/apex-end` before closing a session
-
-## Brain File Hygiene — Rules for writing to .agents/
-- **No redundancy across files**: CLAUDE.md is canonical for stack, constraints, conventions, commands, design tokens, auth architecture. CONTEXT.md holds ONLY project metadata, services table, env vars, known risks — nothing that's in CLAUDE.md. DECISIONS.md holds the "why" behind architectural choices. MAP.md holds file paths and route maps only.
-- **Before writing to any file**: ask "Is this already documented elsewhere?" If yes, don't duplicate it.
-- **Unique IDs**: Task IDs (T-NNN) and ADR numbers (ADR-NNN) must never collide. Always scan for the highest existing number before creating a new one.
-- **Completed work is immutable history**: Once a task is DONE, its entry is a one-liner. Session logs older than 2 weeks are archive material, not active context.
-- **CONTRACTS.md is optional**: Only maintain it if the project has > 10 documented API endpoints. A partially-documented API surface is worse than no documentation.
-
-## Project Mode
-Current mode: **ACTIVE**
-
-## Team
-- Lead: [fill in]
-- Contributors: [fill in — names + scope]
-- Tasks tagged `[CONTRACTOR: @name]` are scoped to that person
-
-## Commands
+Slash commands (skills in `.claude/skills/`):
 - `/apex-init` — one-time setup: fill brain files from the real codebase
 - `/apex-start` — begin session: load tasks, pick what to work on
 - `/apex-end` — close session: update brain files
-- `apex-schema` — auto-fires on DB phrases; also invokable as `/apex-schema`
+- `/apex-schema` — DB change guard; also auto-fires on DB phrases
+- `/apex-linear-bootstrap` — push all tasks to Linear (once, after `/mcp` auth)

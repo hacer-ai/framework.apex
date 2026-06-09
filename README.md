@@ -2,12 +2,11 @@
 
 APEX is an installable scaffold that gives a software team — humans, Claude Code, and Codex — a single shared memory layer. Every session starts by reading pre-digested context files rather than scanning source code.
 
-- `CLAUDE.md` — Claude Code entry point (auto-read every session)
-- `AGENTS.md` — Codex entry point (same purpose, different filename)
+- `AGENTS.md` — the shared entry point: all rules live here, read natively by Codex
+- `CLAUDE.md` — thin Claude Code entry point that imports AGENTS.md via `@AGENTS.md` (no duplicated rules)
 - `.agents/` — shared brain: context, map, schema, tasks, progress, decisions, contracts
-- `.claude/commands/` — slash commands for Claude Code (`/apex-init`, `/apex-start`, `/apex-end`)
-- `.claude/skills/` — auto-invoked skills (`apex-schema` fires automatically on DB work)
-- `.agents/skills/` — Codex skills (same content as `.claude/commands/`)
+- `.claude/skills/` — Claude Code skills (`/apex-init`, `/apex-start`, `/apex-end`, `/apex-schema`, Linear skills)
+- `.agents/skills/` — Codex skills (same workflows, Codex's discovery path)
 
 ---
 
@@ -112,7 +111,7 @@ Linear is write-only — TASKS.md is always the read source. Linear only gets ca
 Set up the Linear MCP once per machine:
 
 ```sh
-claude mcp add-json linear '{"command":"npx","args":["-y","mcp-remote","https://mcp.linear.app/sse"]}'
+claude mcp add --transport http linear https://mcp.linear.app/mcp
 ```
 
 Then authenticate in Claude Code: `/mcp` → follow the OAuth flow.
@@ -123,13 +122,16 @@ Then authenticate in Claude Code: `/mcp` → follow the OAuth flow.
 
 | Command | Where | What it does |
 | --- | --- | --- |
-| `/apex-init` | Claude Code | One-time init — fills `.agents/` from the real codebase |
+| `/apex-init` | Claude Code | One-time init — fills `.agents/` from the real codebase (manual-only) |
 | `/apex-start` | Claude Code / Codex | Load task list (lazy), pick a task to work on |
 | `/apex-end` | Claude Code / Codex | Update PROGRESS, TASKS, MAP, SCHEMA, Linear sync |
-| `apex-schema` | Auto-invoked | DB change guard — fires on migration/schema phrases |
+| `/apex-schema` | Auto-invoked | DB change guard — fires on migration/schema phrases |
+| `/apex-linear-bootstrap` | Claude Code / Codex | Push all TASKS.md tasks to Linear (run once, manual-only) |
+| `/apex-linear-add` | Auto-invoked | "add task: …" — creates the task in TASKS.md + Linear |
+| `/apex-linear-sync` | Auto-invoked | Mirrors a task status change to Linear |
 
 ### Auto-invocation
-`apex-schema` is installed as a skill in `.claude/skills/apex-schema/` so it fires automatically when you say things like "add a column", "migration", "create table", or "alter table" — without typing a command. You can also call it directly as `/apex-schema`.
+Every APEX workflow is a Claude Code skill in `.claude/skills/`. Skills without `disable-model-invocation: true` fire automatically when your words match their description — say "add a column" and `apex-schema` loads, say "let's begin" and `apex-start` loads. `/apex-init` and `/apex-linear-bootstrap` are manual-only because they have one-time side effects.
 
 ### Context tip
 Run `/compact` mid-session if the context window is getting heavy. The built-in compactor summarizes conversation history without losing working state.
@@ -154,8 +156,8 @@ Run `/compact` mid-session if the context window is getting heavy. The built-in 
 
 ```text
 your-project/
-├── AGENTS.md                        ← Codex entry point (user-owned)
-├── CLAUDE.md                        ← Claude Code entry point (user-owned)
+├── AGENTS.md                        ← Shared entry point — all rules live here (user-owned)
+├── CLAUDE.md                        ← Imports AGENTS.md via @AGENTS.md (user-owned)
 ├── .agents/
 │   ├── CONTEXT.md
 │   ├── MAP.md
@@ -163,7 +165,7 @@ your-project/
 │   ├── TASKS.md
 │   ├── PROGRESS.md
 │   ├── DECISIONS.md
-│   ├── CONTRACTS.md
+│   ├── CONTRACTS.md                 ← optional, not installed by default
 │   └── skills/                      ← Codex skills
 │       ├── apex-start/SKILL.md
 │       ├── apex-end/SKILL.md
@@ -172,12 +174,14 @@ your-project/
 │       ├── apex-linear-sync/SKILL.md
 │       └── apex-linear-add/SKILL.md
 └── .claude/
-    ├── commands/                    ← Claude Code slash commands
-    │   ├── apex-init.md
-    │   ├── apex-start.md
-    │   └── apex-end.md
-    └── skills/                      ← Auto-invoked skills
-        └── apex-schema/SKILL.md     ← Fires automatically on DB phrases
+    └── skills/                      ← Claude Code skills (each invokable as /name)
+        ├── apex-init/SKILL.md       ← manual-only (/apex-init)
+        ├── apex-start/SKILL.md
+        ├── apex-end/SKILL.md
+        ├── apex-schema/SKILL.md     ← fires automatically on DB phrases
+        ├── apex-linear-bootstrap/SKILL.md
+        ├── apex-linear-sync/SKILL.md
+        └── apex-linear-add/SKILL.md
 ```
 
 ---

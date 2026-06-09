@@ -27,9 +27,10 @@ Target users: solo devs and small teams (2-5 people) using AI coding tools.
   - `CLAUDE.md`, `AGENTS.md` (entry points)
   - `.agents/CONTEXT.md`, `.agents/MAP.md`, `.agents/SCHEMA.md`, `.agents/TASKS.md`, `.agents/PROGRESS.md`, `.agents/DECISIONS.md` (brain files)
   - `.agents/CONTRACTS.md` is NOT installed by default (a partially-documented API surface is worse than none). Create manually when the project has > 10 API endpoints.
-- **Framework files** (commands in `.claude/commands/`, skills in `.claude/skills/` and `.agents/skills/`) are safe to overwrite with `--force`.
+- **Framework files** (skills in `.claude/skills/` and `.agents/skills/`) are safe to overwrite with `--force`. The installer also deletes legacy `.claude/commands/apex-*.md` files left by older versions.
 - `templates/shared-brain/` is the single source of truth for all scaffold content. Every file uses `__PROJECT_NAME__` as the placeholder, which the installer replaces via `sed`.
-- `.agents/skills/` are Codex-facing skills. `.claude/commands/` are Claude Code slash commands. `.claude/skills/` are Claude Code auto-invocation skills. The brain files in `.agents/*.md` are shared and model-agnostic.
+- `.agents/skills/` are Codex-facing skills. `.claude/skills/` are Claude Code skills — each is invokable as `/name` and, unless `disable-model-invocation: true` is set, also auto-invoked when the user's words match its description. The brain files in `.agents/*.md` are shared and model-agnostic.
+- `CLAUDE.md` imports `AGENTS.md` via `@AGENTS.md` — shared rules live once in AGENTS.md; CLAUDE.md only adds Claude-specific notes.
 - Shared memory (`.agents/`) narrows the search space; it does not replace reading the actual source code before making edits.
 
 ## Architecture
@@ -38,12 +39,11 @@ Target users: solo devs and small teams (2-5 people) using AI coding tools.
 framework.apex/
 ├── scripts/install-apex.sh   # Installer: copies templates, substitutes __PROJECT_NAME__
 ├── templates/shared-brain/   # All scaffold files (the source of truth)
-│   ├── AGENTS.md             # Codex entry point template
-│   ├── CLAUDE.md             # Claude Code entry point template
+│   ├── AGENTS.md             # Shared entry point template (all rules live here)
+│   ├── CLAUDE.md             # Claude Code entry point — imports AGENTS.md
 │   ├── .agents/              # Shared brain templates (project-owned after install)
 │   │   └── skills/           # Codex skill templates (framework-managed)
-│   ├── .claude/commands/     # Claude Code slash commands (framework-managed)
-│   └── .claude/skills/       # Claude Code auto-invocation skills (framework-managed)
+│   └── .claude/skills/       # Claude Code skills (framework-managed)
 └── index.html                # Interactive reference page (documentation)
 ```
 
@@ -52,7 +52,8 @@ framework.apex/
 | Category | Array in installer | `--force` behavior | Examples |
 |---|---|---|---|
 | Project-owned | `USER_FILES` | Never overwritten | `CLAUDE.md`, `.agents/MAP.md`, `.agents/TASKS.md` |
-| Framework | `FILES` | Overwritten | `.claude/commands/apex-start.md`, `.agents/skills/apex-start/SKILL.md` |
+| Framework | `FILES` | Overwritten | `.claude/skills/apex-start/SKILL.md`, `.agents/skills/apex-start/SKILL.md` |
+| Legacy | `LEGACY_FILES` | Deleted if framework-authored | `.claude/commands/apex-start.md` |
 
 ## Modifying templates
 
@@ -67,13 +68,12 @@ When adding a new template file:
 
 | Purpose | Claude Code path | Codex path |
 |---|---|---|
-| Entry point | `CLAUDE.md` (auto-read) | `AGENTS.md` (auto-read) |
-| Slash commands | `.claude/commands/*.md` | N/A |
-| Auto-invoked skills | `.claude/skills/name/SKILL.md` | `.agents/skills/name/SKILL.md` |
-| Manual skills | `.claude/commands/*.md` | `.agents/skills/name/SKILL.md` |
+| Entry point | `CLAUDE.md` (auto-read; imports `AGENTS.md`) | `AGENTS.md` (auto-read) |
+| Skills (auto-invoked + `/name`) | `.claude/skills/name/SKILL.md` | `.agents/skills/name/SKILL.md` |
+| Manual-only skills | same path + `disable-model-invocation: true` | `.agents/skills/name/SKILL.md` |
 | Shared brain | `.agents/*.md` | `.agents/*.md` |
 
-Claude Code does NOT read `.agents/skills/`. Codex does NOT read `.claude/`.
+Claude Code does NOT read `.agents/skills/`. Codex does NOT read `.claude/`. Both follow the Agent Skills SKILL.md format (agentskills.io), so skill bodies are kept identical across the two paths — edit both together.
 
 ## Future: multi-tool support (planned)
 
