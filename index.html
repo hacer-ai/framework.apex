@@ -431,20 +431,19 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; 
 
     <div class="tree">
       <div class="tree-row"><div class="tree-path"><span class="dim">your-project/</span></div><div class="tree-desc"></div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ </span>CLAUDE.md</div><div class="tree-desc">Claude Code entry point — auto-read every session. Points to .agents/ brain.</div><div class="pill pill-purple">auto-read</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ </span>AGENTS.md</div><div class="tree-desc">Codex entry point — same purpose, different file. Points to .agents/ brain.</div><div class="pill pill-blue">auto-read</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ .claude/</span></div><div class="tree-desc">Claude Code config — only Claude Code reads this directory.</div><div class="pill pill-purple">Claude Code only</div></div>
-      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>commands/</div><div class="tree-desc">Slash commands → /apex-start, /apex-task, /apex-end, /apex-schema, /apex-plan</div><div class="pill pill-purple">visible in /help</div></div>
-      <div class="tree-row"><div class="tree-path">       <span class="dim">└─ </span>skills/apex-schema/</div><div class="tree-desc">apex-schema as a skill for auto-invocation on DB tasks</div><div class="pill pill-amber">auto-invoked</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ </span>AGENTS.md</div><div class="tree-desc">Shared rules — all constraints live here. Codex reads natively.</div><div class="pill pill-blue">auto-read</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ </span>CLAUDE.md</div><div class="tree-desc">Imports AGENTS.md via @AGENTS.md. Adds Claude Code-specific slash command list.</div><div class="pill pill-purple">auto-read</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ .claude/</span></div><div class="tree-desc">Claude Code only — all skills invokable as /name</div><div class="pill pill-purple">Claude Code only</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">└─ </span>skills/</div><div class="tree-desc">/apex-init · /apex-start · /apex-end · /apex-schema · /apex-linear-*</div><div class="pill pill-purple">manual + auto</div></div>
       <div class="tree-row"><div class="tree-path">  <span class="dim">└─ .agents/</span></div><div class="tree-desc">Shared brain + Codex skills. Model-agnostic. Git-tracked for team sync.</div><div class="pill pill-blue">Codex + shared</div></div>
-      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>CONTEXT.md</div><div class="tree-desc">Stack, services, integrations, env vars.</div><div class="pill pill-purple">session start</div></div>
-      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>MAP.md</div><div class="tree-desc">Codebase map — every module described. Replaces file scanning.</div><div class="pill pill-purple">session start</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>CONTEXT.md</div><div class="tree-desc">Stack, services, integrations, env vars.</div><div class="pill pill-purple">on demand</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>MAP.md</div><div class="tree-desc">Codebase map — every module described. Replaces file scanning.</div><div class="pill pill-purple">on demand</div></div>
       <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span><span style="color:var(--amber)">SCHEMA.md</span></div><div class="tree-desc">All tables, fields, types, relationships, change log.</div><div class="pill pill-amber">DB guard</div></div>
-      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>TASKS.md</div><div class="tree-desc">Numbered sprint queue with [LEAD] / [CONTRACTOR] tags.</div><div class="pill pill-green">each session</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>TASKS.md</div><div class="tree-desc">Numbered sprint queue with T-NNN IDs, Linear IDs, [LEAD] / [CONTRACTOR] tags.</div><div class="pill pill-green">each session</div></div>
       <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>PROGRESS.md</div><div class="tree-desc">Milestone timeline + session log. Appended by apex-end.</div><div class="pill pill-green">session end</div></div>
       <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>DECISIONS.md</div><div class="tree-desc">Architecture Decision Records. Never re-debate settled choices.</div><div class="pill pill-green">when decided</div></div>
-      <div class="tree-row"><div class="tree-path">       <span class="dim">├─ </span>CONTRACTS.md</div><div class="tree-desc">API endpoints, shared interfaces, data contracts.</div><div class="pill pill-amber">on change</div></div>
-      <div class="tree-row"><div class="tree-path">       <span class="dim">└─ </span>skills/</div><div class="tree-desc">Codex skills — apex-start, apex-end, apex-schema, apex-plan</div><div class="pill pill-blue">Codex only</div></div>
+      <div class="tree-row"><div class="tree-path">       ├─ CONTRACTS.md</div><div class="tree-desc">Stable API interfaces (optional — only if >10 endpoints).</div><div class="pill pill-amber">on change</div></div>
+      <div class="tree-row"><div class="tree-path">       <span class="dim">└─ </span>skills/</div><div class="tree-desc">Codex skills — apex-start, apex-end, apex-schema, apex-linear-*</div><div class="pill pill-blue">Codex only</div></div>
     </div>
   </section>
 
@@ -574,19 +573,17 @@ Create all files with REAL content — no placeholders.
 <span class="val">[e.g. Supabase over PlanetScale because RLS. Drizzle over Prisma because edge.]</span>
 
 Create these files:
-- CLAUDE.md           ← Claude Code entry point
-- AGENTS.md           ← Codex entry point (same content, different file name)
+- AGENTS.md           ← Shared rules (Codex reads natively; CLAUDE.md imports it)
+- CLAUDE.md           ← Claude Code entry (@AGENTS.md import + slash command list)
 - .agents/CONTEXT.md
 - .agents/MAP.md
 - .agents/SCHEMA.md   ← tables/fields from the DB description above
 - .agents/TASKS.md
 - .agents/PROGRESS.md
 - .agents/DECISIONS.md
-- .agents/CONTRACTS.md
 - .agents/skills/apex-start/SKILL.md
 - .agents/skills/apex-end/SKILL.md
 - .agents/skills/apex-schema/SKILL.md
-- .agents/skills/apex-plan/SKILL.md
 
 Confirm with a tree view when done.</div>
           </div>
@@ -648,12 +645,12 @@ For SCHEMA.md: read the actual schema files found in the audit.
 Extract real tables, fields, types, relationships — not summaries.
 
 Files to create:
-- CLAUDE.md + AGENTS.md (entry points)
+- AGENTS.md (shared rules) + CLAUDE.md (thin @AGENTS.md import)
 - All .agents/ context files
 - .agents/SCHEMA.md built from REAL schema source
 - .agents/PROGRESS.md (prior work tagged "pre-APEX")
 - .agents/DECISIONS.md (ask me for key past decisions)
-- All 4 skills in .agents/skills/</div>
+- Core skills: .agents/skills/apex-start, apex-end, apex-schema</div>
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Step 3 — Deep schema extraction (DB-heavy projects)</div>
@@ -690,15 +687,17 @@ Flag any inconsistencies between migrations and current schema.</div>
 <div class="container">
 
   <section>
-    <div class="eyebrow">Commands &amp; Skills — Corrected Paths</div>
-    <h2>Two tools. Two directories.<br>Same content.</h2>
-    <p class="lead">Claude Code and Codex look in completely different places for commands. This is the #1 reason commands don't appear. APEX uses a dual-directory setup — identical content, correct path per tool. The brain files in <code>.agents/</code> are shared and model-agnostic.</p>
+    <div class="eyebrow">Skills — How They Work</div>
+    <h2>One format. Two directories.<br>Same workflow.</h2>
+    <p class="lead">Every APEX workflow is a <code>SKILL.md</code> file. Claude Code loads them from <code>.claude/skills/</code> — each is invokable as <code>/name</code> and, unless locked to manual-only, fires automatically when your words match its description. Codex loads the identical content from <code>.agents/skills/</code>. The brain files in <code>.agents/</code> are shared by both.</p>
 
-    <div class="callout" style="background:#fef2f2;border-color:#fecaca;">
-      <div class="callout-icon">⚠️</div>
+    <div class="callout green">
+      <div class="callout-icon">💡</div>
       <div class="callout-body">
-        <div class="callout-title" style="color:#dc2626;">Why your commands weren't visible</div>
-        <div class="callout-desc">APEX v2 put commands in <code>.agents/skills/</code>. Claude Code never scans <code>.agents/</code> — it only looks in <code>.claude/commands/</code> or <code>.claude/skills/</code>. Commands placed in <code>.agents/</code> are invisible to Claude Code entirely. They only work for Codex.</div>
+        <div class="callout-title">Manual vs auto-invoked — controlled by one frontmatter field</div>
+        <div class="callout-desc">
+          Add <code>disable-model-invocation: true</code> to a skill's frontmatter and only <em>you</em> can invoke it — Claude will never trigger it automatically. Leave it out and Claude matches it against your words. <code>/apex-init</code> and <code>/apex-linear-bootstrap</code> are manual-only because they have one-time side effects. Everything else auto-invokes on the right phrase.
+        </div>
       </div>
     </div>
 
@@ -706,132 +705,93 @@ Flag any inconsistencies between migrations and current schema.</div>
       <div class="compare-col">
         <div class="compare-head purple">✦ Claude Code — where it looks</div>
         <div class="compare-body">
-          <div class="compare-row"><div class="cr-key">Commands</div><div class="cr-val">.claude/commands/*.md</div></div>
           <div class="compare-row"><div class="cr-key">Skills</div><div class="cr-val">.claude/skills/name/SKILL.md</div></div>
-          <div class="compare-row"><div class="cr-key">Global cmds</div><div class="cr-val">~/.claude/commands/*.md</div></div>
+          <div class="compare-row"><div class="cr-key">Invocation</div><div class="cr-val">/name (manual) or auto-match</div></div>
           <div class="compare-row"><div class="cr-key">Global skills</div><div class="cr-val">~/.claude/skills/name/SKILL.md</div></div>
+          <div class="compare-row"><div class="cr-key">Entry point</div><div class="cr-val">CLAUDE.md (imports AGENTS.md)</div></div>
           <div class="compare-row"><div class="cr-key">Does NOT read</div><div class="cr-val" style="color:var(--red)">.agents/skills/ ✗</div></div>
         </div>
       </div>
       <div class="compare-col">
-        <div class="compare-head blue">⧉ Codex — where it looks (in order)</div>
+        <div class="compare-head blue">⧉ Codex — where it looks</div>
         <div class="compare-body">
           <div class="compare-row"><div class="cr-key">Project</div><div class="cr-val">.agents/skills/name/SKILL.md</div></div>
-          <div class="compare-row"><div class="cr-key">Parent dir</div><div class="cr-val">../.agents/skills/</div></div>
-          <div class="compare-row"><div class="cr-key">Repo root</div><div class="cr-val">$REPO_ROOT/.agents/skills/</div></div>
+          <div class="compare-row"><div class="cr-key">Parent dirs</div><div class="cr-val">../.agents/skills/ (up to repo root)</div></div>
           <div class="compare-row"><div class="cr-key">User global</div><div class="cr-val">~/.agents/skills/</div></div>
           <div class="compare-row"><div class="cr-key">Entry point</div><div class="cr-val">AGENTS.md</div></div>
-          <div class="compare-row"><div class="cr-key">MCP deps</div><div class="cr-val">agents/openai.yaml</div></div>
-          <div class="compare-row"><div class="cr-key">Does NOT read</div><div class="cr-val" style="color:var(--red)">.claude/commands/ ✗</div></div>
+          <div class="compare-row"><div class="cr-key">MCP deps</div><div class="cr-val">agents/openai.yaml (per skill)</div></div>
+          <div class="compare-row"><div class="cr-key">Does NOT read</div><div class="cr-val" style="color:var(--red)">.claude/skills/ ✗</div></div>
         </div>
       </div>
     </div>
 
-    <div class="eyebrow" style="margin-bottom:8px;">Correct APEX folder structure</div>
+    <div class="eyebrow" style="margin-bottom:8px;">Scaffold layout after install</div>
     <div class="tree" style="margin-bottom:28px;">
       <div class="tree-row"><div class="tree-path"><span class="dim">project/</span></div><div class="tree-desc"></div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ </span>CLAUDE.md</div><div class="tree-desc">Claude Code entry — auto-read every session</div><div class="pill pill-purple">Claude Code</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ </span>AGENTS.md</div><div class="tree-desc">Codex entry — auto-read every session</div><div class="pill pill-blue">Codex</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ .claude/</span></div><div class="tree-desc">Claude Code config — only Claude Code reads this</div><div class="pill pill-purple">Claude Code only</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│   ├─ </span>commands/</div><div class="tree-desc">← <strong>Slash commands go here.</strong> Each .md file = one /command</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│   │   ├─ </span>apex-start.md</div><div class="tree-desc">→ type <code>/apex-start</code> in Claude Code</div><div class="pill pill-green">visible in /help</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│   │   ├─ </span>apex-end.md</div><div class="tree-desc">→ type <code>/apex-end</code></div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│   │   ├─ </span>apex-schema.md</div><div class="tree-desc">→ type <code>/apex-schema</code></div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│   │   └─ </span>apex-plan.md</div><div class="tree-desc">→ type <code>/apex-plan</code></div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│   └─ </span>skills/</div><div class="tree-desc">← Skills go here for <strong>auto-invocation</strong> (apex-schema fires automatically on DB tasks)</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│       └─ </span>apex-schema/</div><div class="tree-desc">Only apex-schema needs to be a skill — it auto-fires on DB trigger phrases</div><div class="pill pill-amber">auto-invoked</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│           └─ </span>SKILL.md</div><div class="tree-desc">Same content as commands/apex-schema.md but with frontmatter description</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ .agents/</span></div><div class="tree-desc">Shared brain + Codex commands — model-agnostic</div><div class="pill pill-blue">Codex + shared</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│   ├─ </span>CONTEXT.md / MAP.md / SCHEMA.md …</div><div class="tree-desc">Brain files — both tools read these explicitly</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│   └─ </span>skills/</div><div class="tree-desc">Codex skills — SKILL.md + optional agents/openai.yaml per skill</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-start/SKILL.md</div><div class="tree-desc">Codex: invoke with <code>$apex-start</code> or describe the task</div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-end/SKILL.md</div><div class="tree-desc"></div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-schema/SKILL.md</div><div class="tree-desc"></div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-plan/SKILL.md</div><div class="tree-desc"></div></div>
-      <div class="tree-row"><div class="tree-path">  <span class="dim">│       └─ </span>apex-linear-*/</div><div class="tree-desc">Linear skills with <code>agents/openai.yaml</code> for MCP tool deps</div><div class="pill pill-amber">MCP</div></div>
-    </div>
-
-    <div class="callout green">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <div class="callout-title">Commands vs Skills — when to use which in Claude Code</div>
-        <div class="callout-desc">
-          <strong>Use <code>.claude/commands/</code></strong> for things you type manually: <code>/apex-start</code>, <code>/apex-end</code>, <code>/apex-plan</code>. Single <code>.md</code> file, no frontmatter needed, shows up in <code>/help</code> autocomplete immediately.<br><br>
-          <strong>Use <code>.claude/skills/</code></strong> for things Claude should trigger automatically: <code>apex-schema</code> fires when you say "add a column" without you typing anything. Requires a directory + <code>SKILL.md</code> with a <code>description</code> frontmatter field.
-        </div>
-      </div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ </span>AGENTS.md</div><div class="tree-desc">Shared rules — all constraints, conventions, commands listed here</div><div class="pill pill-blue">Codex entry</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ </span>CLAUDE.md</div><div class="tree-desc">Imports AGENTS.md via @AGENTS.md — no duplicated content</div><div class="pill pill-purple">Claude Code entry</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ .claude/</span></div><div class="tree-desc">Claude Code only — all skills in one place</div><div class="pill pill-purple">Claude Code only</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│   └─ </span>skills/</div><div class="tree-desc">Each dir = one /command + optional auto-invocation</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-init/SKILL.md</div><div class="tree-desc">→ <code>/apex-init</code> — manual-only, one-time brain setup</div><div class="pill pill-amber">manual only</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-start/SKILL.md</div><div class="tree-desc">→ <code>/apex-start</code> or say "let's begin"</div><div class="pill pill-green">auto + manual</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-end/SKILL.md</div><div class="tree-desc">→ <code>/apex-end</code> or say "wrap up"</div><div class="pill pill-green">auto + manual</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-schema/SKILL.md</div><div class="tree-desc">→ <code>/apex-schema</code> or say "add column" / "migration"</div><div class="pill pill-amber">auto-invoked</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-linear-bootstrap/SKILL.md</div><div class="tree-desc">→ <code>/apex-linear-bootstrap</code> — manual-only, run once</div><div class="pill pill-amber">manual only</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-linear-sync/SKILL.md</div><div class="tree-desc">→ auto on "mark done", "starting task"</div><div class="pill pill-green">auto + manual</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       └─ </span>apex-linear-add/SKILL.md</div><div class="tree-desc">→ auto on "add task: …"</div><div class="pill pill-green">auto + manual</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">├─ .agents/</span></div><div class="tree-desc">Shared brain + Codex skills — model-agnostic</div><div class="pill pill-blue">Shared</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│   ├─ </span>CONTEXT.md / MAP.md / SCHEMA.md …</div><div class="tree-desc">Brain files — both tools read these on demand</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│   └─ </span>skills/</div><div class="tree-desc">Codex skills — same SKILL.md body as .claude/skills/, different path</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       ├─ </span>apex-start/ · apex-end/ · apex-schema/</div><div class="tree-desc">Core workflow skills</div></div>
+      <div class="tree-row"><div class="tree-path">  <span class="dim">│       └─ </span>apex-linear-{bootstrap,sync,add}/</div><div class="tree-desc">Linear skills — include <code>agents/openai.yaml</code> for MCP deps</div><div class="pill pill-amber">MCP</div></div>
     </div>
 
     <div class="card-stack">
 
       <div class="card accent-purple">
         <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-emoji">🚀</div>
+          <div class="card-emoji">⚡</div>
           <div class="card-meta">
-            <div class="card-title">apex-ship — Commit and ship</div>
-            <div class="card-sub">Claude Code: .claude/commands/apex-ship.md · Codex: .agents/skills/apex-ship/SKILL.md</div>
+            <div class="card-title">apex-init — One-time brain setup</div>
+            <div class="card-sub">Claude Code only · .claude/skills/apex-init/SKILL.md · disable-model-invocation: true</div>
           </div>
-          <div class="pill pill-purple">Manual</div>
+          <div class="pill pill-amber">Manual only</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
           <div class="prompt-section">
-            <div class="prompt-label">What it does — 6 guided steps</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Step 1 — Update brain files (same as /apex-end):
-  PROGRESS, TASKS, MAP, SCHEMA, DECISIONS updated.
-  Linear synced for any DONE tasks with [LIN:] tags.
+            <div class="prompt-label">Run once after installing the scaffold. Reads the real codebase and fills .agents/ automatically.</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
+name: apex-init
+description: One-time APEX setup. Reads the real codebase and fills every .agents/ brain file. Run manually with /apex-init right after installing the scaffold.
+disable-model-invocation: true
+---
 
-Step 2 — Find the completed task, build branch name:
-  T-NNN-task-slug  (e.g. T-012-jwt-refresh-token-rotation)
+Populate the shared brain from the real codebase. Do not invent — only write what you can
+confirm by reading files. Do not skip steps.
 
-Step 3 — Check current git branch:
-  If on main/master → git checkout -b T-NNN-task-slug
-  If already on a T-NNN branch → stay
-  If on a different branch → ask before proceeding
+Step 1 — Read config files in parallel (package.json, pyproject.toml, go.mod, Cargo.toml,
+docker-compose.yml, Dockerfile, .env.example, CI files, framework configs).
+Extract: stack, services, env vars, hosting platform. Write .agents/CONTEXT.md.
 
-Step 4 — Show git status --short:
-  User sees exactly what will be committed.
-  Flags .env or build artifacts before including.
+Step 2 — List the project root and source folder children.
+Read 1-2 key files per significant module to confirm its responsibility.
+Write .agents/MAP.md with a "Last verified:" block (current git short hash + today's date).
 
-Step 5 — Propose commit message:
-  feat(T-NNN): [one-line summary]
-  User confirms or edits.
+Step 3 — If a database was detected, read migration / schema files.
+Write .agents/SCHEMA.md with tables, fields, relationships. If no DB: leave template, add note.
 
-Step 6 — Ask what to do next:
-  1. commit — commit to branch only
-  2. pr     — commit + push + open PR (uses gh if available)
-  3. cancel — stop, I'll handle git manually</div>
-          </div>
-        </div>
-      </div>
+Step 4 — Before writing TASKS.md, ask the user and wait:
+"Do you already have a task list or backlog somewhere?
+1. A file — give me the path
+2. An export — paste it here
+3. Dictate them now
+4. No — create scaffold-review tasks"
 
-      <div class="card accent-blue">
-        <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-emoji">🔍</div>
-          <div class="card-meta">
-            <div class="card-title">apex-review — Pre-ship contract check</div>
-            <div class="card-sub">Claude Code: .claude/commands/apex-review.md · Codex: .agents/skills/apex-review/SKILL.md</div>
-          </div>
-          <div class="pill pill-blue">Manual</div>
-          <div class="card-toggle">+</div>
-        </div>
-        <div class="card-body">
-          <div class="prompt-section">
-            <div class="prompt-label">What it checks</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Reads: CONTRACTS.md, DECISIONS.md, MAP.md
-Runs: git diff --name-only HEAD
+Import tasks from their source; if option 4: create T-001/T-002/T-003 review tasks + DONE: T-000.
 
-For each changed file:
-1. Contract violations  — changed an interface in CONTRACTS.md without updating it?
-2. Decision conflicts   — change contradicts a recorded DECISIONS.md choice?
-3. New public exports   — new API or function not yet documented in CONTRACTS.md?
-
-Output:
-  ✅ PASS   — files with no issues
-  ⚠️ REVIEW — file: specific issue
-  🔴 BLOCK  — must fix before shipping
-
-Read-only. Does not modify any files.</div>
+Step 5 — Summarize each file: what was written, what needs human review.
+Suggest running /apex-start to begin the first session.</div>
           </div>
         </div>
       </div>
@@ -841,76 +801,56 @@ Read-only. Does not modify any files.</div>
           <div class="card-emoji">▶</div>
           <div class="card-meta">
             <div class="card-title">apex-start — Session opener</div>
-            <div class="card-sub">Claude Code: .claude/commands/apex-start.md · Codex: .agents/skills/apex-start/SKILL.md</div>
+            <div class="card-sub">Claude Code: .claude/skills/apex-start/SKILL.md · Codex: .agents/skills/apex-start/SKILL.md</div>
           </div>
-          <div class="pill pill-purple">Manual</div>
+          <div class="pill pill-green">Auto + Manual</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
           <div class="prompt-section">
-            <div class="prompt-label">Claude Code → .claude/commands/apex-start.md (single file, no frontmatter needed)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Read the following files silently, in order:
-1. CLAUDE.md
-2. .agents/CONTEXT.md
-3. .agents/MAP.md
-4. .agents/TASKS.md
-5. .agents/PROGRESS.md
-
-Then respond ONLY with this block — nothing else:
-
----
-✓ SESSION LOADED
-Project: [name] · Mode: [mode from CLAUDE.md]
-Last completed: [most recent PROGRESS.md entry, one line]
-Blocked: [blocked tasks or "none"]
-
-## Tasks available
-**In Progress:**
-[list all tasks with 🔴 In Progress status]
-
-**Up Next:**
-[list all tasks with 🟡 Up Next status, numbered]
-
-Which task should I work on? (or say "show backlog" to see all, "add task: [description]" to create a new one)
----
-
-Wait for the user to select a task or add a new one before starting any work.
-If the user picks a task: mark it In Progress in TASKS.md, then if it has a [LIN:] tag call apex-linear-sync to update Linear status.
-If the active task involves the database, read .agents/SCHEMA.md first.
-Do not read files outside MAP.md scope unless the task requires it.</div>
-          </div>
-          <div class="prompt-section">
-            <div class="prompt-label">Codex → .agents/skills/apex-start/SKILL.md (directory + frontmatter)</div>
+            <div class="prompt-label">Claude Code + Codex — identical SKILL.md body (Claude Code path shown)</div>
             <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-start
-description: Start a new APEX development session. Load project context, review tasks, and let the user pick what to work on. Use when beginning any work session or when the user says "start session", "begin", "what should I work on", or "let's get started".
+description: Begin a work session. Load tasks and session status. Use when starting work or when the user says "let's begin", "what should I work on", "start session".
 ---
 
-Read the following files silently, in order:
-1. AGENTS.md
-2. .agents/CONTEXT.md
-3. .agents/MAP.md
-4. .agents/TASKS.md
-5. .agents/PROGRESS.md
+Read these files silently:
+1. .agents/TASKS.md — In Progress and Up Next sections only (stop before Backlog)
+2. .agents/PROGRESS.md — last entry only
 
-Then respond ONLY with this block — nothing else:
+Run: git log --oneline -1
+Note HEAD hash. If MAP.md "Last verified:" has a different hash, mark as stale.
+
+Health checks (silent, report warnings in output):
+- "In Progress" has items marked [x] or DONE → warn stale tasks stuck in wrong section
+- TASKS.md > 400 lines → warn bloat
+
+Respond ONLY with this block:
 
 ---
 ✓ SESSION LOADED
-Project: [name] · Mode: [mode from AGENTS.md]
-Last completed: [most recent PROGRESS.md entry]
+Project: [name] · Mode: [mode]
+Last completed: [last PROGRESS.md entry, one line]
 Blocked: [blocked tasks or "none"]
+[if stale: ⚠ MAP.md stale (was: abc1234 · now: def5678) — say "update map" to fix]
 
-## Tasks available
-**In Progress:** [list In Progress tasks]
-**Up Next:** [list Up Next tasks, numbered]
+**In Progress:** T-NNN — title
+**Up Next:** T-NNN — title
 
-Which task should I work on? (or say "show backlog" / "add task: [description]")
+Which task? (T-ID · "show backlog" · "add task: [description]")
 ---
 
-Wait for the user to pick a task or add a new one before starting work.
-If the user picks a task: mark it In Progress in TASKS.md, then sync to Linear if [LIN:] tag exists.
-If the task touches the database, read .agents/SCHEMA.md first.</div>
+Wait for task selection before reading any other files or writing code.
+
+On task selection:
+- Move task to In Progress in TASKS.md if not already there
+- If [LIN: ABC-NNN] tag exists, invoke apex-linear-sync to update Linear status
+- Read .agents/SCHEMA.md only if the task involves DB work
+- Read .agents/MAP.md only if the task requires navigating unfamiliar modules
+- Read .agents/DECISIONS.md only if the task touches architecture decisions
+
+If user says "update map": read source dirs, update MAP.md + Last verified line, then resume.
+If user says "show backlog": read TASKS.md Backlog section and display it.</div>
           </div>
         </div>
       </div>
@@ -920,53 +860,49 @@ If the task touches the database, read .agents/SCHEMA.md first.</div>
           <div class="card-emoji">■</div>
           <div class="card-meta">
             <div class="card-title">apex-end — Session closer</div>
-            <div class="card-sub">Claude Code: .claude/commands/apex-end.md · Codex: .agents/skills/apex-end/SKILL.md</div>
+            <div class="card-sub">Claude Code: .claude/skills/apex-end/SKILL.md · Codex: .agents/skills/apex-end/SKILL.md</div>
           </div>
-          <div class="pill pill-green">Manual</div>
+          <div class="pill pill-green">Auto + Manual</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
           <div class="prompt-section">
-            <div class="prompt-label">Claude Code → .claude/commands/apex-end.md</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Update these files to close the session:
-
-1. **.agents/PROGRESS.md** — Append today's date entry:
-   - What was completed (✅)
-   - What was started but not finished (🔄)
-   - Any decisions or surprises (🧠)
-
-2. **.agents/TASKS.md** — Update statuses:
-   - Mark completed tasks [DONE] with date
-   - Add any new tasks discovered this session
-   - Re-prioritize if needed
-
-3. **.agents/MAP.md** — Add any new files or modules created
-
-4. **.agents/SCHEMA.md** — If any DB changes were made:
-   - Update affected table entries
-   - Append a row to the Change Log section
-
-5. **.agents/DECISIONS.md** — Add any architectural decisions made
-
-Output a ready-to-use git commit message:
-`chore(apex): [date] — [main thing accomplished]`</div>
-          </div>
-          <div class="prompt-section">
-            <div class="prompt-label">Codex → .agents/skills/apex-end/SKILL.md</div>
+            <div class="prompt-label">Claude Code + Codex — identical SKILL.md body (Claude Code path shown)</div>
             <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-end
-description: End the current APEX development session by updating all context files. Use when the user says "end session", "wrap up", "closing", "done for today", or asks to update the project docs.
+description: End the work session. Update all brain files with today's progress. Use when the user is done for the day, says "wrap up", "close session", or "end session".
 ---
 
-Update these files to close the session:
+Update the brain files to close this session.
 
-1. **.agents/PROGRESS.md** — Append today's date entry (✅ done · 🔄 carry-forward · 🧠 decisions)
-2. **.agents/TASKS.md** — Mark [DONE] with date, add new tasks, re-prioritize
-3. **.agents/MAP.md** — Add new files or modules created this session
-4. **.agents/SCHEMA.md** — If DB changed: update tables + append Change Log row
-5. **.agents/DECISIONS.md** — Add architectural decisions made
+TASKS.md
+- Mark completed tasks [DONE] with today's date.
+- Trim rule: - [x] T-NNN — Title [Lead] DONE YYYY-MM-DD — delete all sub-bullets.
+- Move any [x] items out of "In Progress" to the Done section.
+- New tasks found this session: scan highest existing T-NNN, increment by 1.
 
-Output: `chore(apex): [date] — [main thing accomplished]`</div>
+PROGRESS.md
+- If > 150 lines: archive sessions older than 2 weeks into a summary table at bottom.
+  Keep Milestones + last 5 sessions with full detail.
+- Append today's entry: ✅ done · 🔄 carry-forward · 🧠 decisions · who did the work.
+
+MAP.md
+- Add any new files or modules created this session. Update Last verified hash + date.
+
+SCHEMA.md
+- Only if DB changes were made: update affected tables, append a Change Log row.
+
+DECISIONS.md
+- Add architectural decisions made this session. Scan for highest ADR-NNN, use +1. Append at END only.
+
+Rules (apply to all updates)
+- No redundancy across brain files.
+- Unique IDs: T-NNN and ADR-NNN must never collide — always scan before creating.
+- Completed work is immutable: DONE tasks are one-liners. Sessions >2 weeks old are archive material.
+
+For each DONE task with a [LIN: ABC-NNN] tag not yet synced: invoke apex-linear-sync.
+
+Output: chore(apex): [YYYY-MM-DD] — [main thing accomplished]</div>
           </div>
         </div>
       </div>
@@ -976,62 +912,43 @@ Output: `chore(apex): [date] — [main thing accomplished]`</div>
           <div class="card-emoji">⬡</div>
           <div class="card-meta">
             <div class="card-title">apex-schema — DB change guard</div>
-            <div class="card-sub">Claude Code: BOTH .claude/commands/ AND .claude/skills/ · Codex: .agents/skills/</div>
+            <div class="card-sub">Claude Code: .claude/skills/apex-schema/SKILL.md · Codex: .agents/skills/apex-schema/SKILL.md</div>
           </div>
-          <div class="pill pill-amber">Manual + Auto-invoked ✦</div>
+          <div class="pill pill-amber">Auto-invoked ✦</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
           <div class="prompt-section">
-            <div class="prompt-label">Claude Code → .claude/commands/apex-schema.md (for /apex-schema manual use)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Read .agents/SCHEMA.md and .agents/CONTRACTS.md.
-
-DB change: $ARGUMENTS
-
-Before writing any migration or query, analyze:
-
-1. **Affected tables** — which SCHEMA.md tables are touched?
-2. **Relationship impact** — does this break or require updating FK relationships?
-3. **Constraint conflicts** — conflicts with existing unique/check constraints?
-4. **Downstream impact** — which CONTRACTS.md interfaces or MAP.md modules query these tables?
-5. **Destructive?** — column removal, type change, or rename? State rollback path.
-6. **RLS impact** — if Supabase, are existing RLS policies still valid?
-
-Propose the migration. Wait for my explicit approval before writing migration files.
-After approval + execution: update .agents/SCHEMA.md tables and append to Change Log.</div>
-          </div>
-          <div class="prompt-section">
-            <div class="prompt-label">Claude Code → .claude/skills/apex-schema/SKILL.md (for auto-invocation on DB tasks)</div>
+            <div class="prompt-label">Claude Code — .claude/skills/apex-schema/SKILL.md</div>
             <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-schema
-description: Guard against unsafe database changes. Auto-invoke whenever the task involves creating a migration, adding a column, changing a table, writing a DB query, modifying an ORM model, or anything involving database schema. Trigger phrases include: "add column", "create table", "migration", "schema change", "alter table", "new table", "foreign key", "FK", "index", "drizzle", "prisma schema".
+description: Guard against unsafe DB changes. Auto-invokes on: migration, add column, create table, alter table, schema change, new table, foreign key, ORM model, drizzle schema, prisma schema, supabase migration.
 allowed-tools: Read, Write
 ---
 
-Read .agents/SCHEMA.md and .agents/CONTRACTS.md.
+Read .agents/SCHEMA.md first. Also read .agents/CONTRACTS.md if it exists.
 
-DB change: $ARGUMENTS
+DB change requested: $ARGUMENTS
 
 Before writing any migration or query, analyze:
+1. Affected tables — which SCHEMA.md tables are touched?
+2. Relationship impact — does this break or require updating FK relationships?
+3. Constraint conflicts — conflicts with existing unique/check constraints?
+4. Downstream impact — which CONTRACTS.md endpoints or MAP.md modules query these tables?
+5. Destructive? — column removal, type change, or rename? State rollback path.
+6. RLS impact — if Supabase, are existing RLS policies still valid after this change?
 
-1. **Affected tables** — which SCHEMA.md tables are touched?
-2. **Relationship impact** — does this break or require updating FK relationships?
-3. **Constraint conflicts** — conflicts with existing unique/check constraints?
-4. **Downstream impact** — which CONTRACTS.md interfaces or MAP.md modules query these tables?
-5. **Destructive?** — column removal, type change, or rename? State rollback path.
-6. **RLS impact** — if Supabase, are existing RLS policies still valid?
-
-Propose the migration. Wait for my explicit approval before writing migration files.
-After approval + execution: update .agents/SCHEMA.md and append to Change Log.</div>
+Propose the migration plan. Wait for explicit approval before writing any migration files.
+After approval and execution: update .agents/SCHEMA.md entries and append to the Change Log.</div>
           </div>
           <div class="prompt-section">
-            <div class="prompt-label">Codex → .agents/skills/apex-schema/SKILL.md (same as Claude Code skill above)</div>
+            <div class="prompt-label">Codex — .agents/skills/apex-schema/SKILL.md (same body, shorter description)</div>
             <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
 name: apex-schema
 description: Guard against unsafe database changes. Auto-invoke for any task involving migrations, schema changes, adding columns, creating tables, modifying ORM models, or any database structure work.
 ---
 
-Read .agents/SCHEMA.md and .agents/CONTRACTS.md.
+Read .agents/SCHEMA.md first. Also read .agents/CONTRACTS.md if it exists (optional file).
 
 DB change: $ARGUMENTS
 
@@ -1040,7 +957,7 @@ Analyze before writing anything:
 2. FK relationship impact
 3. Constraint conflicts
 4. Downstream CONTRACTS.md / MAP.md impact
-5. Destructive? (removal, type change, rename) → state rollback path
+5. Destructive? (removal, type change, rename) — state rollback path
 6. RLS policy validity (if Supabase)
 
 Propose migration. Wait for approval.
@@ -1049,102 +966,69 @@ After execution: update SCHEMA.md + append Change Log row.</div>
         </div>
       </div>
 
-      <div class="card accent-green">
-        <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-emoji">✅</div>
-          <div class="card-meta">
-            <div class="card-title">apex-task — Task board</div>
-            <div class="card-sub">Claude Code: .claude/commands/apex-task.md · Shows task list with T-IDs and descriptions — pick or add</div>
-          </div>
-          <div class="pill pill-green">Manual</div>
-          <div class="card-toggle">+</div>
-        </div>
-        <div class="card-body">
-          <div class="prompt-section">
-            <div class="prompt-label">Claude Code → .claude/commands/apex-task.md</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Read .agents/TASKS.md silently.
-
-Display the task board:
-
----
-## Task Board
-
-**🔴 In Progress**
-T-NNN [LIN: ID] — title · owner
-  what needs to happen (one line)
-
-**🟡 Up Next**
-T-NNN [LIN: ID] — title · owner
-  what needs to happen (one line)
-
-**🚫 Blocked**
-T-NNN — title · BLOCKED: reason
-
-**🔵 Backlog** (top 5)
-T-NNN — title
----
-
-Reply with:
-- A T-ID to start working on that task
-- "add task: [description]" to create a new task in TASKS.md + Linear
-- "show all" to see the full backlog
-- "block T-NNN: [reason]" to flag a task as blocked
-
-When the user selects a task:
-- Mark it In Progress in .agents/TASKS.md
-- If it has a [LIN: ABC-NNN] tag, call apex-linear-sync to move it to In Progress in Linear
-- If it touches the database, read .agents/SCHEMA.md before writing any code</div>
-          </div>
-        </div>
-      </div>
-
       <div class="card accent-blue">
         <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-emoji">◈</div>
+          <div class="card-emoji">⬡</div>
           <div class="card-meta">
-            <div class="card-title">apex-plan — Feature planning</div>
-            <div class="card-sub">Claude Code: .claude/commands/apex-plan.md · Codex: .agents/skills/apex-plan/SKILL.md</div>
+            <div class="card-title">Linear skills — bootstrap · sync · add</div>
+            <div class="card-sub">Claude Code: .claude/skills/apex-linear-*/SKILL.md · Codex: .agents/skills/apex-linear-*/SKILL.md + agents/openai.yaml</div>
           </div>
-          <div class="pill pill-blue">Manual</div>
+          <div class="pill pill-amber">MCP required</div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
           <div class="prompt-section">
-            <div class="prompt-label">Claude Code → .claude/commands/apex-plan.md</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Read: CLAUDE.md, .agents/CONTEXT.md, .agents/MAP.md, .agents/SCHEMA.md, .agents/CONTRACTS.md
-
-Feature to plan: $ARGUMENTS
-
-Without writing any code, produce:
-1. **Impact analysis** — existing modules from MAP.md affected
-2. **Schema changes** — new/modified tables needed (check SCHEMA.md)
-3. **New files** — what to add to MAP.md
-4. **Contract changes** — CONTRACTS.md updates needed
-5. **Task breakdown** — ordered task list formatted for TASKS.md
-6. **Risk flags** — anything that could break existing functionality
-
-Wait for approval before touching TASKS.md or writing code.</div>
-          </div>
-          <div class="prompt-section">
-            <div class="prompt-label">Codex → .agents/skills/apex-plan/SKILL.md</div>
+            <div class="prompt-label">apex-linear-bootstrap — push all TASKS.md tasks to Linear (run once, manual-only)</div>
             <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
-name: apex-plan
-description: Plan a new feature before writing any code. Use when the user says "I want to build X", "plan this feature", "what would it take to add Y", or describes a significant new capability.
+name: apex-linear-bootstrap
+description: Bootstrap Linear by creating issues from TASKS.md. Run manually with /apex-linear-bootstrap, once per project, after the Linear MCP is connected.
+disable-model-invocation: true
 ---
 
-Read: AGENTS.md, .agents/CONTEXT.md, .agents/MAP.md, .agents/SCHEMA.md, .agents/CONTRACTS.md
+Read .agents/TASKS.md and .agents/CONTEXT.md.
+Extract the Linear Team ID and Project from CONTEXT.md.
+If missing, stop and ask the user to add them under "External Services".
 
-Feature to plan: $ARGUMENTS
+For every task without a [LIN: ...] tag:
+1. Create a Linear issue (title, team, status mapped from section, label: "apex")
+2. Immediately append [LIN: ABC-NNN] to that task line in TASKS.md
 
-Without writing any code, produce:
-1. Impact analysis — existing MAP.md modules affected
-2. Schema changes — new/modified tables (check SCHEMA.md)
-3. New files — additions to MAP.md
-4. Contract changes — CONTRACTS.md updates needed
-5. Task breakdown — ordered list formatted for TASKS.md
-6. Risk flags — things that could break
+Report: issues created, any failures, confirm all IDs are in TASKS.md.
+Skip tasks already tagged [LIN:]. Skip [DONE] tasks unless explicitly asked.</div>
+          </div>
+          <div class="prompt-section">
+            <div class="prompt-label">apex-linear-sync — mirrors a task status change to Linear (auto-invoked)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
+name: apex-linear-sync
+description: Sync a task status change to Linear. Auto-invoke whenever a task in TASKS.md changes state — moving to In Progress, marking as Done, marking as Blocked, or unblocking. Trigger phrases: "mark done", "task complete", "starting task", "blocked on", "unblocked".
+---
 
-Wait for approval before touching TASKS.md or writing code.</div>
+Read .agents/TASKS.md. Extract [LIN: ABC-NNN] from the task.
+If no tag: stop — "This task has no Linear ID. Run /apex-linear-bootstrap first."
+
+Starting → status: "In Progress", comment: "Started via APEX — [date]"
+Completing → status: "Done", comment: "Completed via APEX — [summary]"; mark DONE in TASKS.md
+Blocking → status: "Todo", comment: "BLOCKED: [reason] — [date]"; add [BLOCKED] tag in TASKS.md
+Unblocking → status: "Todo", comment: "Unblocked — [date]"; remove [BLOCKED] tag
+
+Confirm: ✓ Linear [ABC-NNN] updated to [status]</div>
+          </div>
+          <div class="prompt-section">
+            <div class="prompt-label">apex-linear-add — add a new task to TASKS.md + Linear simultaneously (auto-invoked)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>---
+name: apex-linear-add
+description: Add a new task to both TASKS.md and Linear simultaneously. Use when the user wants to add a new task, issue, or work item. Trigger: "add task", "new task", "create issue", "add to backlog", "add task: [description]".
+---
+
+Read .agents/TASKS.md and .agents/CONTEXT.md.
+New task: $ARGUMENTS
+
+1. Scan TASKS.md for the highest T-NNN, use +1
+2. Create a Linear issue (title, team from CONTEXT.md, status: Todo, label: "apex")
+3. Add to Up Next: - [ ] T-NNN [LIN: ABC-NNN] — [title] `[LEAD]`
+4. Confirm: ✓ T-NNN created in TASKS.md and Linear [ABC-NNN]
+
+If Linear MCP is not connected: add task to TASKS.md without the [LIN] tag and say so.</div>
           </div>
         </div>
       </div>
@@ -1153,9 +1037,9 @@ Wait for approval before touching TASKS.md or writing code.</div>
   </section>
 
   <section>
-    <div class="eyebrow">Manual Setup Reference</div>
-    <h2>Alternative: create files manually</h2>
-    <p class="lead">The installer (<code>install-apex.sh</code>) handles all of this automatically. These blocks are a reference for understanding what each file contains, or for creating files individually without the installer.</p>
+    <div class="eyebrow">Installation Verification</div>
+    <h2>Confirm everything is in place</h2>
+    <p class="lead">Run the installer (<code>install-apex.sh</code>), then verify with these commands. If any file is missing, re-run with <code>--force</code> to refresh framework files.</p>
 
     <style>
       .qs-step { margin-bottom: 36px; }
@@ -1169,270 +1053,31 @@ Wait for approval before touching TASKS.md or writing code.</div>
       .qs-step-label code { font-size:11.5px; background:var(--bg-muted); padding:2px 5px; border-radius:3px; font-weight:400; }
     </style>
 
-    <!-- STEP 1 -->
     <div class="qs-step">
       <div class="qs-step-header">
-        <span class="qs-badge purple">STEP 1 of 6</span>
-        <span class="qs-step-label">Create <code>.claude/commands/apex-start.md</code></span>
+        <span class="qs-badge green">VERIFY</span>
+        <span class="qs-step-label">Run these shell commands after installing</span>
       </div>
-      <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Create the file .claude/commands/apex-start.md with this exact content:
-
-Read the following files silently, in order:
-1. CLAUDE.md
-2. .agents/CONTEXT.md
-3. .agents/MAP.md
-4. .agents/TASKS.md
-5. .agents/PROGRESS.md
-
-Then respond ONLY with this block:
-
----
-✓ SESSION LOADED
-Project: [name from CLAUDE.md]
-Last completed: [most recent PROGRESS.md entry, one line]
-Blocked: [any [BLOCKED] tasks, or "none"]
-
-## Tasks available
-**In Progress:** [list In Progress tasks]
-**Up Next:** [list Up Next tasks, numbered]
-
-Which task should I work on? (or say "show backlog" / "add task: [description]")
----
-
-Wait for the user to select a task before starting work.
-If the user picks a task: mark it In Progress in TASKS.md, then if it has a [LIN:] tag sync to Linear.
-If the selected task touches the database, read .agents/SCHEMA.md before writing any code.</div>
-    </div>
-
-    <!-- STEP 2 -->
-    <div class="qs-step">
-      <div class="qs-step-header">
-        <span class="qs-badge purple">STEP 2 of 6</span>
-        <span class="qs-step-label">Create <code>.claude/commands/apex-end.md</code></span>
-      </div>
-      <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Create the file .claude/commands/apex-end.md with this exact content:
-
-Update these files to close the session:
-
-1. .agents/PROGRESS.md — Append an entry for today:
-   - What was completed (✅)
-   - What was started but not finished (🔄)
-   - Any decisions or surprises (🧠)
-
-2. .agents/TASKS.md — Update statuses:
-   - Mark completed tasks [DONE] with today's date
-   - Add any new tasks discovered this session
-   - Re-prioritize if needed
-
-3. .agents/MAP.md — Add any new files or modules created this session
-
-4. .agents/SCHEMA.md — Only if DB changes were made:
-   - Update affected table entries
-   - Append a row to the Change Log section at the bottom
-
-5. .agents/DECISIONS.md — Add any architectural decisions made
-
-Output a git commit message in this format:
-chore(apex): [YYYY-MM-DD] — [main thing accomplished]</div>
-    </div>
-
-    <!-- STEP 3 -->
-    <div class="qs-step">
-      <div class="qs-step-header">
-        <span class="qs-badge purple">STEP 3 of 6</span>
-        <span class="qs-step-label">Create <code>.claude/commands/apex-schema.md</code> and <code>.claude/commands/apex-plan.md</code></span>
-      </div>
-      <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Create the file .claude/commands/apex-schema.md with this exact content:
-
-Read .agents/SCHEMA.md and .agents/CONTRACTS.md first.
-
-DB change requested: $ARGUMENTS
-
-Before writing any migration or query, analyze:
-1. Affected tables — which SCHEMA.md tables are touched?
-2. Relationship impact — does this break or require updating FK relationships?
-3. Constraint conflicts — conflicts with existing unique/check constraints?
-4. Downstream impact — which CONTRACTS.md endpoints or MAP.md modules query these tables?
-5. Destructive? — column removal, type change, or rename? State the rollback path.
-6. RLS impact — if Supabase, are existing RLS policies still valid after this change?
-
-Propose the migration plan. Wait for explicit approval before writing any migration files.
-After approval and execution: update .agents/SCHEMA.md entries and append to the Change Log.
-
-
-Create the file .claude/commands/apex-plan.md with this exact content:
-
-Read: CLAUDE.md, .agents/CONTEXT.md, .agents/MAP.md, .agents/SCHEMA.md, .agents/CONTRACTS.md
-
-Feature to plan: $ARGUMENTS
-
-Without writing any code, produce:
-1. Impact analysis — which existing modules from MAP.md are affected
-2. Schema changes — new or modified tables needed (check against SCHEMA.md)
-3. New files — what to add to MAP.md after implementation
-4. Contract changes — any CONTRACTS.md updates needed
-5. Task breakdown — ordered task list ready to paste into TASKS.md
-6. Risk flags — anything that could break existing functionality
-
-Wait for approval before adding tasks to TASKS.md or writing any code.</div>
-    </div>
-
-    <!-- STEP 4 -->
-    <div class="qs-step">
-      <div class="qs-step-header">
-        <span class="qs-badge amber">STEP 4 of 6</span>
-        <span class="qs-step-label">Create <code>.claude/skills/apex-schema/SKILL.md</code> &nbsp;<span style="font-weight:400;font-size:12px;color:var(--text-muted)">— auto-fires on DB tasks without you typing the command</span></span>
-      </div>
-      <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Create the file .claude/skills/apex-schema/SKILL.md with this exact content:
-
----
-name: apex-schema
-description: Guard against unsafe database changes. Auto-invoke whenever the task involves a migration, adding a column, changing a table, writing a DB query, modifying an ORM model, or any database schema work. Trigger phrases: "add column", "create table", "migration", "schema change", "alter table", "new table", "foreign key", "FK", "index", "drizzle schema", "prisma schema".
-allowed-tools: Read, Write
----
-
-Read .agents/SCHEMA.md and .agents/CONTRACTS.md first.
-
-DB change requested: $ARGUMENTS
-
-Before writing any migration or query, analyze:
-1. Affected tables — which SCHEMA.md tables are touched?
-2. Relationship impact — does this break or require updating FK relationships?
-3. Constraint conflicts — conflicts with existing unique/check constraints?
-4. Downstream impact — which CONTRACTS.md endpoints or MAP.md modules query these tables?
-5. Destructive? — column removal, type change, or rename? State the rollback path.
-6. RLS impact — if Supabase, are existing RLS policies still valid after this change?
-
-Propose the migration plan. Wait for explicit approval before writing any migration files.
-After approval and execution: update .agents/SCHEMA.md and append to the Change Log.</div>
-    </div>
-
-    <!-- STEP 5 -->
-    <div class="qs-step">
-      <div class="qs-step-header">
-        <span class="qs-badge blue">STEP 5 of 6</span>
-        <span class="qs-step-label">Create all four <code>.agents/skills/</code> files for Codex</span>
-      </div>
-      <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Create the file .agents/skills/apex-start/SKILL.md with this exact content:
-
----
-name: apex-start
-description: Start a new APEX development session. Load project context, show task list, and let the user pick what to work on. Use when beginning any work session or when the user says "start session", "begin", "what should I work on", or "let's get started".
----
-
-Read the following files silently, in order:
-1. AGENTS.md
-2. .agents/CONTEXT.md
-3. .agents/MAP.md
-4. .agents/TASKS.md
-5. .agents/PROGRESS.md
-
-Then respond ONLY with this block:
-
----
-✓ SESSION LOADED
-Project: [name from AGENTS.md]
-Last completed: [most recent PROGRESS.md entry]
-Blocked: [any [BLOCKED] tasks, or "none"]
-
-## Tasks available
-**In Progress:** [list In Progress tasks]
-**Up Next:** [list Up Next tasks, numbered]
-
-Which task should I work on? (or say "show backlog" / "add task: [description]")
----
-
-Wait for the user to select a task before starting work.
-If the user picks a task: mark it In Progress in TASKS.md, sync to Linear if [LIN:] tag exists.
-If the task touches the database, read .agents/SCHEMA.md first.
-
-===
-
-Create the file .agents/skills/apex-end/SKILL.md with this exact content:
-
----
-name: apex-end
-description: End the current APEX development session by updating all context files. Use when the user says "end session", "wrap up", "closing", "done for today", or asks to update project docs.
----
-
-Update these files to close the session:
-1. .agents/PROGRESS.md — Append today's entry (✅ done · 🔄 carry-forward · 🧠 decisions)
-2. .agents/TASKS.md — Mark [DONE] with date, add new tasks, re-prioritize
-3. .agents/MAP.md — Add new files or modules created this session
-4. .agents/SCHEMA.md — If DB changed: update tables + append Change Log row
-5. .agents/DECISIONS.md — Add architectural decisions made
-
-Output: chore(apex): [YYYY-MM-DD] — [main thing accomplished]
-
-===
-
-Create the file .agents/skills/apex-schema/SKILL.md with this exact content:
-
----
-name: apex-schema
-description: Guard against unsafe database changes. Auto-invoke for any task involving migrations, schema changes, adding columns, creating tables, modifying ORM models, or any database structure work.
----
-
-Read .agents/SCHEMA.md and .agents/CONTRACTS.md.
-
-DB change: $ARGUMENTS
-
-Analyze before writing anything:
-1. Affected tables in SCHEMA.md
-2. FK relationship impact
-3. Constraint conflicts
-4. Downstream CONTRACTS.md / MAP.md impact
-5. Destructive? (removal, type change, rename) — state rollback path
-6. RLS policy validity (if Supabase)
-
-Propose migration. Wait for approval.
-After execution: update SCHEMA.md + append Change Log row.
-
-===
-
-Create the file .agents/skills/apex-plan/SKILL.md with this exact content:
-
----
-name: apex-plan
-description: Plan a new feature before writing any code. Use when the user says "I want to build X", "plan this feature", "what would it take to add Y", or describes a significant new capability.
----
-
-Read: AGENTS.md, .agents/CONTEXT.md, .agents/MAP.md, .agents/SCHEMA.md, .agents/CONTRACTS.md
-
-Feature to plan: $ARGUMENTS
-
-Without writing any code, produce:
-1. Impact analysis — existing MAP.md modules affected
-2. Schema changes — new/modified tables (check SCHEMA.md)
-3. New files — additions to MAP.md after implementation
-4. Contract changes — CONTRACTS.md updates needed
-5. Task breakdown — ordered list ready to paste into TASKS.md
-6. Risk flags — anything that could break
-
-Wait for approval before touching TASKS.md or writing code.</div>
-    </div>
-
-    <!-- STEP 6 -->
-    <div class="qs-step">
-      <div class="qs-step-header">
-        <span class="qs-badge green">STEP 6 of 6</span>
-        <span class="qs-step-label">Verify everything is in place</span>
-      </div>
-      <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>Run these shell commands and confirm the output:
-
-ls .claude/commands/
-# Expected: apex-end.md  apex-init.md  apex-onboard.md  apex-plan.md  apex-schema.md  apex-start.md  apex-task.md
-
-ls .claude/skills/apex-schema/
-# Expected: SKILL.md
+      <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>ls .claude/skills/
+# Expected: apex-init  apex-start  apex-end  apex-schema  apex-linear-bootstrap  apex-linear-sync  apex-linear-add
 
 ls .agents/skills/
-# Expected: apex-end  apex-linear-add  apex-linear-bootstrap  apex-linear-sync  apex-plan  apex-schema  apex-start
+# Expected: apex-start  apex-end  apex-schema  apex-linear-bootstrap  apex-linear-sync  apex-linear-add
 
-Then in Claude Code type /help and confirm these appear:
-# /apex-start   /apex-task   /apex-end   /apex-schema   /apex-plan   /apex-init   /apex-onboard
+ls .agents/
+# Expected: CONTEXT.md  MAP.md  SCHEMA.md  TASKS.md  PROGRESS.md  DECISIONS.md  skills/</div>
+    </div>
 
-If any are missing, report which files are absent and recreate them.</div>
+    <div class="qs-step">
+      <div class="qs-step-header">
+        <span class="qs-badge purple">INIT</span>
+        <span class="qs-step-label">Open Claude Code and initialize the brain</span>
+      </div>
+      <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>/apex-init
+
+# Claude reads the real codebase, fills .agents/ automatically, and asks
+# about existing tasks before writing anything.
+# Takes 1-2 minutes on a typical project.</div>
     </div>
 
   </section>
@@ -1440,12 +1085,12 @@ If any are missing, report which files are absent and recreate them.</div>
   <section>
     <div class="eyebrow">Phase 2 — Planned</div>
     <h2>What's coming next</h2>
-    <p class="lead">These features are designed but not yet built. Same APEX pattern — one markdown file, no new dependencies.</p>
+    <p class="lead">These features are designed but not yet built. Same APEX pattern — one SKILL.md file, no new dependencies.</p>
     <div class="two-col">
       <div class="info-card" style="border-left:3px solid var(--text-muted);">
         <div class="ic-icon">👥</div>
         <div class="ic-title">Contractor task filtering</div>
-        <div class="ic-desc">When a contractor runs <code>/apex-task</code>, they only see tasks tagged <code>[CONTRACTOR: @name]</code>. One-line change. High-value for multi-person teams.</div>
+        <div class="ic-desc">When a contractor runs <code>/apex-start</code>, they only see tasks tagged <code>[CONTRACTOR: @name]</code>. One description-field change. High-value for multi-person teams.</div>
       </div>
       <div class="info-card" style="border-left:3px solid var(--text-muted);">
         <div class="ic-icon">📢</div>
@@ -1465,7 +1110,7 @@ If any are missing, report which files are absent and recreate them.</div>
     </div>
 
     <div class="eyebrow" style="margin-top:32px;">Phase 3 — Multi-Tool Support</div>
-    <p class="lead">The <code>.agents/</code> brain is already model-agnostic. Future phases will add thin entry-point adapters for additional AI coding tools — same shared brain, more front doors.</p>
+    <p class="lead">The <code>.agents/</code> brain is model-agnostic by design. Future phases add thin entry-point adapters — same shared brain, more front doors.</p>
     <div class="two-col">
       <div class="info-card" style="border-left:3px solid var(--text-muted);">
         <div class="ic-icon">⬡</div>
@@ -1491,18 +1136,18 @@ If any are missing, report which files are absent and recreate them.</div>
   </section>
 
   <section>
-    <div class="eyebrow">Token Savings</div>
+    <div class="eyebrow">Token Efficiency</div>
     <h2>Why this structure is efficient</h2>
     <div class="two-col">
       <div class="info-card">
         <div class="ic-icon">📉</div>
-        <div class="ic-title">Commands load on demand</div>
-        <div class="ic-desc"><code>.claude/commands/</code> files are NOT loaded into context until you type the command. Zero token cost at session start — only the command you invoke gets loaded.</div>
+        <div class="ic-title">Skills load on demand</div>
+        <div class="ic-desc">Skill bodies are NOT loaded into context until the skill fires — manually or automatically. Only the skill description enters context at startup. Zero token cost for 6 skills sitting in <code>.claude/skills/</code>.</div>
       </div>
       <div class="info-card">
         <div class="ic-icon">🎯</div>
-        <div class="ic-title">apex-schema as a skill = auto-guard</div>
-        <div class="ic-desc">Having apex-schema in <em>both</em> <code>.claude/commands/</code> (for manual <code>/apex-schema</code>) AND <code>.claude/skills/</code> (for auto-invocation) means the DB guard fires whether you remember to type it or not.</div>
+        <div class="ic-title">apex-schema = automatic DB guard</div>
+        <div class="ic-desc"><code>apex-schema</code> fires whether you remember to invoke it or not. Say "add a column" and the guard loads, reads SCHEMA.md, and blocks unsafe changes — no human reminder required.</div>
       </div>
       <div class="info-card">
         <div class="ic-icon">🗺</div>
@@ -1512,7 +1157,7 @@ If any are missing, report which files are absent and recreate them.</div>
       <div class="info-card">
         <div class="ic-icon">🔄</div>
         <div class="ic-title">PROGRESS.md = no re-explaining</div>
-        <div class="ic-desc">PROGRESS.md stores what happened last session. <code>/apex-start</code> reads it and Claude resumes exactly where you left off — no recap needed, no "what were we working on."</div>
+        <div class="ic-desc">PROGRESS.md stores what happened last session. <code>/apex-start</code> reads it and Claude resumes exactly where you left off — no recap, no "what were we working on."</div>
       </div>
     </div>
   </section>
@@ -1709,8 +1354,8 @@ Update SCHEMA.md to match. Do not change the actual schema.</div>
     <div class="callout green">
       <div class="callout-icon">⇄</div>
       <div class="callout-body">
-        <div class="callout-title">The key insight — shared brain, two entry points</div>
-        <div class="callout-desc">Claude Code reads <code>CLAUDE.md</code> automatically. Codex reads <code>AGENTS.md</code> automatically. Both files contain identical content pointing to <code>.agents/</code>. The entire brain — CONTEXT, MAP, SCHEMA, TASKS, PROGRESS, skills — is shared and model-agnostic.</div>
+        <div class="callout-title">The key insight — one source of truth, two entry points</div>
+        <div class="callout-desc">All shared rules live in <code>AGENTS.md</code>. Codex reads it natively. <code>CLAUDE.md</code> is a thin 12-line file that imports <code>AGENTS.md</code> via <code>@AGENTS.md</code> — no duplicated rules. Both point to the same <code>.agents/</code> brain: CONTEXT, MAP, SCHEMA, TASKS, PROGRESS, DECISIONS. Edit AGENTS.md once; both tools stay in sync.</div>
       </div>
     </div>
 
@@ -1718,11 +1363,9 @@ Update SCHEMA.md to match. Do not change the actual schema.</div>
       <div class="compare-col">
         <div class="compare-head purple">✦ Claude Code</div>
         <div class="compare-body">
-          <div class="compare-row"><div class="cr-key">Entry file</div><div class="cr-val">CLAUDE.md</div></div>
-          <div class="compare-row"><div class="cr-key">Commands</div><div class="cr-val">.claude/commands/*.md</div></div>
-          <div class="compare-row"><div class="cr-key">Skills dir</div><div class="cr-val">.claude/skills/</div></div>
-          <div class="compare-row"><div class="cr-key">Skill format</div><div class="cr-val">SKILL.md + frontmatter</div></div>
-          <div class="compare-row"><div class="cr-key">Invocation</div><div class="cr-val">/apex-start or auto-invoke</div></div>
+          <div class="compare-row"><div class="cr-key">Entry file</div><div class="cr-val">CLAUDE.md (imports @AGENTS.md)</div></div>
+          <div class="compare-row"><div class="cr-key">Skills dir</div><div class="cr-val">.claude/skills/name/SKILL.md</div></div>
+          <div class="compare-row"><div class="cr-key">Invocation</div><div class="cr-val">/name (manual) or auto-match</div></div>
           <div class="compare-row"><div class="cr-key">Brain files</div><div class="cr-val">.agents/* (shared)</div></div>
         </div>
       </div>
@@ -1742,100 +1385,97 @@ Update SCHEMA.md to match. Do not change the actual schema.</div>
 
   <section>
     <div class="eyebrow">Entry Point Files</div>
-    <h2>CLAUDE.md and AGENTS.md — nearly identical</h2>
+    <h2>AGENTS.md is canonical. CLAUDE.md imports it.</h2>
 
     <div class="card-stack">
-      <div class="card accent-purple">
-        <div class="card-header" onclick="toggleCard(this)">
-          <div class="card-emoji">✦</div>
-          <div class="card-meta">
-            <div class="card-title">CLAUDE.md — Claude Code entry point</div>
-            <div class="card-sub">Project root · Auto-read by Claude Code on every session</div>
-          </div>
-          <div class="card-toggle">+</div>
-        </div>
-        <div class="card-body">
-          <div class="prompt-section">
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># [PROJECT NAME] — CLAUDE.md
-
-## Read Order (every session, no exceptions)
-1. `.agents/CONTEXT.md` — stack and services
-2. `.agents/MAP.md` — codebase map (read this, do not scan folders)
-3. `.agents/TASKS.md` — what to work on
-4. `.agents/PROGRESS.md` — where we left off
-
-## DB Rule — Non-negotiable
-Never write a migration, query, or ORM model without reading `.agents/SCHEMA.md` first.
-The `apex-schema` skill handles this automatically, but you must also read SCHEMA.md manually
-if the task references any table or field.
-
-## Golden Rules
-- Never rewrite working modules unless explicitly required
-- Never change `.agents/CONTRACTS.md` interfaces without approval
-- Never install dependencies not in CONTEXT.md stack
-- Always check DECISIONS.md before proposing alternatives already debated
-- Always run the apex-end skill before closing a session
-
-## Project Mode
-Current mode: **[NEW / ACTIVE / STABLE]**
-
-## Team
-- Lead: [name]
-- Contractors: [names + scope]
-- Tasks tagged [CONTRACTOR] in TASKS.md are contractor-only scope
-
-## Skills Available
-- apex-start — load context and begin session
-- apex-end — commit the brain before closing
-- apex-schema — DB change guard (also auto-invokes on DB tasks)
-- apex-plan — plan features before coding</div>
-          </div>
-        </div>
-      </div>
-
       <div class="card accent-blue">
         <div class="card-header" onclick="toggleCard(this)">
           <div class="card-emoji">⧉</div>
           <div class="card-meta">
-            <div class="card-title">AGENTS.md — Codex entry point</div>
-            <div class="card-sub">Project root · Auto-read by OpenAI Codex on every session</div>
+            <div class="card-title">AGENTS.md — shared rules for all tools</div>
+            <div class="card-sub">Project root · Read natively by Codex · Imported by CLAUDE.md · Edit this file only</div>
           </div>
           <div class="card-toggle">+</div>
         </div>
         <div class="card-body">
           <div class="prompt-section">
-            <div class="prompt-label">Same content as CLAUDE.md — just a different filename</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># [PROJECT NAME] — AGENTS.md
-<span class="cm"># This is the Codex entry point. Mirrors CLAUDE.md exactly.</span>
-<span class="cm"># Both files point to the shared .agents/ brain.</span>
+            <div class="prompt-label">All constraints, rules, and skill references live here — not duplicated in CLAUDE.md</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># [PROJECT NAME] — Agent instructions
 
-## Read Order (every session, no exceptions)
-1. `.agents/CONTEXT.md` — stack and services
-2. `.agents/MAP.md` — codebase map (read this, do not scan folders)
-3. `.agents/TASKS.md` — what to work on
-4. `.agents/PROGRESS.md` — where we left off
+Shared entry point for all coding agents. Codex reads this natively;
+Claude Code reads it through the @AGENTS.md import in CLAUDE.md.
+
+## Session start
+Run the apex-start skill. Do not bulk-read all brain files upfront.
+
+Load on demand:
+- .agents/MAP.md — navigating unfamiliar modules (do not scan folders)
+- .agents/CONTEXT.md — stack or services info
+- .agents/DECISIONS.md — before proposing architecture alternatives
+- .agents/SCHEMA.md — before any DB work (non-negotiable)
 
 ## DB Rule — Non-negotiable
-Never write a migration, query, or ORM model without reading `.agents/SCHEMA.md` first.
+Never write a migration, query, or ORM model without reading .agents/SCHEMA.md first.
 
 ## Golden Rules
 - Never rewrite working modules unless explicitly required
-- Never change `.agents/CONTRACTS.md` interfaces without approval
-- Never install dependencies not in CONTEXT.md stack
+- Never change .agents/CONTRACTS.md interfaces without approval (if file exists)
 - Always check DECISIONS.md before proposing alternatives already debated
+- Always run the apex-end skill before closing a session
+
+## Brain File Hygiene
+- No redundancy: this file is canonical for rules. CONTEXT.md holds project metadata,
+  services, env vars, risks only. DECISIONS.md holds "why". MAP.md holds paths only.
+- Unique IDs: T-NNN and ADR-NNN must never collide — scan before creating.
+- Completed work is immutable: DONE tasks are one-liners. Sessions >2 weeks = archive material.
+- CONTRACTS.md is optional: only if >10 documented API endpoints.
 
 ## Project Mode
-Current mode: **[NEW / ACTIVE / STABLE]**
+Current mode: **ACTIVE**
 
 ## Team
 - Lead: [name]
-- Contractors: [names + scope]
+- Contributors: [names + scope]
+- Tasks tagged [CONTRACTOR: @name] are scoped to that person
 
-## Skills Available (invoke with $ or by description)
-- apex-start — load context and begin session
-- apex-end — commit the brain before closing
-- apex-schema — DB change guard
-- apex-plan — plan features before coding</div>
+## Skills
+- apex-start — begin session, pick task
+- apex-end — close session, update brain files
+- apex-schema — DB change guard (auto-fires on DB phrases)
+- apex-linear-bootstrap — push tasks to Linear (once, manual)
+- apex-linear-sync — sync task status to Linear (auto)
+- apex-linear-add — add task: TASKS.md + Linear (auto)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card accent-purple">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-emoji">✦</div>
+          <div class="card-meta">
+            <div class="card-title">CLAUDE.md — thin Claude Code wrapper</div>
+            <div class="card-sub">Project root · Imports AGENTS.md · Adds only Claude Code-specific notes</div>
+          </div>
+          <div class="card-toggle">+</div>
+        </div>
+        <div class="card-body">
+          <div class="prompt-section">
+            <div class="prompt-label">Only 12 lines — all rules live in AGENTS.md, imported via @AGENTS.md</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button># [PROJECT NAME] — CLAUDE.md
+
+@AGENTS.md
+
+## Claude Code
+
+All shared rules live in AGENTS.md (imported above) — edit that file, not this one,
+so Codex and Claude Code stay aligned.
+
+Slash commands (skills in .claude/skills/):
+- /apex-init — one-time setup: fill brain files from the real codebase
+- /apex-start — begin session: load tasks, pick what to work on
+- /apex-end — close session: update brain files
+- /apex-schema — DB change guard; also auto-fires on DB phrases
+- /apex-linear-bootstrap — push all tasks to Linear (once, after /mcp auth)</div>
           </div>
         </div>
       </div>
@@ -1943,23 +1583,18 @@ Do not write any code until all 5 are answered.</div>
         </div>
         <div class="card-body">
           <div class="prompt-section">
-            <div class="prompt-label">Option A — Official Linear MCP (recommended)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># Run this once in your terminal</span>
-claude mcp add-json linear '{"command":"npx","args":["-y","mcp-remote","https://mcp.linear.app/sse"]}'
-
-<span class="cm"># Then inside a Claude Code session, authenticate:</span>
-/mcp
-<span class="cm"># Follow the OAuth flow — log in with your Linear account</span>
-
-<span class="cm"># Verify connection:</span>
-<span class="cm"># Ask Claude: "List my assigned Linear issues"</span></div>
+            <div class="prompt-label">Step 1 — Register the server (run once in terminal)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>claude mcp add --transport http linear https://mcp.linear.app/mcp</div>
           </div>
           <div class="prompt-section">
-            <div class="prompt-label">Option B — Direct HTTP (if SSE gives issues)</div>
-            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button>claude mcp add --transport http linear-server https://mcp.linear.app/mcp
+            <div class="prompt-label">Step 2 — Authenticate (run inside a Claude Code session)</div>
+            <div class="code-block"><button class="copy-btn" onclick="copyBlock(this)">Copy</button><span class="cm"># Inside a Claude Code session:</span>
+/mcp
+<span class="cm"># Follow the OAuth flow — log in with your Linear account</span>
+<span class="cm"># Auth persists across projects. You only do this once per machine.</span>
 
-<span class="cm"># Or via claude.ai Settings → Connectors → Linear</span>
-<span class="cm"># This is the zero-config path if you use Claude.ai already</span></div>
+<span class="cm"># Verify: ask Claude "List my assigned Linear issues"</span>
+<span class="cm"># If you use claude.ai already: Settings → Connectors → Linear (zero-config OAuth)</span></div>
           </div>
           <div class="prompt-section">
             <div class="prompt-label">Add to .agents/CONTEXT.md once connected</div>
